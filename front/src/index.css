@@ -15,7 +15,7 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
+  font: 10px;
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
@@ -51,7 +51,7 @@
 }
 
 #root {
-  background: #faf8f7;
+  background: #e8f5f1;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -62,7 +62,8 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  font-size: 10px;
   margin: 0;
 }
 
@@ -109,3 +110,5 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+* { box-sizing: border-box; }
