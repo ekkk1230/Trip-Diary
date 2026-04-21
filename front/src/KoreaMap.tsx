@@ -10,7 +10,7 @@ interface KoreaMapProps {
 
 const KoreaMap: React.FC<KoreaMapProps> = ({ onRegionClick }) => {
   return (
-    <div style={{ width: "100%", height: "auto" }}>
+    <div style={{ width: "500px", height: "auto" }}>
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
