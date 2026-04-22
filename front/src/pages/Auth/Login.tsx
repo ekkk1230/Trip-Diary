@@ -1,7 +1,14 @@
 import * as S from './Auth.styles'
-import Logo from "../../assets/Trip_Diary.png"
+import { useState } from 'react';
+import Logo from "../../assets/Trip_Diary.png";
+import { LiaUserSolid } from "react-icons/lia";
+import { RiLockPasswordFill } from "react-icons/ri";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa6";
 
 function Login() {
+    const [eye, setEye] = useState(false);
+
     return (
         <>
             <S.Logo src={Logo} alt="Trip Diary" />
@@ -13,20 +20,29 @@ function Login() {
                 <form action="">
                     <label htmlFor="" className="auth_label">
                         <p>아이디</p>
-                        <input type="text" placeholder="아이디를 입력하세요." />
+                        <div className="input_wrapper">
+                            <LiaUserSolid />
+                            <input type="text" placeholder="아이디를 입력하세요." />
+                        </div>
                     </label>
                     <label htmlFor="" className="auth_label">
                         <p>비밀번호</p>
-                        <input type="password" placeholder="비밀번호를 입력하세요." />
+                        <div className="input_wrapper">
+                            <RiLockPasswordFill/>
+                            <input type={eye ? "text" : "password"} placeholder="비밀번호를 입력하세요." />
+                            <button type="button" onClick={() => setEye(!eye)}>
+                                {eye ? <FaEye /> : <FaEyeSlash />}
+                            </button>
+                        </div>
                     </label>
                 </form>
 
-                <S.AuthLink><a href="#">비밀번호를 잊으셨나요?</a></S.AuthLink>
+                <S.LoginLink><a href="#">비밀번호를 잊으셨나요?</a></S.LoginLink>
 
                 <button className="auth_btn">로그인</button>
             </S.AuthBox>
             
-            <S.AuthLink>아직 계정이 없으신가요? <a href="#">회원가입</a></S.AuthLink>
+            <S.LoginLink>아직 계정이 없으신가요? <a href="#">회원가입</a></S.LoginLink>
         </>
     )
 }

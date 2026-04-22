@@ -21,10 +21,26 @@ export const AuthBox = styled.div`
 
     .auth_tit { font-size: 1.6rem; margin-bottom: 2rem; }
 
-    .auth_label { display: flex; flex-flow: column; align-items: flex-start; }
+    .auth_label { 
+        display: flex; flex-flow: column; align-items: flex-start;
+    
+        .input_wrapper { 
+            background: #f0f9f6; border: .1rem solid rgba(45, 125, 110, 0.12); padding: 1.2rem 1rem; border-radius: .8rem; width: 100%; outline: 0; display: flex; align-items: center; justify-content: space-between;
+
+            svg { width: 1.6rem; min-width: 1.6rem; height: 1.6rem; margin-right: 1rem; }
+            
+            input { flex: 1; border: 0; outline: 0; background: transparent; }
+            button { 
+                border: 0; outline: 0; background: transparent; cursor: pointer; 
+                
+                svg { margin: 0; }
+            }
+        }
+        .input_wrapper:focus { border-color: #2d7d6e; }
+    }
     .auth_label + .auth_label { margin-top: 1.2rem; }
     .auth_label p { font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 500; }
-    .auth_label input { background: #f0f9f6; border: .1rem solid rgba(45, 125, 110, 0.12); border-radius: .8rem; padding: 1.2rem 1rem; width: 100%; outline: 0; }
+    .auth_label > input { background: #f0f9f6; border: .1rem solid rgba(45, 125, 110, 0.12); border-radius: .8rem; padding: 1.2rem 1rem; width: 100%; outline: 0; }
     .auth_label input:focus { border-color: #2d7d6e; }
     .auth_label input::placeholder { color: #1a3d35 }
 

@@ -1,4 +1,5 @@
-import React from 'react'
+import * as S from './Auth.styles'
+import Logo from "../../assets/Trip_Diary.png";
 
 function Join() {
     return (
@@ -28,12 +29,12 @@ function Join() {
                     </label>
                 </form>
 
-                <S.AuthLink><a href="#">비밀번호를 잊으셨나요?</a></S.AuthLink>
+                <S.LoginLink><a href="#">비밀번호를 잊으셨나요?</a></S.LoginLink>
 
                 <button className="auth_btn">회원가입</button>
             </S.AuthBox>
             
-            <S.AuthLink>이미 계정이 있으신가요? <a href="#">로그인</a></S.AuthLink>
+            <S.LoginLink>이미 계정이 있으신가요? <a href="#">로그인</a></S.LoginLink>
         </>
     )
 }
