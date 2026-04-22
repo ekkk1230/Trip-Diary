@@ -1,9 +1,10 @@
 import * as S from './Auth.styles'
-import Logo from "../../assets/Trip_Diary.png";
+import Logo from "../../assets/Trip_Diary_row.png";
 
 function Join() {
     return (
         <>
+            
             <S.Logo src={Logo} alt="Trip Diary" />
             <S.AuthTit className="auth_txt">여행의 순간을 기록하고 공유하세요.</S.AuthTit>
 
