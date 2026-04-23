@@ -13,7 +13,7 @@ export const AuthTit = styled.p`
 `;
 
 export const AuthBox = styled.div`
-    width: 30rem;
+    width: 40rem;
     border-radius: 2rem;
     background: #fff;
     margin: 4rem auto 2rem;

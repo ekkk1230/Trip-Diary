@@ -9,8 +9,8 @@ function App() {
   return (
     <>
       <Layout  hasHeader={true} title="여행지도" hasBottomNav={true} >
-        <Join />
-        <Login />
+        {/* <Join />
+        <Login /> */}
         <KoreaMap onRegionClick={(name) => alert(`You clicked on ${name}`)} />
       </Layout>
     </>
