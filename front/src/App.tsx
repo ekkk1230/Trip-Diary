@@ -1,5 +1,5 @@
+import { Routes, Route } from 'react-router-dom';
 import { useMapStore } from './store/useMapStore';
-import { useState } from 'react'
 import MapComponent from './components/MapComponent'
 import Login from './pages/Auth/Login'
 import Join from './pages/Auth/Join'
@@ -9,13 +9,21 @@ function App() {
   const { title } = useMapStore();
 
   return (
-    <>
-      <Layout hasHeader={true} title={title} hasBottomNav={true} >
-        {/* <Join />
-        <Login /> */}
-        <MapComponent />
-      </Layout>
-    </>
+    <Routes>
+    {/* 지도 페이지 */}
+    <Route path="/" element={
+        <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
+            <MapComponent />
+        </Layout>
+    } />
+    
+    {/* 로그인 페이지 */}
+    <Route path="/login" element={
+        <Layout title={title} hasHeader>
+            <Login />
+        </Layout>
+    } />
+  </Routes>
   )
 }
 

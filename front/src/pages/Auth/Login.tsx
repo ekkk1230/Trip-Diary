@@ -37,12 +37,12 @@ function Login() {
                     </label>
                 </form>
 
-                <S.LoginLink><a href="#">비밀번호를 잊으셨나요?</a></S.LoginLink>
+                <S.LoginLink to="#">비밀번호를 잊으셨나요?</S.LoginLink>
 
                 <button className="auth_btn">로그인</button>
             </S.AuthBox>
             
-            <S.LoginLink>아직 계정이 없으신가요? <a href="#">회원가입</a></S.LoginLink>
+            <S.LoginLink to="#">아직 계정이 없으신가요? 회원가입</S.LoginLink>
         </>
     )
 }

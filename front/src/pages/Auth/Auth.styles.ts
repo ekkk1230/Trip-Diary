@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'; 
 
 export const Logo = styled.img`
     display: block;
@@ -47,7 +48,7 @@ export const AuthBox = styled.div`
     .auth_btn { border-radius: .8rem; padding: 1.2rem 1rem; width: 100%; background: #2d7d6e; color: #fff; border: none; font-size: 1.4rem; cursor: pointer; display: block; margin-top: 1.2rem; }
 `;
 
-export const LoginLink = styled.a`
+export const LoginLink = styled(Link)`
     display: block; text-align: right; margin: 1.2rem 0; font-size: 1.4rem; text-align: center;
      color: #666;  
     a { font-weight: 500; text-decoration: none; color: #1a3d35; }

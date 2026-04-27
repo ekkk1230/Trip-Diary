@@ -8,17 +8,28 @@ interface LayoutProps {
     title?: string;
     hasHeader?: boolean;
     hasBottomNav?: boolean;
+    onBackClick?: () => void;
 }
 
-function Layout({ children, title, hasHeader, hasBottomNav }: LayoutProps) {
+function Layout({ children, title, hasHeader, hasBottomNav, onBackClick }: LayoutProps) {
     const navigate = useNavigate();
+
+    const handleBack = () => {
+        if (onBackClick) {
+            onBackClick();
+        } else if (window.history.length > 2) {
+            navigate(-1);
+        } else {
+            navigate('/', { replace: true });
+        }
+    }
     
     return (
         <S.Wrapper>
             {
                 hasHeader && (
                     <S.Header>
-                        <button onClick={() => navigate(-1)}>
+                        <button onClick={handleBack}>
                             <IoMdArrowBack />
                         </button>
                         <p className="header_title">{title}</p>
