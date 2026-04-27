@@ -1,4 +1,4 @@
-import { useMapStore } from "../store/useMapStore";
+import { useMapStore } from "../../store/useMapStore";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { geoCentroid, geoMercator } from "d3-geo";
@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import * as S from "./MapComponents.styles";
-import { API_CODE_MAP } from "../constants/API_CODE_MAP";
+import { API_CODE_MAP } from "../../constants/API_CODE_MAP";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";

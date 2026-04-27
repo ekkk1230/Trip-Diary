@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { useMapStore } from './store/useMapStore';
-import MapComponent from './components/MapComponent'
+import MapComponent from './features/map/MapComponent'
 import Login from './pages/Auth/Login'
 import Join from './pages/Auth/Join'
 import Layout from './components/layout/Layout'
