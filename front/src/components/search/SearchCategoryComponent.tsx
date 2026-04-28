@@ -1,7 +1,12 @@
 import { useState } from "react";
 import * as S from "../Components.styles";
 
-const CATEGORIES = [
+interface Category {
+    id: number;
+    name: string;
+}
+
+const CATEGORIES: Category[] = [
     { id: 12, name: "관광지" },
     { id: 14, name: "문화시설" },
     { id: 15, name: "축제/공연/행사" },
@@ -12,14 +17,20 @@ const CATEGORIES = [
     { id: 39, name: "음식점" },
 ]
 
-const SearchCategoryComponent = () => {
-    const [selected, setSelected] = useState(false);
+interface SearchCategoryComponentProps {
+    selectedCategory: number | null;
+    onSelectedCategory: (id: number) => void;
+}
+
+const SearchCategoryComponent = ({ selectedCategory, onSelectedCategory }: SearchCategoryComponentProps) => {
 
     return (
         <S.SearchCategoryContainer>
             {CATEGORIES.map(cate => (
                 <button 
                     key={cate.id}
+                    onClick={() => onSelectedCategory(cate.id)}
+                    className={selectedCategory === cate.id ? 'active' : ''}
                 >
                     {cate.name}
                 </button>
