@@ -1,13 +1,13 @@
-// store/useMapStore.ts
 import { create } from "zustand";
 import { fetchAllTourData } from "../api/tourApi";
 
-// API 매핑 테이블도 스토어로 옮겨서 관리하는 게 깔끔합니다
 const API_CODE_MAP: { [key: string]: string } = {
-  "21": "6", "26": "7", "38": "36", "22": "4", "11": "1",
-  "31": "31", "32": "32", "33": "33", "34": "34", "35": "37",
-  "36": "38", "37": "35", "39": "39", "23": "2", "12": "3",
-  "24": "5", "25": "8"
+  "21": "6",  "26": "7",  "38": "36", 
+  "22": "4",  "11": "1",  "31": "31", 
+  "32": "32", "33": "33", "34": "34", 
+  "35": "37", "36": "38", "37": "35", 
+  "39": "39", "23": "2",  "12": "3",
+  "24": "5",  "25": "8"
 };
 
 interface MapStore {
@@ -15,7 +15,7 @@ interface MapStore {
     selectedRegion: any | null;
     selectedSigungu: any | null;
     filteredData: any[];
-    isLoading: boolean; // isLoading 추가
+    isLoading: boolean;
 
     setTitle: (newTitle: string) => void;
     setSelectedRegion: (region: any | null) => void;
@@ -38,6 +38,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     setFilteredData: (data) => set({ filteredData: data }),
 
     fetchAndFilterData: async (geo: any) => {
+        // console.log("전달된 geo 데이터:", geo);
         const name = geo.properties.name;
         const code = geo.properties.code;
         const provinceCode = code.substring(0, 2);

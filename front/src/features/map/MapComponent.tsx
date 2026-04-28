@@ -1,5 +1,4 @@
 import { useMapStore } from "../../store/useMapStore";
-import { useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { geoCentroid, geoMercator } from "d3-geo";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -8,15 +7,15 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import * as S from "./MapComponents.styles";
-import { API_CODE_MAP } from "../../constants/API_CODE_MAP";
+import SearchCotainerComponent from "../../components/search/SearchCotainerComponent";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
 
-const MapComponent: React.FC = () => {
+const MapComponent = () => {
   const { 
     setTitle, selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
-    filteredData, isLoading, fetchAndFilterData, resetMap 
+    filteredData, isLoading, fetchAndFilterData 
   } = useMapStore();
   const projection = geoMercator()
     .center(selectedRegion ? geoCentroid(selectedRegion) : [127.5, 36])
@@ -24,110 +23,115 @@ const MapComponent: React.FC = () => {
     .translate([250, 300]);
 
 
-    const handleRegionClick = async (geo: any) => {
-      if (!selectedRegion) {
-        setSelectedRegion(geo);
-        setTitle(geo.properties.name);
-      } else {
-        fetchAndFilterData(geo); 
-      }
+  const handleRegionClick = async (geo: any) => {
+    if (!selectedRegion) {
+      setSelectedRegion(geo);
+      setTitle(geo.properties.name);
+    } else {
+      fetchAndFilterData(geo); 
     }
+  }
+
+  const searchPlaceholderText = "예) 해운대구, 강남구";
 
   return (
-    <div style={{ width: "500px", margin: "0 auto" }}>
-      <ComposableMap projection={projection as any} width={500} height={600}>
-        <Geographies geography={selectedRegion ? MUNICIPALITY_URL : PROVINCE_URL}>
-          {({ geographies }) =>
-            geographies
-              .filter((geo) => {
-                if (!selectedRegion) return true;
-                const provinceCode = selectedRegion.properties.code;
-                const municipalityCode = geo.properties.code;
+    <>
+      <SearchCotainerComponent fetchAndFilterData={fetchAndFilterData} placeholderTxt={searchPlaceholderText} />
+      <div style={{ width: "500px", margin: "0 auto" }}>
+        <ComposableMap projection={projection as any} width={500} height={600}>
+          <Geographies geography={selectedRegion ? MUNICIPALITY_URL : PROVINCE_URL}>
+            {({ geographies }) =>
+              geographies
+                .filter((geo) => {
+                  if (!selectedRegion) return true;
+                  const provinceCode = selectedRegion.properties.code;
+                  const municipalityCode = geo.properties.code;
 
-                return municipalityCode.startsWith(provinceCode);
-              })
-              .map((geo) => (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  onClick={() => {
-                    if (!selectedRegion) {
-                      handleRegionClick(geo);
-                    } else {
-                      handleRegionClick(geo);
-                    }
-                  }}
-                  style={{
-                    default: { 
-                      fill: selectedSigungu === geo.properties.name ? "#A5D6A7" : "#F1F8E9",
-                      stroke: "#2E7D32", 
-                      strokeWidth: 0.5,
-                      outline: "none",
-                    },
-                    hover: { 
-                      fill: "#C8E6C9", 
-                      cursor: "pointer",
-                      outline: "none",
-                    },
-                    pressed: {
-                      fill: "#81C784",
-                      outline: "none",
-                    }
-                  }}
-                />
-              ))
-          }
-        </Geographies>
-      </ComposableMap>
+                  return municipalityCode.startsWith(provinceCode);
+                })
+                .map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    onClick={() => {
+                      if (!selectedRegion) {
+                        handleRegionClick(geo);
+                      } else {
+                        handleRegionClick(geo);
+                      }
+                    }}
+                    style={{
+                      default: { 
+                        fill: selectedSigungu === geo.properties.name ? "#A5D6A7" : "#F1F8E9",
+                        stroke: "#2E7D32", 
+                        strokeWidth: 0.5,
+                        outline: "none",
+                      },
+                      hover: { 
+                        fill: "#C8E6C9", 
+                        cursor: "pointer",
+                        outline: "none",
+                      },
+                      pressed: {
+                        fill: "#81C784",
+                        outline: "none",
+                      }
+                    }}
+                  />
+                ))
+            }
+          </Geographies>
+        </ComposableMap>
 
-      {isLoading ? (
-        <S.SpinnerWrap style={{ textAlign: "center", padding: "20px" }}>
-          <p>관광지 정보를 불러오는 중입니다...</p>
-          <S.Spinner />
-        </S.SpinnerWrap>
-      ) : filteredData.length > 0 ? (
-        <Swiper
-          modules={[Grid, Navigation, Pagination]}
-          slidesPerView={2}
-          slidesPerGroup={6}
-          grid={{
-            rows: 3,
-            fill: 'row' 
-          }}
-          spaceBetween={10} 
-          pagination={{ clickable: true }}
-          style={{ height: '600px' }} 
-        >
-          {filteredData.map((item, idx) => (
-            <SwiperSlide key={idx}>
-              <S.Card>
-                <S.CardImage 
-                  src={item.firstimage}
-                />
-                <S.CardBody>
-                  <S.CardTitle>{item.title}</S.CardTitle>
-                </S.CardBody>
-              </S.Card>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : ( 
-        <p>검색 결과가 없습니다.</p>
-      )}
+        {isLoading ? (
+          <S.SpinnerWrap style={{ textAlign: "center", padding: "20px" }}>
+            <p>관광지 정보를 불러오는 중입니다...</p>
+            <S.Spinner />
+          </S.SpinnerWrap>
+        ) : filteredData.length > 0 ? (
+          <Swiper
+            modules={[Grid, Navigation, Pagination]}
+            slidesPerView={1}
+            slidesPerGroup={2}
+            grid={{
+              rows: 3,
+              fill: 'row' 
+            }}
+            spaceBetween={10} 
+            pagination={{ clickable: true }}
+            style={{ height: '600px' }} 
+          >
+            {filteredData.map((item, idx) => (
+              <SwiperSlide key={idx}>
+                <S.Card>
+                  <S.CardImage 
+                    src={item.firstimage}
+                  />
+                  <S.CardBody>
+                    <S.CardTitle>{item.title}</S.CardTitle>
+                  </S.CardBody>
+                </S.Card>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : ( 
+          <p>검색 결과가 없습니다.</p>
+        )}
 
-      {selectedRegion && (
-        <button 
-          onClick={() => { 
-            setSelectedRegion(null) 
-            setSelectedSigungu(null)
-            setTitle("지도") 
-          }}
-          style={{ display: "block", margin: "10px auto" }}
-        >
-          전체 지도로 돌아가기
-        </button>
-      )}
-    </div>
+        {selectedRegion && (
+          <button 
+            onClick={() => { 
+              setSelectedRegion(null) 
+              setSelectedSigungu(null)
+              setTitle("지도") 
+            }}
+            style={{ display: "block", margin: "10px auto" }}
+          >
+            전체 지도로 돌아가기
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 
