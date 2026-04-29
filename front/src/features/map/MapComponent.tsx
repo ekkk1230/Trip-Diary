@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import * as S from "./MapComponents.styles";
-import SearchCotainerComponent from "../../components/search/SearchCotainerComponent";
+import CardItem from "./CardItem";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
@@ -99,16 +99,17 @@ const MapComponent = () => {
 						style={{ height: '600px' }} 
 					>
 						{filteredData.map((item, idx) => (
-							<SwiperSlide key={idx}>
-								<S.Card>
-									<S.CardImage 
-										src={item.firstimage}
-									/>
-									<S.CardBody>
-										<S.CardTitle>{item.title}</S.CardTitle>
-									</S.CardBody>
-								</S.Card>
-							</SwiperSlide>
+							// <SwiperSlide key={idx}>
+							// 	<S.Card>
+							// 		<S.CardImage 
+							// 			src={item.firstimage}
+							// 		/>
+							// 		<S.CardBody>
+							// 			<S.CardTitle>{item.title}</S.CardTitle>
+							// 		</S.CardBody>
+							// 	</S.Card>
+							// </SwiperSlide>
+							<CardItem item={item} />
 						))}
 					</Swiper>
 				) : ( 
