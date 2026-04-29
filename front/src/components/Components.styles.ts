@@ -17,8 +17,15 @@ export const SearchContainer = styled.div`
 export const SearchCategoryContainer = styled.div`
     width: 100%; display: flex; gap: .8rem; margin-bottom: 1.2rem;
 
-    button { width: 100%; background: #fff; border: .1rem solid rgba(45, 125, 110, 0.12); font-size: 1.2rem; word-break: keep-all; }
-    button:hover, button.active { background: #fff; border: .1rem solid #2d7d6e; color: #2d7d6e }
+    .filter-btn { width: 4rem; height: 4rem; min-width: 4rem; padding: 0; display: flex; align-items: center; justify-content: center; }
+
+    .btn-wrap { 
+        display: none;
+
+        button { width: 100%; background: #fff; border: .1rem solid rgba(45, 125, 110, 0.12); font-size: 1.2rem; word-break: keep-all; }
+        button:hover, button.active { background: #fff; border: .1rem solid #2d7d6e; color: #2d7d6e }
+    }
+    .btn-wrap.isOpen { display: block; }
 `
 export const SearchInputArea = styled.div`
     display: flex; gap: .8rem;

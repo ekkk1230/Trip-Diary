@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import { useMapStore } from './store/useMapStore';
-import MapComponent from './features/map/MapComponent'
-import Login from './pages/Auth/Login'
-import Join from './pages/Auth/Join'
+import Login from './pages/auth/Login'
+import Join from './pages/auth/Join'
 import Layout from './components/layout/Layout'
+import MapPage from './pages/map/MapPage';
 
 function App() {
   const { title } = useMapStore();
@@ -13,7 +13,7 @@ function App() {
     {/* 지도 페이지 */}
     <Route path="/" element={
         <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
-            <MapComponent />
+            <MapPage />
         </Layout>
     } />
     

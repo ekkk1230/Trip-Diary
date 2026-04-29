@@ -1,5 +1,6 @@
-import { useState } from "react";
 import * as S from "../Components.styles";
+import { useState } from "react";
+import { FaFilter } from "react-icons/fa";
 
 interface Category {
     id: number;
@@ -23,18 +24,28 @@ interface SearchCategoryComponentProps {
 }
 
 const SearchCategoryComponent = ({ selectedCategory, onSelectedCategory }: SearchCategoryComponentProps) => {
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     return (
         <S.SearchCategoryContainer>
-            {CATEGORIES.map(cate => (
-                <button 
-                    key={cate.id}
-                    onClick={() => onSelectedCategory(cate.id)}
-                    className={selectedCategory === cate.id ? 'active' : ''}
-                >
-                    {cate.name}
-                </button>
-            ))}
+            <button 
+                className="filter-btn"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+            >
+                <FaFilter />
+            </button>
+
+            <div className={`btn-wrap ${isFilterOpen ? 'isOpen' : ''}`}>
+                {CATEGORIES.map(cate => (
+                    <button 
+                        key={cate.id}
+                        onClick={() => onSelectedCategory(cate.id)}
+                        className={selectedCategory === cate.id ? 'active' : ''}
+                    >
+                        {cate.name}
+                    </button>
+                ))}
+            </div>
         </S.SearchCategoryContainer>
     )
 }

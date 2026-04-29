@@ -17,8 +17,8 @@ function SearchCotainerComponent({ placeholderTxt, fetchAndFilterData }: SearchC
 
     return (
         <S.SearchContainer>
-            <SearchCategoryComponent selectedCategory={selectedCategory} onSelectedCategory={setSelectedCategory} />
             <SearchInputComponent onSearch={handleSearch} placeholderTxt={placeholderTxt} />
+            <SearchCategoryComponent selectedCategory={selectedCategory} onSelectedCategory={setSelectedCategory} />
         </S.SearchContainer>
     )
 }
