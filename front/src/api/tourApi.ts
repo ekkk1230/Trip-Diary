@@ -1,4 +1,4 @@
-export const fetchAllTourData = async (areaCode: string) => {
+export const fetchAllTourData = async (areaCode: string, contentTypeId?: string | number | null) => {
     let allItems: any[] = [];
     let pageNo = 1;
     let hasMore = true;
@@ -13,6 +13,10 @@ export const fetchAllTourData = async (areaCode: string) => {
             numOfRows: "1000",
             pageNo: pageNo.toString(),
         });
+
+        if (contentTypeId) {
+            params.append("contentTypeId", contentTypeId.toString());
+        }
     
         const res = await fetch(`/api/B551011/KorService2/areaBasedList2?${params}`);
         const data = await res.json();

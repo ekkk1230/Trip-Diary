@@ -37,7 +37,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
     setFilteredData: (data) => set({ filteredData: data }),
 
-    fetchAndFilterData: async (geo: any) => {
+    fetchAndFilterData: async (geo: any, contentTypeId?: string | number | null) => {
         // console.log("전달된 geo 데이터:", geo);
         const name = geo.properties.name;
         const code = geo.properties.code;
@@ -47,7 +47,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
         set({ filteredData: [], isLoading: true, selectedSigungu: name });
 
         try {
-            const allItems = await fetchAllTourData(apiAreaCode);
+            const allItems = await fetchAllTourData(apiAreaCode, contentTypeId);
             
             const keyword = name.replace(/시|군|구/g, "");
             const filtered = allItems.filter((item: any) => 
