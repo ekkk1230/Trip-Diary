@@ -16,6 +16,7 @@ interface MapStore {
     selectedSigungu: any | null;
     filteredData: any[];
     isLoading: boolean;
+    isSearched: boolean;
 
     setTitle: (newTitle: string) => void;
     setSelectedRegion: (region: any | null) => void;
@@ -31,6 +32,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     selectedSigungu: null,
     filteredData: [],
     isLoading: false,
+    isSearched: false,
 
     setTitle: (newTitle) => set({ title: newTitle }),
     setSelectedRegion: (region) => set({ selectedRegion: region }),
@@ -44,7 +46,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
         const provinceCode = code.substring(0, 2);
         const apiAreaCode = API_CODE_MAP[provinceCode] || provinceCode;
 
-        set({ filteredData: [], isLoading: true, selectedSigungu: name });
+        set({ filteredData: [], isLoading: true, selectedSigungu: name, isSearched: true });
 
         try {
             const allItems = await fetchAllTourData(apiAreaCode, contentTypeId);

@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { Swiper } from 'swiper/react';
 
 export const ListContainer = styled.div`
   margin-top: 20px;
@@ -14,7 +15,7 @@ export const Card = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   transition: transform 0.2s;
-  cursor: pointer;
+  cursor: pointer; margin-bottom: 1rem;
 
   &:hover {
     transform: translateY(-5px);
@@ -28,7 +29,7 @@ export const CardImage = styled.img`
 `;
 
 export const CardBody = styled.div`
-  padding: 12px;
+  padding: 12px; height: 10rem; display: flex; flex-direction: column; justify-content: space-between;
 `;
 
 export const CardTitle = styled.h4`
@@ -44,6 +45,15 @@ export const CardAddress = styled.p`
   margin: 0;
   font-size: 12px;
   color: #666;
+`;
+
+export const StyledSwiper = styled(Swiper)`
+  .swiper-pagination-fraction {
+    bottom: 0rem;
+    color: #333;
+    font-weight: 700; 
+    font-size: 1.4rem;
+  }
 `;
 
 const spin = keyframes`

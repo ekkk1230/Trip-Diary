@@ -12,6 +12,7 @@ function CardItem({ item }: CardItemProps) {
             />
             <S.CardBody>
                 <S.CardTitle>{item.title}</S.CardTitle>
+                <S.CardAddress>{item.addr1}</S.CardAddress>
             </S.CardBody>
         </S.Card>
     )

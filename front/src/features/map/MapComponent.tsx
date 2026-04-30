@@ -8,6 +8,7 @@ import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import * as S from "./MapComponents.styles";
 import CardItem from "./CardItem";
+import { useState } from "react";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
@@ -15,8 +16,9 @@ const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkore
 const MapComponent = () => {
 	const { 
 		setTitle, selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
-		filteredData, isLoading, fetchAndFilterData 
+		filteredData, isLoading, fetchAndFilterData, isSearched
 	} = useMapStore();
+
 	const projection = geoMercator()
 		.center(selectedRegion ? geoCentroid(selectedRegion) : [127.5, 36])
 		.scale(selectedRegion ? 16000 : 4000) 
@@ -86,34 +88,30 @@ const MapComponent = () => {
 						<S.Spinner />
 					</S.SpinnerWrap>
 				) : filteredData.length > 0 ? (
-					<Swiper
+					<S.StyledSwiper
 						modules={[Grid, Navigation, Pagination]}
-						slidesPerView={1}
+						slidesPerView={2}
 						slidesPerGroup={2}
 						grid={{
 							rows: 3,
 							fill: 'row' 
 						}}
 						spaceBetween={10} 
-						pagination={{ clickable: true }}
-						style={{ height: '600px' }} 
+						pagination={{ 
+							type: 'fraction',
+							clickable: true 
+						}}
 					>
 						{filteredData.map((item, idx) => (
-							// <SwiperSlide key={idx}>
-							// 	<S.Card>
-							// 		<S.CardImage 
-							// 			src={item.firstimage}
-							// 		/>
-							// 		<S.CardBody>
-							// 			<S.CardTitle>{item.title}</S.CardTitle>
-							// 		</S.CardBody>
-							// 	</S.Card>
-							// </SwiperSlide>
-							<CardItem item={item} />
+							<SwiperSlide key={idx}>
+								<CardItem item={item} /> 
+							</SwiperSlide>
 						))}
-					</Swiper>
-				) : ( 
+					</S.StyledSwiper>
+				) : isSearched ? ( 
 					<p>검색 결과가 없습니다.</p>
+				) : (
+					<p>지역을 선택하여 관광지 정보를 확인하세요.</p>
 				)}
 
 				{selectedRegion && (
