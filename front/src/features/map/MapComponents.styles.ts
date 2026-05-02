@@ -1,11 +1,17 @@
 import styled, { keyframes } from "styled-components";
 import { Swiper } from 'swiper/react';
 
+export const SearchTxt = styled.div`
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #555; 
+`;
+
 export const ListContainer = styled.div`
   margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 16px; width: 50rem !important;
 `;
 
 export const Card = styled.div`

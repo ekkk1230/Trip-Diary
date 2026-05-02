@@ -36,7 +36,7 @@ const MapComponent = () => {
 
 	return (
 		<>
-			<div style={{ width: "500px", margin: "0 auto" }}>
+			<div className="MapContainer" style={{ width: "500px", margin: "0 auto" }}>
 				<ComposableMap projection={projection as any} width={500} height={600}>
 					<Geographies geography={selectedRegion ? MUNICIPALITY_URL : PROVINCE_URL}>
 						{({ geographies }) =>
@@ -109,9 +109,9 @@ const MapComponent = () => {
 						))}
 					</S.StyledSwiper>
 				) : isSearched ? ( 
-					<p>검색 결과가 없습니다.</p>
+					<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>
 				) : (
-					<p>지역을 선택하여 관광지 정보를 확인하세요.</p>
+					<S.SearchTxt>지역을 선택하여 관광지 정보를 확인하세요.</S.SearchTxt>
 				)}
 
 				{selectedRegion && (
