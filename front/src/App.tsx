@@ -4,6 +4,7 @@ import Login from './pages/auth/Login'
 import Join from './pages/auth/Join'
 import Layout from './components/layout/Layout'
 import MapPage from './pages/map/MapPage';
+import DetailPage from './pages/detail/DetailPage';
 
 function App() {
   const { title } = useMapStore();
@@ -14,6 +15,11 @@ function App() {
     <Route path="/" element={
         <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
             <MapPage />
+        </Layout>
+    } />
+    <Route path="/detail/:contentid" element={
+        <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
+            <DetailPage />
         </Layout>
     } />
     
