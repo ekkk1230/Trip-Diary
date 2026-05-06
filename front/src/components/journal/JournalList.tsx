@@ -47,7 +47,7 @@ function JournalList({ type, contentid }: JournalListProps) {
         <S.Section>
             {type === "list" && (
                 <S.HeaderAction>
-                    <S.WriteButton onClick={() => navigate('/journal/write', { state: { detailType: 'edit' } })}>
+                    <S.WriteButton onClick={() => navigate('/journal/write', { state: { detailType: 'edit', mood: 'new' } })}>
                         새로운 기록 남기기 🖋️
                     </S.WriteButton>
                 </S.HeaderAction>
@@ -60,8 +60,8 @@ function JournalList({ type, contentid }: JournalListProps) {
                                 <button 
                                     className="edit-btn"
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 부모 클릭 이벤트 방지
-                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', journal: log } });
+                                        e.stopPropagation(); 
+                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', journal: log, mood: 'edit' } });
                                     }}
                                 >
                                     수정
@@ -71,7 +71,6 @@ function JournalList({ type, contentid }: JournalListProps) {
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         if(window.confirm("기록을 삭제하시겠습니까?")) {
-                                            // 삭제 로직 호출
                                             console.log(`${log.id} 삭제 시도`);
                                         }
                                     }}
@@ -80,7 +79,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                                 </button>
                             </S.AdminButtons>
 
-                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'edit', journal: log } })} style={{ cursor: 'pointer' }}>
+                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'view', journal: log } })} style={{ cursor: 'pointer' }}>
                                 <S.ImageWrapper>
                                     <img src={log.mainImage} alt={log.logTitle} />
                                     <S.MoodBadge>{log.mood}</S.MoodBadge>
