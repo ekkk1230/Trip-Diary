@@ -5,9 +5,11 @@ import Join from './pages/auth/Join'
 import Layout from './components/layout/Layout'
 import MapPage from './pages/map/MapPage';
 import DetailPage from './pages/detail/DetailPage';
+import JournalPage from './pages/journal/JournalPage';
+import { useUiStore } from './store/useUiStore';
 
 function App() {
-  const { title } = useMapStore();
+  const { title } = useUiStore();
 
   return (
     <Routes>
@@ -20,6 +22,11 @@ function App() {
     <Route path="/detail/:contentid" element={
         <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
             <DetailPage />
+        </Layout>
+    } />
+    <Route path="/journal" element={
+        <Layout title={title} hasHeader hasBottomNav onBackClick={() => useMapStore.getState().resetMap() }>
+            <JournalPage />
         </Layout>
     } />
     

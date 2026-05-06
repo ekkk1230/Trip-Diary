@@ -1,13 +1,20 @@
 import * as S from './Auth.styles'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from "../../assets/Trip_Diary.png";
 import { LiaUserSolid } from "react-icons/lia";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
+import { useUiStore } from '../../store/useUiStore';
 
-function Login() {
+function Login() {    
+    const { setTitle } = useUiStore();
     const [eye, setEye] = useState(false);
+
+    useEffect(() => {
+        setTitle('로그인')
+    }, [setTitle]);
+    
 
     return (
         <>

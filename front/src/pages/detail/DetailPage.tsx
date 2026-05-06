@@ -5,10 +5,17 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import * as S from "./DetailPage.styles"
 import { fetchDetail } from "../../api/tourApi";
+import JournalList from "../../components/journal/JournalList";
+import { useUiStore } from "../../store/useUiStore";
 
 function DetailPage() {
+    const { setTitle } = useUiStore();
     const { contentid } = useParams();
     const [detail, setDetail] = useState<any>(null);
+
+    useEffect(() => {
+        setTitle("상세보기");
+    }, [setTitle])
 
     useEffect(() => {
         const loadData = async () => {
@@ -51,6 +58,8 @@ function DetailPage() {
                     🌐 공식 홈페이지 방문하기
                 </S.HomeButton>
             )}
+
+            <JournalList type="detail" contentid={contentid} />
 
             {/* 목록으로 돌아가기 버튼 (선택 사항) */}
             <div style={{ marginTop: '50px', textAlign: 'center' }}>

@@ -1,14 +1,22 @@
 import * as S from './Auth.styles'
 import Logo from "../../assets/Trip_Diary_row.png";
+import { useUiStore } from '../../store/useUiStore';
+import { useEffect } from 'react';
 
 function Join() {
+    const { setTitle } = useUiStore();
+
+    useEffect(() => {
+        setTitle('회원가입')
+    }, [setTitle]);
+
     return (
         <>
             <S.Logo src={Logo} alt="Trip Diary" />
             <S.AuthTit className="auth_txt">여행의 순간을 기록하고 공유하세요.</S.AuthTit>
 
             <S.AuthBox className="auth_box">
-                <p className="auth_tit">로그인</p>
+                <p className="auth_tit">회원가입</p>
 
                 <form action="">
                     <label htmlFor="" className="auth_label">

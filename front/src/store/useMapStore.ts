@@ -11,14 +11,12 @@ const API_CODE_MAP: { [key: string]: string } = {
 };
 
 interface MapStore {
-    title: string;
     selectedRegion: any | null;
     selectedSigungu: any | null;
     filteredData: any[];
     isLoading: boolean;
     isSearched: boolean;
 
-    setTitle: (newTitle: string) => void;
     setSelectedRegion: (region: any | null) => void;
     setSelectedSigungu: (sigungu: any | null) => void;
     setFilteredData: (data: any[]) => void;
@@ -27,14 +25,12 @@ interface MapStore {
 }
 
 export const useMapStore = create<MapStore>((set, get) => ({
-    title: '지도',
     selectedRegion: null,
     selectedSigungu: null,
     filteredData: [],
     isLoading: false,
     isSearched: false,
 
-    setTitle: (newTitle) => set({ title: newTitle }),
     setSelectedRegion: (region) => set({ selectedRegion: region }),
     setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
     setFilteredData: (data) => set({ filteredData: data }),
@@ -63,5 +59,5 @@ export const useMapStore = create<MapStore>((set, get) => ({
         }
     },
 
-    resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [], title: "지도" }),
+    resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [] }),
 }))

@@ -1,0 +1,134 @@
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+import * as S from "./Journal.styles"
+
+import mockData from "../../assets/data/mock_journal.json"
+
+interface journalLog {
+    id: string;
+    contentId: string;
+    logTitle: string;
+    location: string;
+    travelDate: string;
+    weather: string;
+    mood: string;
+    mainImage: string;
+    author: string;
+    description: string;
+    stats: { likes: number, comments: number };
+    keywords: string[];
+}
+
+const MOCK_JOURNAL: journalLog[] = mockData;
+
+interface JournalListProps {
+    type: string;
+    contentid?: string;
+}
+
+function JournalList({ type, contentid }: JournalListProps) {
+    const navigate = useNavigate();
+    const [journalList, setJournalList] = useState<any[]>([]);
+
+    useEffect(() => {
+        setJournalList(MOCK_JOURNAL)
+    }, [])
+
+    // console.log(journalList)
+    if (journalList.length == 0) {
+        return <div className="loading">데이터를 불러오는 중입니다...</div>
+    }
+
+    const displayList = type === "detail" 
+        ? journalList.filter(log => log.contentId === contentid)
+        : journalList;
+
+    return (
+        <S.Section>
+            {type === "list" && (
+                <S.HeaderAction>
+                    <S.WriteButton onClick={() => navigate('/journal/write', { state: { detailType: 'edit' } })}>
+                        새로운 기록 남기기 🖋️
+                    </S.WriteButton>
+                </S.HeaderAction>
+            )}
+            <S.GridContainer>
+                {displayList.length > 0 ? (
+                    displayList.map((log) => (
+                        <S.Card key={log.id}>
+                            <S.AdminButtons>
+                                <button 
+                                    className="edit-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // 부모 클릭 이벤트 방지
+                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', journal: log } });
+                                    }}
+                                >
+                                    수정
+                                </button>
+                                <button 
+                                    className="delete-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if(window.confirm("기록을 삭제하시겠습니까?")) {
+                                            // 삭제 로직 호출
+                                            console.log(`${log.id} 삭제 시도`);
+                                        }
+                                    }}
+                                >
+                                    삭제
+                                </button>
+                            </S.AdminButtons>
+
+                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'edit', journal: log } })} style={{ cursor: 'pointer' }}>
+                                <S.ImageWrapper>
+                                    <img src={log.mainImage} alt={log.logTitle} />
+                                    <S.MoodBadge>{log.mood}</S.MoodBadge>
+                                </S.ImageWrapper>
+                                    
+                                <S.ContentWrapper>
+                                    <S.MetaInfo>
+                                        <span>{log.travelDate}</span>
+                                        <span>{log.location}</span>
+                                    </S.MetaInfo>
+                                    
+                                    <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
+                                        {log.logTitle}
+                                    </h3>
+                                    
+                                    {type === "list" && (
+                                        <S.Description>{log.description}</S.Description>
+                                    )}
+                                    
+                                    <S.CardFooter>
+                                        <div className="tags">
+                                            {log.keywords.slice(0, 2).map((tag: string) => (
+                                                <span key={tag}>#{tag}</span>
+                                            ))}
+                                        </div>
+                                        <div className="stats">
+                                            ❤️ {log.stats.likes}
+                                        </div>
+                                    </S.CardFooter>
+                                </S.ContentWrapper>
+                            </div>
+                        </S.Card>
+                    ))
+                ) : (
+                    <p style={{ gridColumn: '1/-1', textAlign: 'center', padding: '50px 0', color: '#999' }}>
+                        기록된 저널이 없습니다. ✍️
+                    </p>
+                )}
+            </S.GridContainer>
+            {type === "detail" && (
+                <S.FooterAction>
+                    <button onClick={() => navigate('/journal')}>
+                        내 기록 남기기
+                    </button>
+                </S.FooterAction>
+            )}
+        </S.Section>
+    );
+}
+
+export default JournalList

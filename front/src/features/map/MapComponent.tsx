@@ -1,21 +1,22 @@
 import { useMapStore } from "../../store/useMapStore";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { geoCentroid, geoMercator } from "d3-geo";
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { SwiperSlide } from 'swiper/react';
 import { Grid, Navigation, Pagination } from 'swiper/modules'; 
 import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import * as S from "./MapComponents.styles";
 import CardItem from "./CardItem";
-import { useState } from "react";
+import { useUiStore } from "../../store/useUiStore";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
 
 const MapComponent = () => {
+	const { setTitle } = useUiStore();
 	const { 
-		setTitle, selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
+		 selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
 		filteredData, isLoading, fetchAndFilterData, isSearched
 	} = useMapStore();
 
