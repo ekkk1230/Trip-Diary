@@ -10,7 +10,8 @@ function CardItem({ item }: CardItemProps) {
         <S.Card>
             <Link to={`/detail/${item.contentid}`}>
                 <S.CardImage 
-                    src={item.firstimage}
+                    src={item.firstimage || ""}
+                    alt=""
                 />
                 <S.CardBody>
                     <S.CardTitle>{item.title}</S.CardTitle>
