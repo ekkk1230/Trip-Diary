@@ -27,7 +27,7 @@ function JournalComment() {
     }, [])
 
     // console.log('commentList',commentList)
-    const filterComment = commentList.filter(c => c.journalId === parseInt(journal.id));
+    const filterComment = commentList.filter(c => c.journalId === parseInt(journal?.id));
     // console.log('filterComment', filterComment)
 
     const handleSubmit = () => {

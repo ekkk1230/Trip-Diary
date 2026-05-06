@@ -3,13 +3,21 @@ import { Link } from 'react-router-dom';
 import { RiHomeHeartLine } from "react-icons/ri";
 import { BsJournalRichtext } from "react-icons/bs";
 import { FiUser, FiSettings } from "react-icons/fi";
+import { useUiStore } from '../../store/useUiStore';
+import { useMapStore } from '../../store/useMapStore';
 
 function BottomNav() {
+    const { setTitle } = useUiStore();
+    const { resetMap } = useMapStore();
+
     return (
         <S.BottomNav>
             <ul className="nav_list">
                 <li className="nav_item">
-                    <Link to="/">
+                    <Link to="/" onClick={() => {
+                        resetMap();
+                        setTitle("지도");
+                    }} >
                         <RiHomeHeartLine />
                         홈
                     </Link>

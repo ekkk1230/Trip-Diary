@@ -17,7 +17,7 @@ function MapPage() {
     return (
         <>
             <SearchCotainerComponent fetchAndFilterData={fetchAndFilterData} placeholderTxt={searchPlaceholderText} />
-            <MapComponent />
+            <MapComponent isMainPage={true} />
         </>
     )
 }

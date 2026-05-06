@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as S from "./Journal.styles"
 
 import mockData from "../../assets/data/mock_journal.json"
@@ -41,6 +41,8 @@ function JournalList({ type, contentid }: JournalListProps) {
 
     const displayList = type === "detail" 
         ? journalList.filter(log => log.contentId === contentid)
+        : type === "myList"
+        ? journalList.filter(log => log.author === "test")
         : journalList;
 
     return (

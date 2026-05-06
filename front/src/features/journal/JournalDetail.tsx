@@ -6,6 +6,7 @@ import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
 import { TiWeatherSunny } from "react-icons/ti";
 import { TbMoodSmile } from "react-icons/tb";
+import { REGION_DATA } from "../../constants/API_CODE_MAP";
 
 
 function JournalDetail() {
@@ -17,12 +18,16 @@ function JournalDetail() {
 
 
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [sido, setSido] = useState("");
+    const [sigungu, setSigungu] = useState("");
+
+    const sidos = Object.keys(REGION_DATA);
     
     useEffect(() => {
         setIsEdit(detailType === "edit" || mood === "new");
     }, [detailType, mood])
 
-    // console.log(detailType, journal, mood)
+    console.log(detailType, journal, mood)
 
     return (
         <S.DetailContainer>
@@ -64,11 +69,26 @@ function JournalDetail() {
                     <S.Row>
                         <S.InputGroup>
                             <span>장소</span>
-                            <input 
+                            {/* <input 
                                 type="text" 
                                 placeholder="예: 충북 괴산군" 
                                 defaultValue={mood === "edit" ? journal?.location : ""}
-                            />
+                            /> */}
+                            <select 
+                                value={sido} 
+                                onChange={e => setSido(e.target.value)}
+                            >
+                                <option value="">시</option>
+                                {sidos.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+
+                            <select 
+                                value={sigungu}
+                                onChange={e => setSigungu(e.target.value)}
+                            >
+                                <option value="">군구</option>
+                                {sido && REGION_DATA[sido].map(sg => <option key={sg} value={sg}>{sg}</option>)}
+                            </select>
                         </S.InputGroup>
             
                         <S.InputGroup>
@@ -95,8 +115,8 @@ function JournalDetail() {
                     {/* 1. 상단 정보 */}
                     <div className="meta-top">
                         <span className="author">@{journal?.author}</span>
-                        <span className="stats"><AiOutlineLike />{journal?.stats.likes}</span>
-                        <span className="stats"><FaRegEye /> {journal?.stats.comments}</span>
+                        <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
+                        <span className="stats"><FaRegEye /> {journal?.stats?.comments}</span>
                         <span className="date">{journal?.travelDate}</span>
                     </div>
 
