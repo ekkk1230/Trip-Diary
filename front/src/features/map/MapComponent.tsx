@@ -96,7 +96,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 											? (provinceCounts?.[geoName] || 0) 
 											: (sigunguCounts?.[geoName] || 0);
 
-											if (count > 0) console.log(`${geoName}: ${count}`);
+											// if (count > 0) console.log(`${geoName}: ${count}`);
 
 											if (isMainPage) {
 												return selectedSigungu === geo.properties.name ? "#A5D6A7" : "#F1F8E9";

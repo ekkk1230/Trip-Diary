@@ -97,7 +97,7 @@ export const Header = styled.div`
 
         span {
             font-size: 1.1rem;
-            color: #ff6b6b; /* 찜 컬러 포인트 */
+            color: #ff6b6b;
             background: #fff0f0;
             padding: 2px 10px;
             border-radius: 20px;

@@ -18,7 +18,6 @@ interface MapStore {
     filteredData: any[];
     isLoading: boolean;
     isSearched: boolean;
-    isFavorite: boolean;
 
     toggleFavorite: (id: string) => void;
     setSelectedRegion: (region: any | null) => void;
@@ -36,7 +35,6 @@ export const useMapStore = create<MapStore>((set, get) => ({
     filteredData: [],
     isLoading: false,
     isSearched: false,
-    isFavorite: false,
 
     toggleFavorite: id => set(state => {
         const isExisted = state.favoriteList.some(item => item.contentid === id);

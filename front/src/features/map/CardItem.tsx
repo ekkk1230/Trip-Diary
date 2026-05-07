@@ -9,16 +9,18 @@ interface CardItemProps {
 }
 
 function CardItem({ item }: CardItemProps) {
-    const { toggleFavorite, isFavorite } = useMapStore();
+    const { toggleFavorite, favoriteList } = useMapStore();
 
     const handleFavoriteClick = (contentid: any) => {
         toggleFavorite(contentid)
-    }
+    };
+
+    const isFavorite = favoriteList.some(fav => fav.contentid === item.contentid);
 
     return (
         <S.Card>
             <S.FavoriteButton onClick={() => handleFavoriteClick(item.contentid)}>
-                {isFavorite ? <BsBookmarkHeart/> : <BsBookmarkHeartFill/>}
+                {isFavorite ?  <BsBookmarkHeartFill/> : <BsBookmarkHeart/>}
             </S.FavoriteButton>
 
             <Link to={`/detail/${item.contentid}`}>

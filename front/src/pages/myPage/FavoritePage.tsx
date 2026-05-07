@@ -7,7 +7,6 @@ function FavoritePage() {
     const { favoriteList } = useMapStore();
     const navigate = useNavigate();
 
-    // 데이터가 없을 때의 감성적인 처리
     if (favoriteList.length <= 0) {
         return (
             <S.EmptyWrapper>

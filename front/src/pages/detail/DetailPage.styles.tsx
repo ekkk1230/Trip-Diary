@@ -8,19 +8,39 @@ export const Container = styled.div`
   color: #333;
 `;
 
-// 2. 제목 섹션
-export const Title = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 24px;
-  word-break: keep-all;
-  color: #1a1a1a;
-  border-bottom: .4rem solid #A5D6A7; /* 포인트 컬러 */
-  display: inline-block;
-  padding-bottom: .8rem;
+export const DetailHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 `;
 
-// 3. 정보 카드 (주소, 우편번호 등)
+export const Title = styled.h2`
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0;
+    color: #333;
+    line-height: 1.3;
+    word-break: keep-all;
+`;
+
+export const FavoriteBtn = styled.button`
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 10px;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+        transform: scale(1.2);
+    }
+`;
+
+// 정보 카드 (주소, 우편번호 등)
 export const InfoBox = styled.div`
   background: #f9f9f9;
   border-radius: 1.2rem;
@@ -40,7 +60,7 @@ export const InfoBox = styled.div`
   }
 `;
 
-// 4. 본문 내용 (Overview)
+// 본문 내용 (Overview)
 export const Content = styled.div`
   line-height: 1.8;
   font-size: 1.2rem;
@@ -55,7 +75,7 @@ export const Content = styled.div`
   }
 `;
 
-// 5. 홈페이지 버튼
+// 홈페이지 버튼
 export const HomeButton = styled.a`
   display: inline-flex;
   align-items: center;
