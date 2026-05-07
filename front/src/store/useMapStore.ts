@@ -11,12 +11,16 @@ const API_CODE_MAP: { [key: string]: string } = {
 };
 
 interface MapStore {
+    allTourList: any[];
+    favoriteList: any[];
     selectedRegion: any | null;
     selectedSigungu: any | null;
     filteredData: any[];
     isLoading: boolean;
     isSearched: boolean;
+    isFavorite: boolean;
 
+    toggleFavorite: (id: string) => void;
     setSelectedRegion: (region: any | null) => void;
     setSelectedSigungu: (sigungu: any | null) => void;
     setFilteredData: (data: any[]) => void;
@@ -25,12 +29,25 @@ interface MapStore {
 }
 
 export const useMapStore = create<MapStore>((set, get) => ({
+    allTourList: [],
+    favoriteList: [],
     selectedRegion: null,
     selectedSigungu: null,
     filteredData: [],
     isLoading: false,
     isSearched: false,
+    isFavorite: false,
 
+    toggleFavorite: id => set(state => {
+        const isExisted = state.favoriteList.some(item => item.contentid === id);
+
+        if (isExisted) {
+            return { favoriteList: state.favoriteList.filter(item => item.contentid !== id) };
+        } else {
+            const item = state.allTourList.find(t => t.contentid === id);
+            return { favoriteList: [item, ...state.favoriteList] };
+        }
+    }),
     setSelectedRegion: (region) => set({ selectedRegion: region }),
     setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
     setFilteredData: (data) => set({ filteredData: data }),
@@ -46,6 +63,14 @@ export const useMapStore = create<MapStore>((set, get) => ({
 
         try {
             const allItems = await fetchAllTourData(apiAreaCode, contentTypeId);
+
+            set((state) => {
+                const newAllList = [...state.allTourList];
+                allItems.forEach((newItem: any) => {
+                    if (!newAllList.some(existing => existing.contentid === newItem.id)) newAllList.push(newItem);
+                });
+                return { allTourList: newAllList };
+            })
             
             const keyword = name.replace(/시|군|구/g, "");
             const filtered = allItems.filter((item: any) => 

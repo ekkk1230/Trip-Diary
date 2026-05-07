@@ -81,3 +81,31 @@ export const Spinner = styled.div`
   animation: ${spin} 1s linear infinite;
   margin: 20px auto;
 `;
+
+export const FavoriteButton = styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+        background: white;
+    }
+
+    &:active {
+        transform: scale(0.9);
+    }
+`;

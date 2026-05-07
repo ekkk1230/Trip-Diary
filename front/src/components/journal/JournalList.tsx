@@ -40,6 +40,10 @@ function JournalList({ type, contentid }: JournalListProps) {
         if(window.confirm("기록을 삭제하시겠습니까?")) removeJournal(id);
     };
 
+    const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+    }
+
     return (
         <S.Section>
             {type === "list" && (
@@ -94,9 +98,12 @@ function JournalList({ type, contentid }: JournalListProps) {
                                                 <span key={tag}>#{tag}</span>
                                             ))}
                                         </div>
-                                        <div className="stats">
+                                        <button 
+                                            className="stats"
+                                            onClick={e => handleFavorite(e)}
+                                        >
                                             ❤️ {log.stats.likes}
-                                        </div>
+                                        </button>
                                     </S.CardFooter>
                                 </S.ContentWrapper>
                             </div>

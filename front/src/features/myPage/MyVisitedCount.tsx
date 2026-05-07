@@ -1,8 +1,13 @@
+import { Link } from "react-router-dom";
+import { useMapStore } from "../../store/useMapStore";
+import * as S from "./MyPage.styles"
+
 interface MyVisitedCountProps {
     visitedLocations: string[];
 }
 
 function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
+    const { favoriteList } = useMapStore();
     const visitedPlace = visitedLocations.reduce((acc: any, cur: any) => {
         acc[cur] = (acc[cur] || 0) + 1;
         return acc;
@@ -12,20 +17,23 @@ function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
     const regionCount = Object.keys(visitedPlace).length;
 
     return (
-        <div className="countBox-area">
-            <div>
-                <p>방문 지역</p>
-                <p>{regionCount}</p> 
-            </div>
-            <div>
-                <p>방문 기록</p>
-                <p>{visitedLocations.length}</p>
-            </div>
-            <div>
-                <p>찜한 곳</p>
-                <p>0</p>
-            </div>
-        </div>
+        <S.CountContainer>
+            <S.StatBox>
+                <S.Label>방문 지역</S.Label>
+                <S.Value>{regionCount}<span>곳</span></S.Value>
+            </S.StatBox>
+            
+            <S.StatBox>
+                <S.Label>방문 기록</S.Label>
+                <S.Value>{visitedLocations.length}<span>개</span></S.Value>
+            </S.StatBox>
+            
+            <S.StatLink to="/mypage/favorite">
+                <S.Label>찜한 곳</S.Label>
+                <S.Value className="favorite">{favoriteList.length}<span>곳</span></S.Value>
+                <S.ArrowIcon>→</S.ArrowIcon>
+            </S.StatLink>
+        </S.CountContainer>
     )
 }
 

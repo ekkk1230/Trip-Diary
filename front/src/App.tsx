@@ -10,6 +10,7 @@ import { useUiStore } from './store/useUiStore';
 import JournalDetail from './features/journal/JournalDetail';
 import JournalDetailPage from './pages/journal/JournalDetailPage';
 import MyPage from './pages/myPage/MyPage';
+import FavoritePage from './pages/myPage/FavoritePage';
 
 function App() {
     const { title, setTitle } = useUiStore();
@@ -56,9 +57,14 @@ function App() {
             </Layout>
         } />
 
-        <Route path="/myPage" element={
+        <Route path="/mypage" element={
             <Layout title={title} hasHeader hasBottomNav>
                 <MyPage />
+            </Layout>
+        } />
+        <Route path="/mypage/favorite" element={
+            <Layout title={title} hasHeader hasBottomNav>
+                <FavoritePage />
             </Layout>
         } />
         

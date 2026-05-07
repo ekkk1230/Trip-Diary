@@ -21,6 +21,7 @@ interface mapComponentProps {
 
 const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) => {
 	const { setTitle } = useUiStore();
+	
 	const { 
 		 selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
 		filteredData, isLoading, fetchAndFilterData, isSearched
