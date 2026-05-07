@@ -29,9 +29,11 @@ interface Comment {
 interface JournalStore {
     journals: JournalLog[];
     filteredJournals: JournalLog[];
+    likedJournalIds: string[];
     comments: Comment[];
     
     searchJournals: (keyowrd: string, categoy: any) => void;
+    likedJournal: (id: string) => void;
     addJournal: (newJounal: any) => void;
     addComment: (newComment: any) => void;
     updateJournal: (id: string, updateData: any) => void;
@@ -43,6 +45,7 @@ interface JournalStore {
 export const useJournalStore = create<JournalStore>((set) => ({
     journals: mockJournals,
     filteredJournals: mockJournals,
+    likedJournalIds: [],
     comments: mockComments,
 
     searchJournals: (keyword, category) => set(state => {
@@ -64,6 +67,34 @@ export const useJournalStore = create<JournalStore>((set) => ({
         })
 
         return { filteredJournals: filtered };
+    }),
+    likedJournal: id => set(state => {
+        const journal = state.filteredJournals.find(j => j.id === id);
+        if (!journal) return state;
+
+        const isAlreadyLiked = state.likedJournalIds.includes(id);
+        
+        const newLikes = isAlreadyLiked
+            ? Math.max(0, (journal.stats.likes || 0) - 1)
+            : (journal.stats.likes || 0) + 1;
+
+        const updatedJournal = {
+            ...journal,
+            stats: {
+                ...journal.stats,
+                likes: newLikes
+            }
+        };
+
+        const newLikedIds = isAlreadyLiked
+            ? state.likedJournalIds.filter(likedId => likedId !== id)
+            : [...state.likedJournalIds, id];
+
+        return {
+            likedJournalIds: newLikedIds,
+            journals: state.journals.map(j => j.id === id ? { ...updatedJournal, ...state.journals } : j),
+            filteredJournals: state.filteredJournals.map(j => j.id === id ? { ...updatedJournal, ...state.filteredJournals} : j)
+        }
     }),
     addJournal: newJournal => set(state => ({ 
         journals: [newJournal, ...state.journals], 

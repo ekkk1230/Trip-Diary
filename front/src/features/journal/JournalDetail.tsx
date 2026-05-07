@@ -9,12 +9,13 @@ import { TbMoodSmile } from "react-icons/tb";
 import { REGION_DATA } from "../../constants/API_CODE_MAP";
 import { formatDate } from "../../utils/date";
 import { useJournalStore } from "../../store/useJournalStore";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 
 
 function JournalDetail() {
     const { id } = useParams();
     const location = useLocation();
-    const { journals, addJournal, updateJournal } = useJournalStore();
+    const { journals, addJournal, updateJournal, likedJournal, likedJournalIds } = useJournalStore();
 
     const navigate = useNavigate();    
 
@@ -76,6 +77,8 @@ function JournalDetail() {
             setIsEdit(!isEdit);
         }
     }
+
+    const isLiked = likedJournalIds.includes(journal?.id!);
 
     return (
         <S.DetailContainer>
@@ -168,7 +171,7 @@ function JournalDetail() {
             ) : (
                 /* 보기 모드 */
                 <S.ViewContent>
-                    {/* 1. 상단 정보 */}
+                    {/* 상단 정보 */}
                     <div className="meta-top">
                         <span className="author">@{journal?.author}</span>
                         <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
@@ -176,22 +179,34 @@ function JournalDetail() {
                         <span className="date">{formatDate(journal?.travelDate)}</span>
                     </div>
 
-                    {/* 2. 제목 */}
+                    {/* 제목 */}
                     <h1>{journal?.logTitle}</h1>
 
-                    {/* 3. 장소 및 날씨 배지 */}
+                    {/* 장소 및 날씨 배지 */}
                     <div className="info-badges">
                         <span><MdOutlinePlace /> {journal?.location}</span>
                         <span><TiWeatherSunny /> {journal?.weather}</span>
                         <span><TbMoodSmile /> {journal?.mood}</span>
                     </div>
 
-                    {/* 4. 본문 */}
+                    {/* 본문 */}
                     <p className="description">
                         {journal?.description}
                     </p>
 
-                    {/* 5. 키워드 태그 */}
+                    {/* 좋아요 버튼 */}
+                    <S.ReactionArea>
+                        <p>이 여행기가 마음에 드셨나요?</p>
+                        <button 
+                            className={isLiked ? 'liked' : ''} 
+                            onClick={() => likedJournal(journal?.id!)}
+                        >
+                            {isLiked ? <GoHeartFill/> : <GoHeart/>} 
+                            {journal?.stats?.likes}
+                        </button>
+                    </S.ReactionArea>
+
+                    {/* 키워드 태그 */}
                     <div className="tags">
                         {journal?.keywords?.map((tag: string) => (
                             <span key={tag}>#{tag}</span>

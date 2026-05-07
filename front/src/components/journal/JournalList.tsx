@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import * as S from "../../features/journal/Journal.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import type React from "react";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 
 interface JournalListProps {
     type: string;
@@ -9,7 +10,7 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { journals, filteredJournals, removeJournal } = useJournalStore();
+    const { journals, filteredJournals, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
 
     const navigate = useNavigate();
 
@@ -24,7 +25,8 @@ function JournalList({ type, contentid }: JournalListProps) {
         );
     }
 
-    const displayList = type === "detail" 
+    const displayList = 
+        type === "detail" 
         ? filteredJournals.filter(log => log.contentId === contentid)
         : type === "myList"
         ? filteredJournals.filter(log => log.author === "test")
@@ -40,9 +42,10 @@ function JournalList({ type, contentid }: JournalListProps) {
         if(window.confirm("기록을 삭제하시겠습니까?")) removeJournal(id);
     };
 
-    const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id:string) => {
         e.stopPropagation();
-    }
+        likedJournal(id)
+    };
 
     return (
         <S.Section>
@@ -100,9 +103,9 @@ function JournalList({ type, contentid }: JournalListProps) {
                                         </div>
                                         <button 
                                             className="stats"
-                                            onClick={e => handleFavorite(e)}
+                                            onClick={e => handleFavorite(e, log.id)}
                                         >
-                                            ❤️ {log.stats.likes}
+                                            {likedJournalIds.includes(log.id) ? <GoHeartFill/> : <GoHeart/>} {log.stats.likes}
                                         </button>
                                     </S.CardFooter>
                                 </S.ContentWrapper>

@@ -551,3 +551,49 @@ export const CommentItem = styled.div`
     width: 100%;
   }
 `;
+
+export const ReactionArea = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+
+    p {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 15px;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 30px;
+        border: 1px solid #ddd;
+        background: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        svg {
+            font-size: 1.2rem;
+        }
+
+        /* 좋아요 눌렀을 때 스타일 */
+        &.liked {
+            background: #fff0f0;
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+`;
