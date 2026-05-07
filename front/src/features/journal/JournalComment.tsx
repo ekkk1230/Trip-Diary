@@ -1,37 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as S from "../../components/journal/Journal.styles"
-
-import mockData from "../../assets/data/mock_comment.json"
-import { useLocation } from "react-router-dom";
+import { useJournalStore } from "../../store/useJournalStore";
+import { useParams } from "react-router-dom";
 import { formatDate } from "../../utils/date";
 
-interface MockComment {
-    id: string;
-    user: string;
-    journalId: number;
-    date: string;
-    text: string;
-}
-
-const MOCK_COMMENTS: MockComment[] = mockData;
 
 function JournalComment() {
-    const location = useLocation();
-    const journal = location.state.journal;
-    // console.log('journal', journal)
+    const { journals, comments, addComment, updateComment, removeComment } = useJournalStore();
+    const { id } = useParams();
+    const journal = journals.find(j => j.id === id);
 
-    const [commentList, setCommentList] = useState<any[]>([]);
     const [commentText, setCommentText] = useState<string>("");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editText, setEditText] = useState<string>("");
 
-    useEffect(() => {
-        setCommentList(MOCK_COMMENTS);
-    }, [])
 
-    // console.log('commentList',commentList)
-    const filterComment = commentList.filter(c => c.journalId === parseInt(journal?.id));
-    // console.log('filterComment', filterComment)
+    const filterComment = comments.filter(c => c.journalId === parseInt(journal?.id!));
 
     const handleSubmit = () => {
         if (!commentText.trim()) return alert("입력후 확인을 눌러주세요.");
@@ -39,30 +23,28 @@ function JournalComment() {
         const newComment = {
             id: crypto.randomUUID(),
             user: 'test',
-            journalId: parseInt(journal.id),
+            journalId: parseInt(journal?.id!),
             date: formatDate(),
             text: commentText,
         }
 
-        setCommentList([newComment, ...commentList])
+        addComment(newComment);
         setCommentText('');
     }
 
-    const handleEdit = (id: string, originalText: string) => {
-        if (editingId === id) {
-            const updateComment = commentList.map(c => c.id === id ? { ...c, text: editText } : c);
+    const handleEdit = (commentId: string, originalText: string) => {
+        if (editingId === commentId) {
+            updateComment(commentId, editText);
             setEditingId(null);
-            setCommentList(updateComment);
             setEditText("");
         } else {
-            setEditingId(id);
+            setEditingId(commentId);
             setEditText(originalText);
         }
     }
 
-    const handleRemove = (id: string) => {
-        const removeComments = commentList.filter(c => c.id !== id);
-        setCommentList(removeComments);
+    const handleRemove = (id: string) => { 
+        if(window.confirm("댓글을 삭제하시겠습니까?")) removeComment(id);
     }
 
     return (
@@ -93,11 +75,7 @@ function JournalComment() {
                                     </button>
                                     <button 
                                         className="delete-btn" 
-                                        onClick={() => {
-                                            if(window.confirm("댓글을 삭제하시겠습니까?")) {
-                                                handleRemove(c.id);
-                                            }
-                                        }}
+                                        onClick={() => handleRemove(c.id)}
                                     >
                                         삭제
                                     </button>

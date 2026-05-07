@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as S from "../../components/journal/Journal.styles";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
@@ -12,11 +12,13 @@ import { useJournalStore } from "../../store/useJournalStore";
 
 
 function JournalDetail() {
-    const { journalId } = useParams();
+    const { id } = useParams();
     const location = useLocation();
-    const { journals, updateJournal } = useJournalStore();
+    const { journals, addJournal, updateJournal } = useJournalStore();
 
-    const journal = journals.find(j => j.id === journalId);
+    const navigate = useNavigate();    
+
+    const journal = journals.find(j => j.id === id);
     const mood = location.state.mood || 'edit';
     const detailType = location.state.detailType || 'edit';
 
@@ -51,20 +53,41 @@ function JournalDetail() {
     const handleSubmit = () => {
         if (isEdit) {
             const finalLocation = `${editData.sido} ${editData.sigungu}`.trim();
+            const finalData = { ...editData, location: finalLocation };
 
-            updateJournal(journal?.id!, {
-                ...editData,
-                location: finalLocation
-            })
+            if (mood === "new") {
+                const newJournal = {
+                    ...finalData,
+                    id: crypto.randomUUID(),
+                    contentId: id,
+                    mainImage: '',
+                    author: 'test',
+                    stats: { likes: 0, comments: 0 },
+                    keywords: [],
+                }
+                addJournal(newJournal);
+                navigate("/journal");
+            } else {
+                updateJournal(journal?.id!, finalData)
+            }
         }
-        setIsEdit(!isEdit)
+        
+        if (mood !== "new") {
+            setIsEdit(!isEdit);
+        }
     }
 
     return (
         <S.DetailContainer>
-            <button onClick={handleSubmit}>
-                {isEdit ? "저장" : "수정"}
-            </button>
+           {mood === "new" ? (
+                <button onClick={handleSubmit}>
+                    등록하기
+                </button>
+            ) : (
+                <button onClick={handleSubmit}>
+                    {isEdit ? "저장" : "수정"}
+                </button>
+            )}
 
             {isEdit ? (
                 <S.EditForm>

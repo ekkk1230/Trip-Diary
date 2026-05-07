@@ -45,12 +45,12 @@ function App() {
                 <JournalDetailPage />
             </Layout>
         } />
-        <Route path="/journal/edit/:journalId" element={
+        <Route path="/journal/edit/:id" element={
             <Layout title={title} hasHeader hasBottomNav>
                 <JournalDetailPage />
             </Layout>
         } />
-        <Route path="/journal/:journalId" element={
+        <Route path="/journal/:id" element={
             <Layout title={title} hasHeader hasBottomNav>
                 <JournalDetailPage />
             </Layout>
