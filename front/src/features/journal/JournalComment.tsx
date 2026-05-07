@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as S from "../../components/journal/Journal.styles"
+import * as S from "./Journal.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../utils/date";

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import * as S from "./Journal.styles"
+import * as S from "../../features/journal/Journal.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import type React from "react";
 
