@@ -28,8 +28,10 @@ interface Comment {
 
 interface JournalStore {
     journals: JournalLog[];
+    filteredJournals: JournalLog[];
     comments: Comment[];
-
+    
+    searchJournals: (keyowrd: string, categoy: any) => void;
     addJournal: (newJounal: any) => void;
     addComment: (newComment: any) => void;
     updateJournal: (id: string, updateData: any) => void;
@@ -40,16 +42,44 @@ interface JournalStore {
 
 export const useJournalStore = create<JournalStore>((set) => ({
     journals: mockJournals,
+    filteredJournals: mockJournals,
     comments: mockComments,
 
-    addJournal: newJournal => set(state => ({ journals: [newJournal, ...state.journals] })),
+    searchJournals: (keyword, category) => set(state => {
+        if (!keyword && !category) return { filteredJournals: state.journals };
+
+        const filtered = state.journals.filter(j => {
+            const matchesKeyword = keyword
+                ? (j.logTitle.includes(keyword) ||
+                   j.description.includes(keyword) ||
+                   j.mood.includes(keyword) ||
+                   j.keywords.some(k => k.includes(keyword)))
+                : true;
+            
+            const matchesCategory = category
+                ? j.mood === category
+                : true;
+
+            return matchesKeyword && matchesCategory;
+        })
+
+        return { filteredJournals: filtered };
+    }),
+    addJournal: newJournal => set(state => ({ 
+        journals: [newJournal, ...state.journals], 
+        filteredJournals: [newJournal, ...state.filteredJournals],
+    })),
     addComment: newComment => set(state => ({ comments: [newComment, ...state.comments] })),
     updateJournal: (id, updateData) => set((state) => ({
-        journals: state.journals.map(j => j.id === id ? { ...j, ...updateData } : j)
+        journals: state.journals.map(j => j.id === id ? { ...j, ...updateData } : j),
+        filteredJournals: state.filteredJournals.map(j => j.id === id ? { ...j, ...updateData} : j),
     })),
     updateComment: (id, updateData) => set((state) => ({
         comments: state.comments.map(c => c.id === id ? { ...c, ...updateData } : c)
     })),
-    removeJournal: (id) => set((state) => ({ journals: state.journals.filter(j => j.id !== id) })),
+    removeJournal: (id) => set((state) => ({
+        journals: state.journals.filter(j => j.id !== id) ,
+        filteredJournals: state.filteredJournals.filter(j => j.id !== id),
+    })),
     removeComment: (id) => set((state) => ({ comments: state.comments.filter(c => c.id !== id) }))
 }))

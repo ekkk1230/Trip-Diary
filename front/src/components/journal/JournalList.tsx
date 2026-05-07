@@ -9,20 +9,26 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { journals, removeJournal } = useJournalStore();
+    const { journals, filteredJournals, removeJournal } = useJournalStore();
 
     const navigate = useNavigate();
 
     // console.log(journals)
-    if (journals.length == 0) {
-        return <div className="loading">데이터를 불러오는 중입니다...</div>
+    if (journals.length === 0) {
+        return (
+            <S.Section>
+                <div className="loading" style={{ textAlign: 'center', padding: '100px 0' }}>
+                    데이터를 불러오는 중입니다... ⏳
+                </div>
+            </S.Section>
+        );
     }
 
     const displayList = type === "detail" 
-        ? journals.filter(log => log.contentId === contentid)
+        ? filteredJournals.filter(log => log.contentId === contentid)
         : type === "myList"
-        ? journals.filter(log => log.author === "test")
-        : journals;
+        ? filteredJournals.filter(log => log.author === "test")
+        : filteredJournals;
 
     const handleEditJournal = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
         e.stopPropagation();

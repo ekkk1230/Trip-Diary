@@ -26,6 +26,9 @@ const SearchInputComponent = ({ placeholderTxt, onSearch }: SearchInputComponent
 	};
 
 	const handleSearch = () => {
+		const trimmedKeyword = keyword.trim();
+		if (!trimmedKeyword) return;
+
 		if (selectedRegion) {
 			const mockGeo = { properties: { name: selectedRegion.name, code: selectedRegion.code } };
 			onSearch(mockGeo);
@@ -34,6 +37,8 @@ const SearchInputComponent = ({ placeholderTxt, onSearch }: SearchInputComponent
 			if(exactRegion) {
 				const mockGeo = { properties: { name: exactRegion.name, code: exactRegion.code } };
 				onSearch(mockGeo);
+			} else {
+				onSearch(trimmedKeyword);
 			}
 		}
 	}

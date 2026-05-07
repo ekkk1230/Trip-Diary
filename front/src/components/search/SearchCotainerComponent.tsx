@@ -6,19 +6,18 @@ import SearchInputComponent from "./SearchInputComponent"
 interface SearchContainerComponentProps {
     placeholderTxt: string;
     fetchAndFilterData: (geo: any, categoryId: string | number | null) => void;
+    hasCategory?: boolean;
 }
 
-function SearchCotainerComponent({ placeholderTxt, fetchAndFilterData }: SearchContainerComponentProps) {
+function SearchCotainerComponent({ placeholderTxt, fetchAndFilterData, hasCategory = true }: SearchContainerComponentProps) {
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-    const handleSearch = (geo: any) => {
-        fetchAndFilterData(geo, selectedCategory || null);
-    }
+    const handleSearch = (geo: any) => fetchAndFilterData(geo, selectedCategory || null);
 
     return (
         <S.SearchContainer>
             <SearchInputComponent onSearch={handleSearch} placeholderTxt={placeholderTxt} />
-            <SearchCategoryComponent selectedCategory={selectedCategory} onSelectedCategory={setSelectedCategory} />
+            { hasCategory === true && <SearchCategoryComponent selectedCategory={selectedCategory} onSelectedCategory={setSelectedCategory} /> }
         </S.SearchContainer>
     )
 }
