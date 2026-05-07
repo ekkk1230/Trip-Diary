@@ -548,5 +548,6 @@ export const CommentItem = styled.div`
     color: #495057;
     white-space: pre-wrap;
     word-break: break-all;
+    width: 100%;
   }
 `;

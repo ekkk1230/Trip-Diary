@@ -28,7 +28,7 @@ function DetailPage() {
         loadData();
     }, [contentid]);
 
-    console.log(detail)
+    // console.log(detail)
 
     if (!detail) return <div>데이터를 불러오는 중입니다...</div>;
 

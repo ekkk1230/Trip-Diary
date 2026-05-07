@@ -3,6 +3,7 @@ import * as S from "../../components/journal/Journal.styles"
 
 import mockData from "../../assets/data/mock_comment.json"
 import { useLocation } from "react-router-dom";
+import { formatDate } from "../../utils/date";
 
 interface MockComment {
     id: string;
@@ -21,6 +22,8 @@ function JournalComment() {
 
     const [commentList, setCommentList] = useState<any[]>([]);
     const [commentText, setCommentText] = useState<string>("");
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editText, setEditText] = useState<string>("");
 
     useEffect(() => {
         setCommentList(MOCK_COMMENTS);
@@ -32,7 +35,34 @@ function JournalComment() {
 
     const handleSubmit = () => {
         if (!commentText.trim()) return alert("입력후 확인을 눌러주세요.");
+
+        const newComment = {
+            id: crypto.randomUUID(),
+            user: 'test',
+            journalId: parseInt(journal.id),
+            date: formatDate(),
+            text: commentText,
+        }
+
+        setCommentList([newComment, ...commentList])
         setCommentText('');
+    }
+
+    const handleEdit = (id: string, originalText: string) => {
+        if (editingId === id) {
+            const updateComment = commentList.map(c => c.id === id ? { ...c, text: editText } : c);
+            setEditingId(null);
+            setCommentList(updateComment);
+            setEditText("");
+        } else {
+            setEditingId(id);
+            setEditText(originalText);
+        }
+    }
+
+    const handleRemove = (id: string) => {
+        const removeComments = commentList.filter(c => c.id !== id);
+        setCommentList(removeComments);
     }
 
     return (
@@ -57,15 +87,15 @@ function JournalComment() {
                                 <div className="comment-actions">
                                     <button 
                                         className="edit-btn" 
-                                        onClick={() => console.log(`${c.id}번 댓글 수정 모드 진입`)}
+                                        onClick={() => handleEdit(c.id, c.text)}
                                     >
-                                        수정
+                                        {editingId === c.id ? '확인' : '수정'}
                                     </button>
                                     <button 
                                         className="delete-btn" 
                                         onClick={() => {
                                             if(window.confirm("댓글을 삭제하시겠습니까?")) {
-                                                console.log(`${c.id}번 댓글 삭제 실행`);
+                                                handleRemove(c.id);
                                             }
                                         }}
                                     >
@@ -73,7 +103,19 @@ function JournalComment() {
                                     </button>
                                 </div>
                             </div>
-                            <p className="comment-text">{c.text}</p>
+                            {editingId === c.id ? (
+                                <input 
+                                    className="comment-text" 
+                                    type="text" 
+                                    defaultValue={c.text} 
+                                    value={editText}
+                                    autoFocus 
+                                    onChange={e => setEditText(e.target.value)}
+                                />
+                            ) : (
+                                <p className="comment-text">{c.text}</p>
+                            )}
+                            
                         </S.CommentItem>
                     ))
                 ) : (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as S from "../../components/journal/Journal.styles";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";

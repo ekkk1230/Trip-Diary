@@ -46,7 +46,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 		}
 	}
 
-	console.log('visitedLocations', visitedLocations)
+	// console.log('visitedLocations', visitedLocations)
 
 	const provinceCounts = visitedLocations?.reduce((acc: any, loc: any) => {
 		const province = loc.split(' ')[0];
