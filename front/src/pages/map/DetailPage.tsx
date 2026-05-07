@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import * as S from "./DetailPage.styles"
+import * as S from "../../features/map/MapComponents.styles"
 import { fetchDetail } from "../../api/tourApi";
 import JournalList from "../../components/journal/JournalList";
 import { useUiStore } from "../../store/useUiStore";
@@ -40,7 +40,6 @@ function DetailPage() {
 
     return (
         <S.Container>
-            {/* 💡 헤더 섹션: 제목과 찜 버튼을 나란히 배치 */}
             <S.DetailHeader>
                 <S.Title>{detail.title}</S.Title>
                 <S.FavoriteBtn 
@@ -67,7 +66,7 @@ function DetailPage() {
                     target="_blank" 
                     rel="noreferrer"
                 >
-                    🌐 공식 홈페이지 방문하기
+                    공식 홈페이지 방문하기
                 </S.HomeButton>
             )}
 

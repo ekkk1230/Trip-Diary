@@ -27,7 +27,7 @@ interface MapStore {
     resetMap: () => void;
 }
 
-export const useMapStore = create<MapStore>((set, get) => ({
+export const useMapStore = create<MapStore>((set) => ({
     allTourList: [],
     favoriteList: [],
     selectedRegion: null,

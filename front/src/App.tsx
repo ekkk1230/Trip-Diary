@@ -4,13 +4,12 @@ import Login from './pages/auth/Login'
 import Join from './pages/auth/Join'
 import Layout from './components/layout/Layout'
 import MapPage from './pages/map/MapPage';
-import DetailPage from './pages/detail/DetailPage';
 import JournalPage from './pages/journal/JournalPage';
 import { useUiStore } from './store/useUiStore';
-import JournalDetail from './features/journal/JournalDetail';
 import JournalDetailPage from './pages/journal/JournalDetailPage';
 import MyPage from './pages/myPage/MyPage';
 import FavoritePage from './pages/myPage/FavoritePage';
+import DetailPage from './pages/map/DetailPage';
 
 function App() {
     const { title, setTitle } = useUiStore();
@@ -72,6 +71,11 @@ function App() {
         <Route path="/login" element={
             <Layout title={title} hasHeader>
                 <Login />
+            </Layout>
+        } />
+        <Route path="/join" element={
+            <Layout title={title} hasHeader>
+                <Join />
             </Layout>
         } />
     </Routes>
