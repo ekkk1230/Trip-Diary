@@ -77,3 +77,71 @@ export const ArrowIcon = styled.span`
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
 `;
+
+export const Container = styled.div`
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+`;
+
+export const Header = styled.div`
+    margin-bottom: 24px;
+    
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        span {
+            font-size: 1.1rem;
+            color: #ff6b6b; /* 찜 컬러 포인트 */
+            background: #fff0f0;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 6px;
+    }
+`;
+
+export const GridSection = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    
+    /* 태블릿/데스크탑 대응 */
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+`;
+
+export const EmptyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+
+    .icon { font-size: 3rem; margin-bottom: 16px; }
+    h3 { font-size: 1.2rem; color: #333; margin-bottom: 8px; }
+    p { font-size: 0.95rem; color: #999; line-height: 1.5; margin-bottom: 24px; }
+    
+    button {
+        padding: 12px 24px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+`;

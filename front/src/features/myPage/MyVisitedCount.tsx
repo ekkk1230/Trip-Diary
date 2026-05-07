@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useMapStore } from "../../store/useMapStore";
 import * as S from "./MyPage.styles"
 

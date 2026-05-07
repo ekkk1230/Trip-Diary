@@ -11,8 +11,8 @@ interface CardItemProps {
 function CardItem({ item }: CardItemProps) {
     const { toggleFavorite, isFavorite } = useMapStore();
 
-    const handleFavoriteClick = (id: any) => {
-        toggleFavorite(id)
+    const handleFavoriteClick = (contentid: any) => {
+        toggleFavorite(contentid)
     }
 
     return (
