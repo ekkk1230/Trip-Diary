@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import * as S from "./Journal.styles"
 import { useJournalStore } from "../../store/useJournalStore";
+import type React from "react";
 
 interface JournalListProps {
     type: string;
@@ -8,7 +9,7 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { journals } = useJournalStore();
+    const { journals, removeJournal } = useJournalStore();
 
     const navigate = useNavigate();
 
@@ -22,6 +23,16 @@ function JournalList({ type, contentid }: JournalListProps) {
         : type === "myList"
         ? journals.filter(log => log.author === "test")
         : journals;
+
+    const handleEditJournal = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+        e.stopPropagation();
+        navigate(`/journal/edit/${id}`, { state: { detailType: 'edit', mood: 'edit' } });
+    }
+
+    const handleRemove = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+        e.stopPropagation();
+        if(window.confirm("기록을 삭제하시겠습니까?")) removeJournal(id);
+    };
 
     return (
         <S.Section>
@@ -39,21 +50,13 @@ function JournalList({ type, contentid }: JournalListProps) {
                             <S.AdminButtons>
                                 <button 
                                     className="edit-btn"
-                                    onClick={(e) => {
-                                        e.stopPropagation(); 
-                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', mood: 'edit' } });
-                                    }}
+                                    onClick={e => handleEditJournal(e, log.id)}
                                 >
                                     수정
                                 </button>
                                 <button 
                                     className="delete-btn"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        if(window.confirm("기록을 삭제하시겠습니까?")) {
-                                            console.log(`${log.id} 삭제 시도`);
-                                        }
-                                    }}
+                                    onClick={e => handleRemove(e, log.id)}
                                 >
                                     삭제
                                 </button>

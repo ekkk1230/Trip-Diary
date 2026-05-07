@@ -34,7 +34,7 @@ function JournalComment() {
 
     const handleEdit = (commentId: string, originalText: string) => {
         if (editingId === commentId) {
-            updateComment(commentId, editText);
+            updateComment(commentId, { text: editText });
             setEditingId(null);
             setEditText("");
         } else {

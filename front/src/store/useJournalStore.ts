@@ -34,6 +34,7 @@ interface JournalStore {
     addComment: (newComment: any) => void;
     updateJournal: (id: string, updateData: any) => void;
     updateComment: (id: string, updateData: any) => void;
+    removeJournal: (id: string) => void;
     removeComment: (id: string) => void;
 }
 
@@ -49,5 +50,6 @@ export const useJournalStore = create<JournalStore>((set) => ({
     updateComment: (id, updateData) => set((state) => ({
         comments: state.comments.map(c => c.id === id ? { ...c, ...updateData } : c)
     })),
+    removeJournal: (id) => set((state) => ({ journals: state.journals.filter(j => j.id !== id) })),
     removeComment: (id) => set((state) => ({ comments: state.comments.filter(c => c.id !== id) }))
 }))
