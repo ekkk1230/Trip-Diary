@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as S from "../../components/journal/Journal.styles";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
@@ -8,16 +8,18 @@ import { TiWeatherSunny } from "react-icons/ti";
 import { TbMoodSmile } from "react-icons/tb";
 import { REGION_DATA } from "../../constants/API_CODE_MAP";
 import { formatDate } from "../../utils/date";
+import { useJournalStore } from "../../store/useJournalStore";
 
 
 function JournalDetail() {
+    const { journalId } = useParams();
     const location = useLocation();
+    const { journals, updateJournal } = useJournalStore();
 
-    const journal = location.state.journal || {}; 
+    const journal = journals.find(j => j.id === journalId);
     const mood = location.state.mood || 'edit';
     const detailType = location.state.detailType || 'edit';
 
-    const [currentJournal, setCurrentJournal] = useState(journal);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [editData, setEditData] = useState({
         logTitle: journal?.logTitle || "",
@@ -50,14 +52,10 @@ function JournalDetail() {
         if (isEdit) {
             const finalLocation = `${editData.sido} ${editData.sigungu}`.trim();
 
-            const updateJournal = {
-                ...journal,
+            updateJournal(journal?.id!, {
                 ...editData,
                 location: finalLocation
-            };
-
-            setCurrentJournal(updateJournal);
-            // props.onUpdate(updateJournal);
+            })
         }
         setIsEdit(!isEdit)
     }
@@ -149,30 +147,30 @@ function JournalDetail() {
                 <S.ViewContent>
                     {/* 1. 상단 정보 */}
                     <div className="meta-top">
-                        <span className="author">@{currentJournal?.author}</span>
-                        <span className="stats"><AiOutlineLike />{currentJournal?.stats?.likes}</span>
-                        <span className="stats"><FaRegEye /> {currentJournal?.stats?.comments}</span>
-                        <span className="date">{formatDate(currentJournal?.travelDate)}</span>
+                        <span className="author">@{journal?.author}</span>
+                        <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
+                        <span className="stats"><FaRegEye /> {journal?.stats?.comments}</span>
+                        <span className="date">{formatDate(journal?.travelDate)}</span>
                     </div>
 
                     {/* 2. 제목 */}
-                    <h1>{currentJournal?.logTitle}</h1>
+                    <h1>{journal?.logTitle}</h1>
 
                     {/* 3. 장소 및 날씨 배지 */}
                     <div className="info-badges">
-                        <span><MdOutlinePlace /> {currentJournal?.location}</span>
-                        <span><TiWeatherSunny /> {currentJournal?.weather}</span>
-                        <span><TbMoodSmile /> {currentJournal?.mood}</span>
+                        <span><MdOutlinePlace /> {journal?.location}</span>
+                        <span><TiWeatherSunny /> {journal?.weather}</span>
+                        <span><TbMoodSmile /> {journal?.mood}</span>
                     </div>
 
                     {/* 4. 본문 */}
                     <p className="description">
-                        {currentJournal?.description}
+                        {journal?.description}
                     </p>
 
                     {/* 5. 키워드 태그 */}
                     <div className="tags">
-                        {currentJournal?.keywords?.map((tag: string) => (
+                        {journal?.keywords?.map((tag: string) => (
                             <span key={tag}>#{tag}</span>
                         ))}
                     </div>

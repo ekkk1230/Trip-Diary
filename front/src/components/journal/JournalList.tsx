@@ -1,25 +1,6 @@
-import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import * as S from "./Journal.styles"
-
-import mockData from "../../assets/data/mock_journal.json"
-
-interface journalLog {
-    id: string;
-    contentId: string;
-    logTitle: string;
-    location: string;
-    travelDate: string;
-    weather: string;
-    mood: string;
-    mainImage: string;
-    author: string;
-    description: string;
-    stats: { likes: number, comments: number };
-    keywords: string[];
-}
-
-const MOCK_JOURNAL: journalLog[] = mockData;
+import { useJournalStore } from "../../store/useJournalStore";
 
 interface JournalListProps {
     type: string;
@@ -27,23 +8,20 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
+    const { journals } = useJournalStore();
+
     const navigate = useNavigate();
-    const [journalList, setJournalList] = useState<any[]>([]);
 
-    useEffect(() => {
-        setJournalList(MOCK_JOURNAL)
-    }, [])
-
-    // console.log(journalList)
-    if (journalList.length == 0) {
+    // console.log(journals)
+    if (journals.length == 0) {
         return <div className="loading">데이터를 불러오는 중입니다...</div>
     }
 
     const displayList = type === "detail" 
-        ? journalList.filter(log => log.contentId === contentid)
+        ? journals.filter(log => log.contentId === contentid)
         : type === "myList"
-        ? journalList.filter(log => log.author === "test")
-        : journalList;
+        ? journals.filter(log => log.author === "test")
+        : journals;
 
     return (
         <S.Section>
@@ -63,7 +41,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                                     className="edit-btn"
                                     onClick={(e) => {
                                         e.stopPropagation(); 
-                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', journal: log, mood: 'edit' } });
+                                        navigate(`/journal/edit/${log.id}`, { state: { detailType: 'edit', mood: 'edit' } });
                                     }}
                                 >
                                     수정
@@ -81,7 +59,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                                 </button>
                             </S.AdminButtons>
 
-                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'view', journal: log } })} style={{ cursor: 'pointer' }}>
+                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'view' } })} style={{ cursor: 'pointer' }}>
                                 <S.ImageWrapper>
                                     <img src={log.mainImage} alt={log.logTitle} />
                                     <S.MoodBadge>{log.mood}</S.MoodBadge>
