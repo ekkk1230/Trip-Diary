@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import * as S from "../../features/journal/Journal.styles"
+import * as S from "../Components.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import type React from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
@@ -87,9 +87,9 @@ function JournalList({ type, contentid }: JournalListProps) {
                                         <span>{log.location}</span>
                                     </S.MetaInfo>
                                     
-                                    <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
+                                    <S.LogTitle style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
                                         {log.logTitle}
-                                    </h3>
+                                    </S.LogTitle>
                                     
                                     {type === "list" && (
                                         <S.Description>{log.description}</S.Description>
