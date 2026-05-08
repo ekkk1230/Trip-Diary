@@ -11,6 +11,7 @@ import MyPage from './pages/myPage/MyPage';
 import FavoritePage from './pages/myPage/FavoritePage';
 import DetailPage from './pages/map/DetailPage';
 import SettingPage from './pages/setting/SettingPage';
+import Profile from './features/setting/Profile';
 
 function App() {
     const navigate = useNavigate();
@@ -74,6 +75,13 @@ function App() {
                     <SettingPage />
                 </Layout>
             } />
+
+            <Route path="/settings/profile" element={
+                <Layout title="프로필 수정" hasHeader hasBottomNav>
+                    <Profile />
+                </Layout>
+            } />
+            
             
             {/* 로그인 페이지 */}
             <Route path="/login" element={
