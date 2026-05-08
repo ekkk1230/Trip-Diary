@@ -85,12 +85,12 @@ function App() {
             
             {/* 로그인 페이지 */}
             <Route path="/login" element={
-                <Layout title={title} hasHeader>
+                <Layout title="" hasHeader>
                     <Login />
                 </Layout>
             } />
             <Route path="/join" element={
-                <Layout title={title} hasHeader>
+                <Layout title="회원가입" hasHeader>
                     <Join />
                 </Layout>
             } />

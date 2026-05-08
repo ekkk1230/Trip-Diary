@@ -2,6 +2,8 @@ import * as S from './Layout.styles'
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import BottomNav from './BottomNav';
+import Popup from '../../features/popup/Popup';
+import { useUiStore } from '../../store/useUiStore';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -13,6 +15,7 @@ interface LayoutProps {
 
 function Layout({ children, title, hasHeader, hasBottomNav, onBackClick }: LayoutProps) {
     const navigate = useNavigate();
+    const { isOpen } = useUiStore();
 
     const handleBack = () => {
         if (onBackClick) {
@@ -38,6 +41,8 @@ function Layout({ children, title, hasHeader, hasBottomNav, onBackClick }: Layou
             }
             <S.Main>{children}</S.Main>
             {hasBottomNav && <BottomNav />}
+
+            { isOpen ? <Popup/> : '' }
         </S.Wrapper>
     )
 }

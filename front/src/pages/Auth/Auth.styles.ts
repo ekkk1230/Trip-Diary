@@ -11,6 +11,7 @@ export const AuthTit = styled.p`
     font-size: 1.6rem;
     font-weight: 500;
     color: #1a3d35;
+    text-align: center;
 `;
 
 export const AuthBox = styled.div`

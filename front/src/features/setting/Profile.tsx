@@ -1,3 +1,4 @@
+import { useSettingStore } from '../../store/useSettingStore';
 import * as S from './Setting.styles';
 
 function Profile() {
