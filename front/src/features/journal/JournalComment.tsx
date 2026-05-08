@@ -101,7 +101,7 @@ function JournalComment() {
                         textAlign: 'center', 
                         padding: '3rem 0', 
                         color: '#adb5bd',
-                        fontSize: '0.9rem' 
+                        fontSize: '1.2rem' 
                     }}>
                         아직 작성된 댓글이 없습니다. 첫 마디를 남겨보세요! ✍️
                     </p>

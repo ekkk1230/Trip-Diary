@@ -361,7 +361,7 @@ export const ReactionArea = styled.div`
     margin-top: 40px;
 
     p {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
         color: #888;
         margin-bottom: 15px;
     }
