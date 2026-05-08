@@ -1,7 +1,9 @@
 import { useSettingStore } from '../../store/useSettingStore';
+import { useUiStore } from '../../store/useUiStore';
 import * as S from './Setting.styles';
 
 function Profile() {
+    const { setIsOpen } = useUiStore();
 
     const userInfo = {
         nickname: "테스트유저",
@@ -10,6 +12,10 @@ function Profile() {
         birth: "1990-01-01",
         profileImg: "https://images.unsplash.com/photo-1599481238505-b8b0537a3f77?auto=format&fit=crop&w=800&q=80"
     };
+
+    const handlePasswordChange = () => {
+        setIsOpen(true);
+    }
 
     return (
         <S.ProfileContainer>
@@ -43,7 +49,7 @@ function Profile() {
 
             {/* 하단 액션 버튼 */}
             <S.ActionSection>
-                <button className="pw-change-btn">비밀번호 변경</button>
+                <button className="pw-change-btn" onClick={handlePasswordChange}>비밀번호 변경</button>
                 <button className="save-btn">저장하기</button>
             </S.ActionSection>
         </S.ProfileContainer>
