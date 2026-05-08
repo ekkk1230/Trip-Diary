@@ -1,17 +1,14 @@
 import { useEffect } from 'react';
 import JournalList from '../../components/journal/JournalList'
-import { useUiStore } from '../../store/useUiStore'
 import SearchCotainerComponent from '../../components/search/SearchCotainerComponent';
 import { useJournalStore } from '../../store/useJournalStore';
 
 function JournalPage() {
-    const { setTitle } = useUiStore();
     const { searchJournals } = useJournalStore();
    
     useEffect(() => {
-        setTitle("저널")
         searchJournals("", null);
-    }, [setTitle, searchJournals]);
+    }, [searchJournals]);
 
     const placeTxt = '지역, 장소 명을 입력해주세요.';
 

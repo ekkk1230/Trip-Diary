@@ -6,20 +6,14 @@ import 'swiper/css/pagination';
 import * as S from "../../features/map/MapComponents.styles"
 import { fetchDetail } from "../../api/tourApi";
 import JournalList from "../../components/journal/JournalList";
-import { useUiStore } from "../../store/useUiStore";
 
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { useMapStore } from "../../store/useMapStore";
 
 function DetailPage() {
-    const { setTitle } = useUiStore();
     const { toggleFavorite, favoriteList } = useMapStore();
     const { contentid } = useParams();
     const [detail, setDetail] = useState<any>(null);
-
-    useEffect(() => {
-        setTitle("상세보기");
-    }, [setTitle])
 
     useEffect(() => {
         const loadData = async () => {

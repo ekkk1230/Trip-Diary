@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useUiStore } from "../../store/useUiStore"
 
 import mockData from "../../assets/data/mock_journal.json";
 
@@ -8,7 +7,6 @@ import JournalList from "../../components/journal/JournalList";
 import MyVisitedCount from "../../features/myPage/MyVisitedCount";
 
 function MyPage() {
-    const { setTitle } = useUiStore();
     const [myJournal, setMyJournal] = useState<any[]>([]);
 
     useEffect(() => {
@@ -18,9 +16,6 @@ function MyPage() {
 
     const visitedLocations = myJournal.map(j => j.location);
 
-    useEffect(() => {
-        setTitle('마이 페이지')
-    }, [])
 
     return (
         <>

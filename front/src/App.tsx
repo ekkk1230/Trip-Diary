@@ -10,6 +10,7 @@ import JournalDetailPage from './pages/journal/JournalDetailPage';
 import MyPage from './pages/myPage/MyPage';
 import FavoritePage from './pages/myPage/FavoritePage';
 import DetailPage from './pages/map/DetailPage';
+import SettingPage from './pages/setting/SettingPage';
 
 function App() {
     const navigate = useNavigate();
@@ -31,40 +32,46 @@ function App() {
                 </Layout>
             } />
             <Route path="/detail/:contentid" element={
-                <Layout title={title} hasHeader hasBottomNav onBackClick={handleBackToMap}>
+                <Layout title="상세보기" hasHeader hasBottomNav onBackClick={handleBackToMap}>
                     <DetailPage />
                 </Layout>
             } />
             
             <Route path="/journal" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="저널" hasHeader hasBottomNav>
                     <JournalPage />
                 </Layout>
             } />
             <Route path="/journal/write" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="저널" hasHeader hasBottomNav>
                     <JournalDetailPage />
                 </Layout>
             } />
             <Route path="/journal/edit/:id" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="저널" hasHeader hasBottomNav>
                     <JournalDetailPage />
                 </Layout>
             } />
             <Route path="/journal/:id" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="저널" hasHeader hasBottomNav>
                     <JournalDetailPage />
                 </Layout>
             } />
 
             <Route path="/mypage" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="마이페이지" hasHeader hasBottomNav>
                     <MyPage />
                 </Layout>
             } />
             <Route path="/mypage/favorite" element={
-                <Layout title={title} hasHeader hasBottomNav>
+                <Layout title="찜목록" hasHeader hasBottomNav>
                     <FavoritePage />
+                </Layout>
+            } />
+
+            <Route path="/settings" element={
+                <Layout title="설정" hasHeader hasBottomNav>
+                    <SettingPage />
                 </Layout>
             } />
             
