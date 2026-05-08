@@ -294,7 +294,7 @@ export const CommentInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 30px;
+  margin: 3rem auto;
 
   textarea {
     width: 100%;

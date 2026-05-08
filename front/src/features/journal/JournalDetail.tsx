@@ -85,7 +85,7 @@ function JournalDetail() {
     }
 
     return (
-        <S.DetailContainer>
+        <>
             {isEdit ? (
                 <S.EditForm>
                     <S.InputGroup>
@@ -264,7 +264,7 @@ function JournalDetail() {
                     </div>
                 </S.ViewContent>
             )}
-        </S.DetailContainer>
+        </>
     );
 }
 
