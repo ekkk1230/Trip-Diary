@@ -14,7 +14,7 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 function JournalDetail() {
     const { id } = useParams();
     const location = useLocation();
-    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
+    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds, isEdit, setIsEdit } = useJournalStore();
 
     const navigate = useNavigate();    
 
@@ -22,7 +22,6 @@ function JournalDetail() {
     const mood = location.state.mood || 'edit';
     const detailType = location.state.detailType || 'edit';
 
-    const [isEdit, setIsEdit] = useState<boolean>(false);
     const [editData, setEditData] = useState({
         logTitle: journal?.logTitle || "",
         travelDate: journal?.travelDate || "",
@@ -45,7 +44,7 @@ function JournalDetail() {
     const sidos = Object.keys(REGION_DATA);
     
     useEffect(() => {
-        setIsEdit(detailType === "edit" || mood === "new");
+        setIsEdit(detailType, mood);
     }, [detailType, mood])
 
     // console.log(detailType, journal, mood)
@@ -67,14 +66,12 @@ function JournalDetail() {
                     keywords: [],
                 }
                 addJournal(newJournal);
+                setIsEdit(undefined, undefined, false);
                 navigate("/journal");
             } else {
                 updateJournal(journal?.id!, finalData)
+                setIsEdit(undefined, undefined, false);
             }
-        }
-        
-        if (mood !== "new") {
-            setIsEdit(!isEdit);
         }
     }
 
@@ -89,16 +86,6 @@ function JournalDetail() {
 
     return (
         <S.DetailContainer>
-           {mood === "new" ? (
-                <button onClick={handleSubmit}>
-                    등록하기
-                </button>
-            ) : (
-                <button onClick={handleSubmit}>
-                    {isEdit ? "저장" : "수정"}
-                </button>
-            )}
-
             {isEdit ? (
                 <S.EditForm>
                     <S.InputGroup>
@@ -218,6 +205,12 @@ function JournalDetail() {
                             onChange={e => updateField('description', e.target.value)}
                         />
                     </S.InputGroup>
+
+                    {mood === "new" ? (
+                        <button onClick={handleSubmit}>등록하기</button>
+                    ) : (
+                        <button onClick={handleSubmit}>확인</button>
+                    )}
                 </S.EditForm>
             ) : (
                 /* 보기 모드 */
@@ -232,7 +225,7 @@ function JournalDetail() {
                         </div>
                         
                         <div className="actions">
-                            <button onClick={() => setIsEdit(true)} className="btn-edit">수정</button>
+                            <button onClick={() => setIsEdit()} className="btn-edit">수정</button>
                             <button onClick={() => handleDelete(journal?.id!)} className="btn-delete">삭제</button>
                         </div>
                     </div>

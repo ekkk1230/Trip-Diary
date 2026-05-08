@@ -31,7 +31,9 @@ interface JournalStore {
     filteredJournals: JournalLog[];
     likedJournalIds: string[];
     comments: Comment[];
+    isEdit: boolean;
     
+    setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
     searchJournals: (keyowrd: string, categoy: any) => void;
     likedJournal: (id: string) => void;
     addJournal: (newJounal: JournalLog) => void;
@@ -47,7 +49,20 @@ export const useJournalStore = create<JournalStore>((set) => ({
     filteredJournals: mockJournals,
     likedJournalIds: [],
     comments: mockComments,
+    isEdit: false,
 
+    setIsEdit: (detailType, mood, forceValue) => set(state => {
+        if (typeof forceValue === 'boolean') {
+            return { isEdit: forceValue };
+        }
+    
+        if (!detailType && !mood) {
+            return { isEdit: !state.isEdit };
+        }
+    
+        const shouldEdit = detailType === "edit" || mood === "new";
+        return { isEdit: shouldEdit };
+    }),
     searchJournals: (keyword, category) => set(state => {
         if (!keyword && !category) return { filteredJournals: state.journals };
 
