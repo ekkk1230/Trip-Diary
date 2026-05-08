@@ -5,7 +5,6 @@ import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
 import { TiWeatherSunny } from "react-icons/ti";
-import { TbMoodSmile } from "react-icons/tb";
 import { REGION_DATA } from "../../constants/API_CODE_MAP";
 import { formatDate } from "../../utils/date";
 import { useJournalStore } from "../../store/useJournalStore";
@@ -15,7 +14,7 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 function JournalDetail() {
     const { id } = useParams();
     const location = useLocation();
-    const { journals, addJournal, updateJournal, likedJournal, likedJournalIds } = useJournalStore();
+    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
 
     const navigate = useNavigate();    
 
@@ -30,7 +29,7 @@ function JournalDetail() {
         weather: journal?.weather || "맑음",
         sido: journal?.location?.split(" ")[0] || "",
         sigungu: journal?.location?.split(" ")[1] || "",
-        mood: journal?.mood || "",
+        placeName: journal?.placeName || "",
         description: journal?.description || "",
         keywords: journal?.keywords || []
     })
@@ -60,7 +59,8 @@ function JournalDetail() {
                 const newJournal = {
                     ...finalData,
                     id: crypto.randomUUID(),
-                    contentId: id,
+                    contentId: id!,
+                    placeName: '',
                     mainImage: '',
                     author: 'test',
                     stats: { likes: 0, comments: 0 },
@@ -79,6 +79,13 @@ function JournalDetail() {
     }
 
     const isLiked = likedJournalIds.includes(journal?.id!);
+
+    const handleDelete = (journalId: string) => {
+        if (confirm("기록을 삭제하시겠습니까?")) {
+            removeJournal(journalId);
+            navigate('/journal');
+        }
+    }
 
     return (
         <S.DetailContainer>
@@ -131,31 +138,75 @@ function JournalDetail() {
                     <S.Row>
                         <S.InputGroup>
                             <span>장소</span>
-                            <select 
-                                value={editData.sido}
-                                onChange={e => updateField('sido', e.target.value)}
-                            >
-                                <option value="">시/도 선택</option>
-                                {sidos.map(s => <option key={s} value={s}>{s}</option>)}
-                            </select>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {/* 지역 선택 영역 */}
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <select 
+                                        value={editData.sido}
+                                        onChange={e => updateField('sido', e.target.value)}
+                                        style={{ flex: 1 }}
+                                    >
+                                        <option value="">시/도 선택</option>
+                                        {sidos.map(s => <option key={s} value={s}>{s}</option>)}
+                                    </select>
 
-                            <select 
-                                value={editData.sigungu}
-                                onChange={e => updateField('sigungu', e.target.value)}
-                            >
-                                <option value="">군/구 선택</option>
-                                {editData.sido && REGION_DATA[editData.sido].map(sg => <option key={sg} value={sg}>{sg}</option>)}
-                            </select>
+                                    <select 
+                                        value={editData.sigungu}
+                                        onChange={e => updateField('sigungu', e.target.value)}
+                                        style={{ flex: 1 }}
+                                    >
+                                        <option value="">군/구 선택</option>
+                                        {editData.sido && REGION_DATA[editData.sido].map(sg => (
+                                            <option key={sg} value={sg}>{sg}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* 구체적인 장소명 입력 영역 */}
+                                <input 
+                                    type="text" 
+                                    placeholder="상세 장소를 입력하세요 (예: 각연사, 광한루원)" 
+                                    value={editData.placeName}
+                                    onChange={e => updateField('placeName', e.target.value)}
+                                />
+                            </div>
                         </S.InputGroup>
             
                         <S.InputGroup>
-                            <span>오늘의 기분</span>
-                            <input 
-                                type="text" 
-                                placeholder="예: 평온함" 
-                                value={editData.mood}
-                                onChange={e => updateField('mood', e.target.value)}
-                            />
+                            <span>키워드</span>
+                            <S.KeywordBadgeGroup>
+                                {["힐링", "액티비티", "맛집", "인생샷", "바다"].map((tag) => (
+                                    <button
+                                        key={tag}
+                                        type="button"
+                                        className={editData.keywords.includes(tag) ? "active" : ""}
+                                        onClick={() => {
+                                            const nextKeywords = editData.keywords.includes(tag)
+                                                ? editData.keywords.filter(k => k !== tag) 
+                                                : [...editData.keywords, tag];
+                                            updateField('keywords', nextKeywords);
+                                        }}
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </S.KeywordBadgeGroup>
+
+                            <S.TagInputWrapper>
+                                <input 
+                                    type="text" 
+                                    placeholder="직접 입력 (예: #차박) 후 엔터" 
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            const val = e.currentTarget.value.trim();
+                                            if (val && !editData.keywords.includes(val)) {
+                                                updateField('keywords', [...editData.keywords, val]);
+                                                e.currentTarget.value = '';
+                                            }
+                                        }
+                                    }}
+                                />
+                            </S.TagInputWrapper>
                         </S.InputGroup>
                     </S.Row>
             
@@ -173,10 +224,17 @@ function JournalDetail() {
                 <S.ViewContent>
                     {/* 상단 정보 */}
                     <div className="meta-top">
-                        <span className="author">@{journal?.author}</span>
-                        <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
-                        <span className="stats"><FaRegEye /> {journal?.stats?.comments}</span>
-                        <span className="date">{formatDate(journal?.travelDate)}</span>
+                        <div className="left">
+                            <span className="author">@{journal?.author}</span>
+                            <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
+                            <span className="stats"><FaRegEye /> {journal?.stats?.comments}</span>
+                            <span className="date">{formatDate(journal?.travelDate)}</span>
+                        </div>
+                        
+                        <div className="actions">
+                            <button onClick={() => setIsEdit(true)} className="btn-edit">수정</button>
+                            <button onClick={() => handleDelete(journal?.id!)} className="btn-delete">삭제</button>
+                        </div>
                     </div>
 
                     {/* 제목 */}
@@ -184,9 +242,8 @@ function JournalDetail() {
 
                     {/* 장소 및 날씨 배지 */}
                     <div className="info-badges">
-                        <span><MdOutlinePlace /> {journal?.location}</span>
+                        <span><MdOutlinePlace /> {journal?.location} {journal?.placeName}</span>
                         <span><TiWeatherSunny /> {journal?.weather}</span>
-                        <span><TbMoodSmile /> {journal?.mood}</span>
                     </div>
 
                     {/* 본문 */}

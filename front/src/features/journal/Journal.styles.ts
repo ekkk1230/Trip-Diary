@@ -69,33 +69,80 @@ export const ViewContent = styled.article`
   /* 상단 메타 정보 영역 */
   .meta-top {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 25px;
-    font-size: 14px;
-    color: #888;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
 
-    .author {
-      font-weight: 700;
-      color: #3498db;
-      margin-right: auto; // 작성자를 왼쪽 끝으로 밀고 나머지는 오른쪽 정렬
-    }
-
-    .stats {
+    .left {
       display: flex;
       align-items: center;
-      gap: 4px;
-      color: #666;
-      
-      svg {
-        font-size: 16px;
-        color: #999;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 1.2rem;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #888;
+      }
+
+      .author {
+        font-weight: 600;
+        color: #1d81f0;
+        margin-right: 4px;
+      }
+
+      .stats {
+        svg {
+          font-size: 1.2rem;
+          color: #bbb;
+        }
+      }
+
+      .date {
+        position: relative;
+        padding-left: 12px;
+        
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 2px;
+            background-color: #ddd;
+            border-radius: 50%;
+        }
       }
     }
 
-    .date {
-      color: #adb5bd;
-      padding-left: 5px;
+    .actions {
+      display: flex;
+      gap: 10px;
+
+      button {
+          background: none;
+          border: none;
+          font-size: 1.2rem;
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 4px;
+          transition: background 0.2s;
+      }
+
+      .btn-edit {
+          color: #666;
+          &:hover { background: #f0f0f0; }
+      }
+
+      .btn-delete {
+          color: #e74c3c; // 삭제는 강조색
+          &:hover { background: #fdf2f2; }
+      }
     }
   }
 
@@ -200,8 +247,7 @@ export const EditForm = styled.form`
 export const InputGroup = styled.label`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-
+  gap: 10px;
   span {
     font-size: 14px;
     font-weight: 600;
@@ -212,7 +258,7 @@ export const InputGroup = styled.label`
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 1.4rem;
     transition: all 0.2s ease;
 
     &:focus {
@@ -394,6 +440,60 @@ export const ReactionArea = styled.div`
 
         &:active {
             transform: scale(0.95);
+        }
+    }
+`;
+
+export const KeywordBadgeGroup = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+
+    button {
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        background: #fff;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+
+        &.active {
+            background: #3498db; 
+            color: white;
+            border-color: #3498db;
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+`;
+
+export const TagInputWrapper = styled.div`
+    width: 100%;
+    margin-top: 4px;
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        background-color: #f8f9fa; 
+        font-size: 0.95rem;
+        color: #333;
+        outline: none;
+        transition: all 0.2s ease;
+
+        &::placeholder {
+            color: #bbb;
+            font-size: 0.85rem;
+        }
+
+        &:focus {
+            border-color: #3498db;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
         }
     }
 `;

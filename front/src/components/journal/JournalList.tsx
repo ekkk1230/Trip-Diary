@@ -78,7 +78,6 @@ function JournalList({ type, contentid }: JournalListProps) {
                             <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'view' } })} style={{ cursor: 'pointer' }}>
                                 <S.ImageWrapper>
                                     <img src={log.mainImage} alt={log.logTitle} />
-                                    <S.MoodBadge>{log.mood}</S.MoodBadge>
                                 </S.ImageWrapper>
                                     
                                 <S.ContentWrapper>

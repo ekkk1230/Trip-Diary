@@ -8,9 +8,9 @@ interface JournalLog {
     contentId: string;
     logTitle: string;
     location: string;
+    placeName: string;
     travelDate: string;
     weather: string;
-    mood: string;
     mainImage: string;
     author: string;
     description: string;
@@ -34,8 +34,8 @@ interface JournalStore {
     
     searchJournals: (keyowrd: string, categoy: any) => void;
     likedJournal: (id: string) => void;
-    addJournal: (newJounal: any) => void;
-    addComment: (newComment: any) => void;
+    addJournal: (newJounal: JournalLog) => void;
+    addComment: (newComment: Comment) => void;
     updateJournal: (id: string, updateData: any) => void;
     updateComment: (id: string, updateData: any) => void;
     removeJournal: (id: string) => void;
@@ -55,13 +55,10 @@ export const useJournalStore = create<JournalStore>((set) => ({
             const matchesKeyword = keyword
                 ? (j.logTitle.includes(keyword) ||
                    j.description.includes(keyword) ||
-                   j.mood.includes(keyword) ||
                    j.keywords.some(k => k.includes(keyword)))
                 : true;
             
-            const matchesCategory = category
-                ? j.mood === category
-                : true;
+            const matchesCategory = true;
 
             return matchesKeyword && matchesCategory;
         })
@@ -92,8 +89,8 @@ export const useJournalStore = create<JournalStore>((set) => ({
 
         return {
             likedJournalIds: newLikedIds,
-            journals: state.journals.map(j => j.id === id ? { ...updatedJournal, ...state.journals } : j),
-            filteredJournals: state.filteredJournals.map(j => j.id === id ? { ...updatedJournal, ...state.filteredJournals} : j)
+            journals: state.journals.map(j => j.id === id ? updatedJournal : j),
+            filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
         }
     }),
     addJournal: newJournal => set(state => ({ 
