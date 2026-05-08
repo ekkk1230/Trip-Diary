@@ -1,9 +1,11 @@
-import React from 'react'
+import * as S from "./Modal.styles";
 
-function Popup() {
-  return (
-    <div>PopupPopupPopupPopupPopupPopupPopupPopupPopupPopupPopupPopupPopup</div>
-  )
+function Modal() {
+    return (
+        <S.ModalContainer>
+            <S.ModalContent>modalmodalmodalmodalmodalmodalmodal</S.ModalContent>
+        </S.ModalContainer>
+    )
 }
 
-export default Popup
+export default Modal
