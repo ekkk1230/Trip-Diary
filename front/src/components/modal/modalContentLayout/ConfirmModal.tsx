@@ -2,25 +2,21 @@ import { useUiStore } from "../../../store/useUiStore";
 import * as S from "../Modal.styles";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
-interface ConfirmModalProps {
-    title: string;
-    content: string;
-}
 
-function ConfirmModal({ title, content }: ConfirmModalProps) {
-    const { onClose } = useUiStore();
+function ConfirmModal() {
+    const { closeModal, modalTitle, modalContent } = useUiStore();
 
     return (
         <S.ModalContainer onClick={(e) => e.stopPropagation()}>
             <S.ModalHeader>
-                <p>{title}</p>
-                <button onClick={onClose}><IoCloseCircleOutline /></button>
+                <p>{modalTitle}</p>
+                <button onClick={closeModal}><IoCloseCircleOutline /></button>
             </S.ModalHeader>
 
-            <S.ModalBody>{content}</S.ModalBody>
+            <S.ModalBody>{modalContent}</S.ModalBody>
 
             <S.ModalFooter>
-                <button className="btn-confirm" onClick={onClose}>닫기</button>
+                <button className="btn-confirm" onClick={closeModal}>닫기</button>
             </S.ModalFooter>
         </S.ModalContainer>
     )

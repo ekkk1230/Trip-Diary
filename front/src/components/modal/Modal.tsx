@@ -1,21 +1,19 @@
+import { useUiStore } from "../../store/useUiStore";
 import * as S from "./Modal.styles";
 import CheckModal from "./modalContentLayout/CheckModal";
 import ConfirmModal from "./modalContentLayout/ConfirmModal";
 
-interface ModalProps {
-    type: "confirm" | "check";
-    title: string;
-    content: string;
-}
 
-function Modal({type, title, content}: ModalProps   ) {
+
+function Modal() {
+    const { modalType } = useUiStore();
     return (
         <>
             <S.ModalOverlay>
-                {type === "confirm" ? (
-                    <ConfirmModal title={title} content={content} />
+                {modalType === "confirm" ? (
+                    <ConfirmModal />
                 ) : (
-                    <CheckModal title={title} content={content} />
+                    <CheckModal />
                 )}
             </S.ModalOverlay>
         </>

@@ -3,7 +3,7 @@ import { useUiStore } from '../../store/useUiStore';
 import * as S from './Setting.styles';
 
 function Profile() {
-    const { setIsOpen } = useUiStore();
+    const { openModal } = useUiStore();
 
     const userInfo = {
         nickname: "테스트유저",
@@ -14,7 +14,9 @@ function Profile() {
     };
 
     const handlePasswordChange = () => {
-        setIsOpen(true);
+        openModal('confirm', '비밀번호 변경', '비밀번호를 변경하시겠습니까?', () => {
+            console.log('비밀번호 변경 확인');
+        })
     }
 
     return (

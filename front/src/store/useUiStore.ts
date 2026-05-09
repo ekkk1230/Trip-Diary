@@ -1,19 +1,35 @@
 import { create } from "zustand";
 
+type ModalType = 'check' | 'confirm';
+
 interface UiStore {
     title: string;
-    isOpen: boolean;
-    
-    setIsOpen: (open: boolean) => void;
-    onClose: () => void;
     setTitle: (newTitle: string) => void;
+
+    isOpen: boolean;
+    modalType: ModalType | null;
+    modalTitle: string;
+    modalContent: string;
+    onConfirm: (() => void) | null;
+    openModal: (type: ModalType, title: string, content: string, onConfirm?: () => void) => void;
+    closeModal: () => void;
 }
 
 export const useUiStore = create<UiStore>((set) => ({
     title: '지도',
-    isOpen: false,
-
-    setIsOpen: (open) => set({ isOpen: open }),
-    onClose: () => set({ isOpen: false }),
     setTitle: (newTitle) => set({ title: newTitle }),
+
+    isOpen: false,
+    modalType: null,
+    modalTitle: '',
+    modalContent: '',
+    onConfirm: null,
+    openModal: (type, title, content, onConfirm) => set({
+        isOpen: true,
+        modalType: type,
+        modalTitle: title,
+        modalContent: content,
+        onConfirm: onConfirm || null,
+    }),
+    closeModal: () => set({ isOpen: false, modalType: null, modalTitle: '', modalContent: '', onConfirm: null }),
 }))
