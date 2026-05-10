@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { type ReactNode } from "react";
 
 type ModalType = 'check' | 'confirm';
 
@@ -9,9 +10,9 @@ interface UiStore {
     isOpen: boolean;
     modalType: ModalType | null;
     modalTitle: string;
-    modalContent: string;
+    modalContent: ReactNode;
     onConfirm: (() => void) | null;
-    openModal: (type: ModalType, title: string, content: string, onConfirm?: () => void) => void;
+    openModal: (type: ModalType, title: string, content: ReactNode, onConfirm?: () => void) => void;
     closeModal: () => void;
 }
 

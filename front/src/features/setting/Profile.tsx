@@ -1,3 +1,4 @@
+import PasswordChangeForm from '../../components/modal/modalContentLayout/PasswordChangeForm';
 import { useSettingStore } from '../../store/useSettingStore';
 import { useUiStore } from '../../store/useUiStore';
 import * as S from './Setting.styles';
@@ -13,8 +14,12 @@ function Profile() {
         profileImg: "https://images.unsplash.com/photo-1599481238505-b8b0537a3f77?auto=format&fit=crop&w=800&q=80"
     };
 
+    const setPassword = (newPassword: string) => {
+        console.log(`새 비밀번호: ${newPassword}`);
+    }
+
     const handlePasswordChange = () => {
-        openModal('confirm', '비밀번호 변경', '비밀번호를 변경하시겠습니까?', () => {
+        openModal('confirm', '비밀번호 변경', <PasswordChangeForm onChange={setPassword} />, () => {
             console.log('비밀번호 변경 확인');
         })
     }
