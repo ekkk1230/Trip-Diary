@@ -1,4 +1,5 @@
 import PasswordChangeForm from '../../components/modal/modalContentLayout/PasswordChangeForm';
+import ProfileImageChangeForm from '../../components/modal/modalContentLayout/ProfileImageChangeForm';
 import { useSettingStore } from '../../store/useSettingStore';
 import { useUiStore } from '../../store/useUiStore';
 import * as S from './Setting.styles';
@@ -18,6 +19,12 @@ function Profile() {
         console.log(`새 비밀번호: ${newPassword}`);
     }
 
+    const handleImageChange = () => {
+        openModal("confirm", "프로필 사진 변경", <ProfileImageChangeForm onImageChange={(newImage) => console.log(`새 프로필 사진: ${newImage}`)} />, () => {
+            console.log('프로필 사진 변경 확인');
+        });
+    }
+
     const handlePasswordChange = () => {
         openModal('confirm', '비밀번호 변경', <PasswordChangeForm onChange={setPassword} />, () => {
             console.log('비밀번호 변경 확인');
@@ -31,7 +38,7 @@ function Profile() {
                 <div className='profile-img'>
                     <img src={userInfo.profileImg} alt="" />
                 </div>
-                <button>사진 변경</button>
+                <button onClick={handleImageChange}>사진 변경</button>
             </S.ImageSection>
 
             {/* 유저 정보 리스트 */}
