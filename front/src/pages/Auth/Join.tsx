@@ -1,103 +1,12 @@
 import * as S from './Auth.styles'
 import Logo from "../../assets/Trip_Diary_row.png";
-import { useUserStore } from '../../store/useUserStore';
-import React, { useState, type ChangeEvent } from 'react';
-import { useUiStore } from '../../store/useUiStore';
-import TextModal from '../../components/modal/modalContentLayout/TextModal';
-import { useNavigate } from 'react-router-dom';
+import { useJoin } from '../../hooks/useJoin';
 
 function Join() {
-    const { openModal } = useUiStore();
-    const { joinUser } = useUserStore();
-    const navigate = useNavigate();
-
-    const [profileImg, setProfileImg] = useState<string | null>(null);
-    const [formData, setFormData] = useState({
-        nickname: '',
-        userId: '',
-        password: '',
-        passwordConfirm: '',
-        gender: 'male',
-        birth: '',
-        profileImg: '',
-        agreements: {
-            service: false,
-            privacy: false,
-            agreedAt: '',
-        }
-    });
-    const [terms, setTerms] = useState({
-        service: false,
-        privacy: false,
-    });
-
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setProfileImg(base64String);
-
-                setFormData(prev => ({
-                    ...prev,
-                    profileImg: base64String
-                }))
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    }
-
-    const handleJoin = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (formData.password !== formData.passwordConfirm) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        const user = {
-            id: crypto.randomUUID(),
-            nickname: formData.nickname,
-            userId: formData.userId,
-            password: formData.password,
-            gender: formData.gender,
-            birth: formData.birth,
-            profileImg: formData.profileImg || '',
-            agreements: {
-                service: terms.service,
-                privacy: terms.privacy,
-                agreedAt: new Date().toISOString().split('T')[0],
-            }
-        };
-
-        joinUser(user);
-
-        openModal(
-            "check",
-            "회원가입 완료",
-            (<TextModal txt={"회원가입이 완료되었습니다."} />)
-        );
-
-        navigate('/login');
-    }
-
-    const handleAllTerms = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { checked } = e.target;
-        setTerms({ service: checked, privacy: checked });
-    }
-
-    const handleTermClick = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
-        setTerms(prev => ({ ...prev, [name]: checked }));
-    }
+    const { formData, terms, profileImg, inputRefs, 
+        handleImageChange, handleChange, 
+        handleAllTerms, handleTermClick,
+        handleJoin } = useJoin();
 
     return (
         <>
@@ -128,28 +37,28 @@ function Join() {
 
                     <label className="auth_label">
                         <p>닉네임</p>
-                        <input name="nickname" type="text" placeholder="닉네임을 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.nickname = el}} name="nickname" type="text" placeholder="닉네임을 입력하세요." onChange={handleChange} />
                     </label>
                     <label className="auth_label">
                         <p>아이디</p>
-                        <input name="userId" type="text" placeholder="아이디를 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.userId = el}} name="userId" type="text" placeholder="아이디를 입력하세요." onChange={handleChange} />
                     </label>
                     <label className="auth_label">
                         <p>비밀번호</p>
-                        <input name="password" type="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.password = el}} name="password" type="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} />
                     </label>
                     <label className="auth_label">
                         <p>비밀번호 확인</p>
-                        <input name="passwordConfirm" type="password" placeholder="비밀번호를 다시 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.passwordConfirm = el}} name="passwordConfirm" type="password" placeholder="비밀번호를 다시 입력하세요." onChange={handleChange} />
                     </label>
                     <label className="auth_label">
                         <p>성별</p>
-                        <input type="radio" name="gender" value="male" checked={formData.gender === 'male'} onChange={handleChange} /> 남
+                        <input type="radio" ref={el => {inputRefs.current.gender = el}} name="gender" value="male" checked={formData.gender === 'male'} onChange={handleChange} /> 남
                         <input type="radio" name="gender" value="female" checked={formData.gender === 'female'} onChange={handleChange} /> 여
                     </label>
                     <label className="auth_label">
                         <p>생년월일</p>
-                        <input name="birth" type="date" className="value" onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.birth = el}} name="birth" type="date" className="value" onChange={handleChange} />
                     </label>
                 </form>
 
@@ -168,6 +77,7 @@ function Join() {
                         <input 
                             type="checkbox" 
                             name="service" 
+                            ref={el => { inputRefs.current.service = el; }}
                             checked={terms.service} 
                             onChange={handleTermClick} 
                         />
@@ -177,6 +87,7 @@ function Join() {
                         <input 
                             type="checkbox" 
                             name="privacy" 
+                            ref={el => { inputRefs.current.privacy = el; }}
                             checked={terms.privacy} 
                             onChange={handleTermClick} 
                         />

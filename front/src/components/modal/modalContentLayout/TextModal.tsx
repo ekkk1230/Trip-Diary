@@ -3,13 +3,14 @@ import ModalFooter from "../ModalFooter";
 
 interface TextModalProps {
     txt: string;
+    onConfirm?: () => void;
 }
 
-function TextModal({ txt }: TextModalProps) {
+function TextModal({ txt, onConfirm }: TextModalProps) {
     return (
         <S.Container>
             <S.Text>{txt}</S.Text>
-            <ModalFooter />
+            <ModalFooter onConfirm={onConfirm} />
         </S.Container>
     )
 }

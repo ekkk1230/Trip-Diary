@@ -8,6 +8,13 @@ interface ModalFooterProps {
 function ModalFooter({ onConfirm }: ModalFooterProps) {
     const { modalType, closeModal } = useUiStore();
 
+    const handleAction = () => {
+        if (typeof onConfirm === 'function') {
+            onConfirm();
+        }
+        closeModal();
+    };
+
     return (
         <S.ModalFooter>
         {modalType === "confirm" ? (
@@ -17,7 +24,7 @@ function ModalFooter({ onConfirm }: ModalFooterProps) {
             </div>
         ) : (
             <div className="btn-wrap">
-                <button className="btn-confirm" onClick={closeModal}>닫기</button>
+                <button className="btn-confirm" onClick={handleAction}>닫기</button>
             </div>
         )}
         </S.ModalFooter>
