@@ -17,6 +17,8 @@ interface UiStore {
 
     isDark: boolean;
     setIsDark: () => void;
+    alarm: boolean;
+    setAlarm: () => void;
 }
 
 export const useUiStore = create<UiStore>((set) => ({
@@ -39,4 +41,6 @@ export const useUiStore = create<UiStore>((set) => ({
 
     isDark: false,
     setIsDark: () => set((state) => ({ isDark: !state.isDark })),
+    alarm: false,
+    setAlarm: () => set((state) => ({ alarm: !state.alarm })),
 }))

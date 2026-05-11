@@ -132,3 +132,51 @@ export const ModalFooter = styled.div`
     &:active { background-color: #e5e5e5; }
   }
 `;
+
+export const OptionItem = styled.div`
+    display: flex; flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f9f9f9;
+    border-radius: 12px;
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px; margin-bottom: 1.6rem;
+
+        .label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sub-label {
+            font-size: 12px;
+            color: #888;
+        }
+    }
+`;
+
+export const ToggleWrapper = styled.div<{ $active: boolean }>`
+    width: 50px;
+    height: 28px;
+    background-color: ${props => (props.$active ? "#34C759" : "#E9E9EA")}; // iOS 그린 컬러
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    .circle {
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: ${props => (props.$active ? "24px" : "2px")}; // 상태에 따른 이동
+        transition: left 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+`;

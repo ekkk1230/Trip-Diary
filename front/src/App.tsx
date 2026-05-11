@@ -12,11 +12,15 @@ import FavoritePage from './pages/myPage/FavoritePage';
 import DetailPage from './pages/map/DetailPage';
 import SettingPage from './pages/setting/SettingPage';
 import Profile from './features/setting/Profile';
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from './styles/theme';
+import { GlobalStyle } from './styles/GlobalStyle';
 
 function App() {
-    const navigate = useNavigate();
-    const { title, setTitle } = useUiStore();
+    const { title, setTitle, isDark } = useUiStore();
+    const theme = isDark ? darkTheme : lightTheme;
     const { resetMap } = useMapStore();
+    const navigate = useNavigate();
 
     const handleBackToMap = () => {
         resetMap();
@@ -25,76 +29,79 @@ function App() {
     }
 
     return (
-        <Routes>
-            {/* 지도 페이지 */}
-            <Route path="/" element={
-                <Layout title={title} hasHeader hasBottomNav onBackClick={handleBackToMap}>
-                    <MapPage />
-                </Layout>
-            } />
-            <Route path="/detail/:contentid" element={
-                <Layout title="상세보기" hasHeader hasBottomNav onBackClick={handleBackToMap}>
-                    <DetailPage />
-                </Layout>
-            } />
-            
-            <Route path="/journal" element={
-                <Layout title="저널" hasHeader hasBottomNav>
-                    <JournalPage />
-                </Layout>
-            } />
-            <Route path="/journal/write" element={
-                <Layout title="저널" hasHeader hasBottomNav>
-                    <JournalDetailPage />
-                </Layout>
-            } />
-            <Route path="/journal/edit/:id" element={
-                <Layout title="저널" hasHeader hasBottomNav>
-                    <JournalDetailPage />
-                </Layout>
-            } />
-            <Route path="/journal/:id" element={
-                <Layout title="저널" hasHeader hasBottomNav>
-                    <JournalDetailPage />
-                </Layout>
-            } />
+        <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <Routes>
+                {/* 지도 페이지 */}
+                <Route path="/" element={
+                    <Layout title={title} hasHeader hasBottomNav onBackClick={handleBackToMap}>
+                        <MapPage />
+                    </Layout>
+                } />
+                <Route path="/detail/:contentid" element={
+                    <Layout title="상세보기" hasHeader hasBottomNav onBackClick={handleBackToMap}>
+                        <DetailPage />
+                    </Layout>
+                } />
+                
+                <Route path="/journal" element={
+                    <Layout title="저널" hasHeader hasBottomNav>
+                        <JournalPage />
+                    </Layout>
+                } />
+                <Route path="/journal/write" element={
+                    <Layout title="저널" hasHeader hasBottomNav>
+                        <JournalDetailPage />
+                    </Layout>
+                } />
+                <Route path="/journal/edit/:id" element={
+                    <Layout title="저널" hasHeader hasBottomNav>
+                        <JournalDetailPage />
+                    </Layout>
+                } />
+                <Route path="/journal/:id" element={
+                    <Layout title="저널" hasHeader hasBottomNav>
+                        <JournalDetailPage />
+                    </Layout>
+                } />
 
-            <Route path="/mypage" element={
-                <Layout title="마이페이지" hasHeader hasBottomNav>
-                    <MyPage />
-                </Layout>
-            } />
-            <Route path="/mypage/favorite" element={
-                <Layout title="찜목록" hasHeader hasBottomNav>
-                    <FavoritePage />
-                </Layout>
-            } />
+                <Route path="/mypage" element={
+                    <Layout title="마이페이지" hasHeader hasBottomNav>
+                        <MyPage />
+                    </Layout>
+                } />
+                <Route path="/mypage/favorite" element={
+                    <Layout title="찜목록" hasHeader hasBottomNav>
+                        <FavoritePage />
+                    </Layout>
+                } />
 
-            <Route path="/settings" element={
-                <Layout title="설정" hasHeader hasBottomNav>
-                    <SettingPage />
-                </Layout>
-            } />
+                <Route path="/settings" element={
+                    <Layout title="설정" hasHeader hasBottomNav>
+                        <SettingPage />
+                    </Layout>
+                } />
 
-            <Route path="/settings/profile" element={
-                <Layout title="프로필 수정" hasHeader hasBottomNav>
-                    <Profile />
-                </Layout>
-            } />
-            
-            
-            {/* 로그인 페이지 */}
-            <Route path="/login" element={
-                <Layout title="" hasHeader>
-                    <Login />
-                </Layout>
-            } />
-            <Route path="/join" element={
-                <Layout title="회원가입" hasHeader>
-                    <Join />
-                </Layout>
-            } />
-        </Routes>
+                <Route path="/settings/profile" element={
+                    <Layout title="프로필 수정" hasHeader hasBottomNav>
+                        <Profile />
+                    </Layout>
+                } />
+                
+                
+                {/* 로그인 페이지 */}
+                <Route path="/login" element={
+                    <Layout>
+                        <Login />
+                    </Layout>
+                } />
+                <Route path="/join" element={
+                    <Layout title="회원가입" hasHeader>
+                        <Join />
+                    </Layout>
+                } />
+            </Routes>
+        </ThemeProvider>
     )
 }
 

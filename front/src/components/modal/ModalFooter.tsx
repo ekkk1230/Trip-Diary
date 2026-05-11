@@ -2,7 +2,7 @@ import { useUiStore } from "../../store/useUiStore"
 import * as S from "./Modal.styles"
 
 interface ModalFooterProps {
-    onConfirm: () => void;
+    onConfirm?: () => void;
 }
 
 function ModalFooter({ onConfirm }: ModalFooterProps) {

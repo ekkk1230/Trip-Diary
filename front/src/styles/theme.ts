@@ -1,31 +1,15 @@
-import { createTheme } from '@mui/material/styles';
+export const lightTheme = {
+    bgColor: "rgba(228, 235, 218, 0.9)", 
+    surfaceColor: "#ffffff",
+    textColor: "#2D3436",
+    borderColor: "rgba(0, 0, 0, 0.1)",
+};
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#2e7d32',
-            light: '#a5d6a7',
-            dark: '#1b5e20',
-            contrastText: '#fff',
-        },
+export const darkTheme = {
+    bgColor: "rgba(30, 35, 28, 0.98)", 
+    surfaceColor: "rgba(45, 52, 42, 1)", 
+    textColor: "#E4EBDA", 
+    borderColor: "rgba(255, 255, 255, 0.1)",
+};
 
-        secondary: {
-            main: '#ff8a65',
-        },
-
-        background: {
-            default: '#F9FBF9',
-        },
-    },
-    typography: {
-        fontFamily: '"Pretendard", "Roboto", "Helvetica", "Arial", sans-serif',
-        h6: {
-            fontWeight: 700,
-        },
-    },
-    shape: {
-        borderRadius: 12,
-    },
-});
-
-export default theme;
+export type AppTheme = typeof lightTheme;

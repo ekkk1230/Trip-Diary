@@ -2,13 +2,30 @@ import { useNavigate } from 'react-router-dom';
 import * as S from '../../features/setting/Setting.styles';
 import { MdChevronRight } from 'react-icons/md';
 import { useUiStore } from '../../store/useUiStore';
+import SetDarkOptionForm from '../../components/modal/modalContentLayout/ToggleForm';
 
 function SettingPage() {
-    const { isDark } = useUiStore();
+    const { openModal, isDark, alarm } = useUiStore();
     const navigate = useNavigate();
 
     const handleSetting = () => {
+        openModal(
+            "check",
+            "다크 모드 변경",
+            (
+                <SetDarkOptionForm subTit={"다크 모드 적용"} subLabel={"화면을 어둡게 설정하여 눈을 보호합니다."} type={"setting"} />
+            )
+        )
+    }
 
+    const handleAlarm = () => {
+        openModal(
+            "check",
+            "알림 설정 변경",
+            (
+                <SetDarkOptionForm subTit={"알람 설정 적용"} subLabel={"중요한 소식과 업데이트에 대한 푸시 알림을 설정합니다."} type={"alarm"}  />
+            )
+        )
     }
 
     return (
@@ -32,13 +49,16 @@ function SettingPage() {
                 <S.SettingItem onClick={handleSetting}>
                     <span>다크 모드</span>
                     <S.ToggleWrapper>
-                        현재 끔
+                        {isDark ? ("활성화") : ("비활성화")}
                         <MdChevronRight />
                     </S.ToggleWrapper>
                 </S.SettingItem>
-                <S.SettingItem>
+                <S.SettingItem onClick={handleAlarm}>
                     <span>알림 설정</span>
-                    <MdChevronRight />
+                    <S.ToggleWrapper>
+                        {alarm ? ("활성화") : ("비활성화")}
+                        <MdChevronRight />
+                    </S.ToggleWrapper>
                 </S.SettingItem>
             </S.SettingList>
 
