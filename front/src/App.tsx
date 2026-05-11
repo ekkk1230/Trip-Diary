@@ -15,6 +15,7 @@ import Profile from './features/setting/Profile';
 import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyle } from './styles/GlobalStyle';
+import FindUser from './pages/auth/FindUser';
 
 function App() {
     const { title, setTitle, isDark } = useUiStore();
@@ -93,6 +94,11 @@ function App() {
                 <Route path="/login" element={
                     <Layout>
                         <Login />
+                    </Layout>
+                } />
+                <Route path="/findUser" element={
+                    <Layout title="아이디/비밀번호 찾기" hasHeader>
+                        <FindUser />
                     </Layout>
                 } />
                 <Route path="/join" element={

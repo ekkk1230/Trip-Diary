@@ -3,9 +3,11 @@ import * as S from '../../features/setting/Setting.styles';
 import { MdChevronRight } from 'react-icons/md';
 import { useUiStore } from '../../store/useUiStore';
 import SetDarkOptionForm from '../../components/modal/modalContentLayout/ToggleForm';
+import { useUserStore } from '../../store/useUserStore';
 
 function SettingPage() {
     const { openModal, isDark, alarm } = useUiStore();
+    const { user, clearUser, removeUser } = useUserStore();
     const navigate = useNavigate();
 
     const handleSetting = () => {
@@ -28,6 +30,13 @@ function SettingPage() {
         )
     }
 
+    const handleRemoveUser = () => removeUser(user!);
+
+    const handleLogout = () => {
+        clearUser();
+        navigate('/login');
+    }
+
     return (
         <S.SettingContainer>
             {/* 계정 섹션 */}
@@ -37,7 +46,7 @@ function SettingPage() {
                     <span>프로필 수정</span>
                     <MdChevronRight />
                 </S.SettingItem>
-                <S.SettingItem onClick={() => alert('준비 중인 기능입니다.')}>
+                <S.SettingItem onClick={handleLogout}>
                     <span>로그아웃</span>
                     <MdChevronRight />
                 </S.SettingItem>
@@ -69,7 +78,7 @@ function SettingPage() {
                     <span>버전 정보</span>
                     <span style={{ fontSize: '14px', color: '#bbb' }}>v1.0.0</span>
                 </S.SettingItem>
-                <S.SettingItem className="danger" onClick={() => confirm('정말 탈퇴하시겠습니까?')}>
+                <S.SettingItem className="danger" onClick={() => handleRemoveUser()}>
                     <span>회원 탈퇴</span>
                 </S.SettingItem>
             </S.SettingList>

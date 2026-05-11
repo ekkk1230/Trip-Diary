@@ -70,6 +70,7 @@ export const useJournalStore = create<JournalStore>((set) => ({
             const matchesKeyword = keyword
                 ? (j.logTitle.includes(keyword) ||
                    j.description.includes(keyword) ||
+                   j.location.includes(keyword) ||
                    j.keywords.some(k => k.includes(keyword)))
                 : true;
             

@@ -1,13 +1,48 @@
 import * as S from './Auth.styles'
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import Logo from "../../assets/Trip_Diary.png";
 import { LiaUserSolid } from "react-icons/lia";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
+import { useUserStore } from '../../store/useUserStore';
+import { useNavigate } from 'react-router-dom';
+import { useUiStore } from '../../store/useUiStore';
+import TextModal from '../../components/modal/modalContentLayout/TextModal';
 
 function Login() {    
+    const { login } = useUserStore();
+    const { openModal } = useUiStore();
+    const navigate = useNavigate();
+
+    const [loginData, setLoginData] = useState({
+        userId: '',
+        password: '',
+    })
     const [eye, setEye] = useState(false);
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setLoginData(prev => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const handleLogin = () => {
+        const isSuccess = login(loginData);
+        
+        if (isSuccess) {
+            navigate('/');
+        } else {
+            openModal(
+                "check",
+                "로그인 실패",
+                (<TextModal txt={"아이디 또는 비밀번호를 다시 입력해주세요."} />)
+            )
+        }
+    }
     
     return (
         <>
@@ -22,14 +57,14 @@ function Login() {
                         <p>아이디</p>
                         <div className="input_wrapper">
                             <LiaUserSolid />
-                            <input type="text" placeholder="아이디를 입력하세요." />
+                            <input type="text" name="userId" placeholder="아이디를 입력하세요." onChange={handleChange} />
                         </div>
                     </label>
                     <label htmlFor="" className="auth_label">
                         <p>비밀번호</p>
                         <div className="input_wrapper">
                             <RiLockPasswordFill/>
-                            <input type={eye ? "text" : "password"} placeholder="비밀번호를 입력하세요." />
+                            <input type={eye ? "text" : "password"} name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} />
                             <button type="button" onClick={() => setEye(!eye)}>
                                 {eye ? <FaEye /> : <FaEyeSlash />}
                             </button>
@@ -37,12 +72,12 @@ function Login() {
                     </label>
                 </form>
 
-                <S.LoginLink to="#">비밀번호를 잊으셨나요?</S.LoginLink>
+                <S.LoginLink to="/findUser">아이디/비밀번호를 잊으셨나요?</S.LoginLink>
 
-                <button className="auth_btn">로그인</button>
+                <button className="auth_btn" onClick={() => handleLogin()}>로그인</button>
             </S.AuthBox>
             
-            <S.LoginLink to="#">아직 계정이 없으신가요? 회원가입</S.LoginLink>
+            <S.LoginLink to="/join">아직 계정이 없으신가요? 회원가입</S.LoginLink>
         </>
     )
 }

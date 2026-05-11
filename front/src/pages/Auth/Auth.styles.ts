@@ -31,9 +31,9 @@ export const AuthBox = styled.div`
 
             svg { width: 1.6rem; min-width: 1.6rem; height: 1.6rem; margin-right: 1rem; }
             
-            input { padding: 0; flex: 1; background: transparent; }
+            input { padding: 0; flex: 1; background: transparent; border: 0; font-size: 1.4rem; padding-left: 1.4rem; }
             button { 
-                background: transparent; cursor: pointer; 
+                background: transparent; cursor: pointer; padding: 0;
                 
                 svg { margin: 0; }
             }
@@ -55,3 +55,96 @@ export const LoginLink = styled(Link)`
     a { font-weight: 500; text-decoration: none; color: #1a3d35; }
 `;
 
+export const FindUserContainer = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+`;
+
+// 탭 바깥 컨테이너 (회색 배경)
+export const TabWrapper = styled.div`
+  display: flex;
+  background: #f1f1f1;
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  position: relative;
+`;
+
+// 개별 탭 버튼
+export const TabButton = styled.button<{ $isActive: boolean }>`
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  background-color: #fff;
+  color: #888;
+  box-shadow: ${(props) => 
+    props.$isActive ? "0 2px 8px rgba(0,0,0,0.1)" : "none"
+  };
+
+  &:hover {
+    color: ${(props) => props.$isActive ? "" : "#555"};
+  }
+`;
+
+// 입력 폼 스타일
+export const FormBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
+
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  p {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+  }
+
+  input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 15px;
+
+    &:focus {
+      outline: none;
+      border-color: #deff9a;
+    }
+  }
+`;
+
+export const ActionButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #deff9a;
+  color: #000;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+`;

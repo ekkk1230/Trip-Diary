@@ -180,3 +180,7 @@ export const ToggleWrapper = styled.div<{ $active: boolean }>`
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 `;
+
+export const Text = styled.div`
+    font-size: 1.6rem; text-align: center;
+`;

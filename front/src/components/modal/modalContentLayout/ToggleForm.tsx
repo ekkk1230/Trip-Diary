@@ -12,11 +12,8 @@ function ToggleForm({ subTit, subLabel, type }: ToggleFormProps) {
     const { isDark, setIsDark, alarm ,setAlarm } = useUiStore();
 
     const handleToggleEvent = (type: string) => {
-        if (type === "setting") {
-            setIsDark();
-        } else if (type === "alarm") {
-            setAlarm();
-        }
+        if (type === "setting") setIsDark(); 
+        else if (type === "alarm") setAlarm();
     }
 
     return (
