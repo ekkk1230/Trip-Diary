@@ -4,9 +4,10 @@ import { MdChevronRight } from 'react-icons/md';
 import { useUiStore } from '../../store/useUiStore';
 import SetDarkOptionForm from '../../components/modal/modalContentLayout/ToggleForm';
 import { useUserStore } from '../../store/useUserStore';
+import TextModal from '../../components/modal/modalContentLayout/TextModal';
 
 function SettingPage() {
-    const { openModal, isDark, alarm } = useUiStore();
+    const { openModal, isDark, alarm, closeModal } = useUiStore();
     const { user, clearUser, removeUser } = useUserStore();
     const navigate = useNavigate();
 
@@ -31,8 +32,17 @@ function SettingPage() {
     }
 
     const handleRemoveUser = () => {
-        removeUser(user!);
-        navigate('/login');
+        openModal(
+            "confirm",
+            "회원 탈퇴",
+            <TextModal 
+            txt={"정말로 회원탈퇴를 하시겠습니까? 삭제 후 복구가 불가능합니다."} 
+            onConfirm={() => {
+                removeUser(user!);
+                closeModal();
+                navigate('/login');
+            }} />
+        )
     };
 
     const handleLogout = () => {
