@@ -8,6 +8,12 @@ interface User {
     password: string;
     gender: string;
     birth: string;
+    profileImg: string;
+    agreements: {
+        service: boolean,
+        privacy: boolean,
+        agreedAt: string,
+    }
 }
 
 interface LoginData {
@@ -43,6 +49,12 @@ export const useUserStore = create<UserStore>()(
                     password: user.password,
                     gender: user.gender,
                     birth: user.birth,
+                    profileImg: user.profileImg,
+                    agreements: {
+                        service: user.agreements.service,
+                        privacy: user.agreements.privacy,
+                        agreedAt: user.agreements.agreedAt,
+                    }
                 };
 
                 set((state) => ({ users: [newUser, ...state.users] }));

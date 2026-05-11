@@ -1,18 +1,12 @@
 import PasswordChangeForm from '../../components/modal/modalContentLayout/PasswordChangeForm';
 import ProfileImageChangeForm from '../../components/modal/modalContentLayout/ProfileImageChangeForm';
 import { useUiStore } from '../../store/useUiStore';
+import { useUserStore } from '../../store/useUserStore';
 import * as S from './Setting.styles';
 
 function Profile() {
     const { openModal, closeModal } = useUiStore();
-
-    const userInfo = {
-        nickname: "테스트유저",
-        email: "test@example.com",
-        gender: "",
-        birth: "1990-01-01",
-        profileImg: "https://images.unsplash.com/photo-1599481238505-b8b0537a3f77?auto=format&fit=crop&w=800&q=80"
-    };
+    const { user } = useUserStore();
 
     // 1. 사진 변경 핸들러
     const handleImageChange = () => {
@@ -53,7 +47,7 @@ function Profile() {
             {/* 상단 프로필 이미지 */}
             <S.ImageSection>
                 <div className='profile-img'>
-                    <img src={userInfo.profileImg} alt="" />
+                    <img src={user?.profileImg} alt="" />
                 </div>
                 <button onClick={handleImageChange}>사진 변경</button>
             </S.ImageSection>
@@ -62,11 +56,11 @@ function Profile() {
             <S.InfoSection>
                 <div className="info-item">
                     <label>닉네임</label>
-                    <input type="text" placeholder="닉네임을 입력하세요" value={userInfo.nickname} className="value" />
+                    <input type="text" placeholder="닉네임을 입력하세요" value={user?.nickname} className="value" />
                 </div>
                 <div className="info-item">
                 <label>성별</label>
-                    <select className="value" value={userInfo.gender}>
+                    <select className="value" value={user?.gender}>
                         <option value="">선택 안 함</option>
                         <option value="male">남성</option>
                         <option value="female">여성</option>
@@ -74,7 +68,7 @@ function Profile() {
                 </div>
                 <div className="info-item">
                     <label>생년월일</label>
-                    <input type="date" className="value" value={userInfo.birth} />
+                    <input type="date" className="value" value={user?.birth} />
                 </div>
             </S.InfoSection>
 

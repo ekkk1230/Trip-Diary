@@ -148,3 +148,107 @@ export const ActionButton = styled.button`
     filter: brightness(0.9);
   }
 `;
+
+export const ProfileUploadSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .auth_label_tit {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: ${(props) => props.theme.textColor};
+  }
+
+  .profile_label {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .img_preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .placeholder {
+      font-size: 32px;
+      color: #888;
+      font-weight: 300;
+    }
+  }
+`;
+
+export const TermsSection = styled.div`
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+
+  .all_check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    label {
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 12px 0;
+  }
+
+  .term_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    span {
+      font-size: 14px;
+      color: #888;
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: #deff9a; 
+    }
+  }
+`;
+
+export const ErrorMessage = styled.p`
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+`;

@@ -8,7 +8,6 @@ function FindUser() {
         <S.FindUserContainer>
             <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>계정 찾기</h2>
 
-            {/* 탭 전환 스위치 */}
             <S.TabWrapper>
                 <S.TabButton 
                 $isActive={activeTab === "id"} 
@@ -24,10 +23,8 @@ function FindUser() {
                 </S.TabButton>
             </S.TabWrapper>
 
-            {/* 탭 내용 */}
             <S.FormBox>
                 {activeTab === "id" ? (
-                // 아이디 찾기 폼
                 <>
                     <S.InputGroup>
                     <p>이름</p>
@@ -40,7 +37,6 @@ function FindUser() {
                     <S.ActionButton>아이디 찾기</S.ActionButton>
                 </>
                 ) : (
-                // 비밀번호 찾기 폼
                 <>
                     <S.InputGroup>
                     <p>아이디</p>

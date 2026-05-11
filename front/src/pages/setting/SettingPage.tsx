@@ -30,7 +30,10 @@ function SettingPage() {
         )
     }
 
-    const handleRemoveUser = () => removeUser(user!);
+    const handleRemoveUser = () => {
+        removeUser(user!);
+        navigate('/login');
+    };
 
     const handleLogout = () => {
         clearUser();
