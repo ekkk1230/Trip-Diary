@@ -1,11 +1,10 @@
 import PasswordChangeForm from '../../components/modal/modalContentLayout/PasswordChangeForm';
 import ProfileImageChangeForm from '../../components/modal/modalContentLayout/ProfileImageChangeForm';
-import { useSettingStore } from '../../store/useSettingStore';
 import { useUiStore } from '../../store/useUiStore';
 import * as S from './Setting.styles';
 
 function Profile() {
-    const { openModal } = useUiStore();
+    const { openModal, closeModal } = useUiStore();
 
     const userInfo = {
         nickname: "테스트유저",
@@ -15,20 +14,38 @@ function Profile() {
         profileImg: "https://images.unsplash.com/photo-1599481238505-b8b0537a3f77?auto=format&fit=crop&w=800&q=80"
     };
 
-    const setPassword = (newPassword: string) => {
-        console.log(`새 비밀번호: ${newPassword}`);
-    }
-
+    // 1. 사진 변경 핸들러
     const handleImageChange = () => {
-        openModal("confirm", "프로필 사진 변경", <ProfileImageChangeForm onImageChange={(newImage) => console.log(`새 프로필 사진: ${newImage}`)} />, () => {
-            console.log('프로필 사진 변경 확인');
-        });
+        openModal(
+            "confirm", 
+            "프로필 사진 변경", 
+            (
+                <ProfileImageChangeForm 
+                    onImageChange={(file) => {
+                        console.log("서버로 전송할 파일:", file);
+                        // 업로드 API 호출
+                        closeModal();
+                    }} 
+                />
+            )
+        );
     }
 
+    // 2. 비밀번호 변경 핸들러
     const handlePasswordChange = () => {
-        openModal('confirm', '비밀번호 변경', <PasswordChangeForm onChange={setPassword} />, () => {
-            console.log('비밀번호 변경 확인');
-        })
+        openModal(
+            'confirm', 
+            '비밀번호 변경', 
+            (
+                <PasswordChangeForm 
+                    onConfirm={(newPw) => {
+                        console.log("변경할 비번:", newPw);
+                        // 유효성 검사 후 서버 전송
+                        closeModal();
+                    }} 
+                />
+            )
+        );
     }
 
     return (

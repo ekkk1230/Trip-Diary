@@ -1,20 +1,22 @@
 import { useUiStore } from "../../store/useUiStore";
 import * as S from "./Modal.styles";
-import CheckModal from "./modalContentLayout/CheckModal";
-import ConfirmModal from "./modalContentLayout/ConfirmModal";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 
 
 function Modal() {
-    const { modalType } = useUiStore();
+    const { closeModal, modalTitle, modalContent } = useUiStore();
     return (
         <>
             <S.ModalOverlay>
-                {modalType === "confirm" ? (
-                    <ConfirmModal />
-                ) : (
-                    <CheckModal />
-                )}
+                <S.ModalContainer onClick={(e) => e.stopPropagation()}>
+                    <S.ModalHeader>
+                        <p>{modalTitle}</p>
+                        <button onClick={closeModal}><IoCloseCircleOutline /></button>
+                    </S.ModalHeader>
+
+                    <S.ModalBody>{modalContent}</S.ModalBody>
+                </S.ModalContainer>
             </S.ModalOverlay>
         </>
     )

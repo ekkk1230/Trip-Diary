@@ -14,6 +14,9 @@ interface UiStore {
     onConfirm: (() => void) | null;
     openModal: (type: ModalType, title: string, content: ReactNode, onConfirm?: () => void) => void;
     closeModal: () => void;
+
+    isDark: boolean;
+    setIsDark: () => void;
 }
 
 export const useUiStore = create<UiStore>((set) => ({
@@ -33,4 +36,7 @@ export const useUiStore = create<UiStore>((set) => ({
         onConfirm: onConfirm || null,
     }),
     closeModal: () => set({ isOpen: false, modalType: null, modalTitle: '', modalContent: '', onConfirm: null }),
+
+    isDark: false,
+    setIsDark: () => set((state) => ({ isDark: !state.isDark })),
 }))

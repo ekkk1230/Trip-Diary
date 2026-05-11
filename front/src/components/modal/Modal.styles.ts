@@ -64,10 +64,48 @@ export const ModalBody = styled.div`
   text-align: center;
 `;
 
+export const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+`;
+
+export const Input = styled.input`
+    width: 100%; 
+`;
+
+export const PreviewSection = styled.div`
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+`;
+
 export const ModalFooter = styled.div`
-  padding: 12px 16px 16px;
+  padding: 1.2rem 0 1.6rem;
   display: flex;
   gap: 8px;
+  width: 100%;
+
+  .btn-wrap { width: 100%; display: flex; gap: .8rem; }
 
   button {
     flex: 1;

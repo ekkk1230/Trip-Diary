@@ -1,9 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import * as S from '../../features/setting/Setting.styles';
 import { MdChevronRight } from 'react-icons/md';
+import { useUiStore } from '../../store/useUiStore';
 
 function SettingPage() {
+    const { isDark } = useUiStore();
     const navigate = useNavigate();
+
+    const handleSetting = () => {
+
+    }
 
     return (
         <S.SettingContainer>
@@ -23,7 +29,7 @@ function SettingPage() {
             {/* 앱 설정 섹션 */}
             <S.GroupTitle>앱 설정</S.GroupTitle>
             <S.SettingList>
-                <S.SettingItem>
+                <S.SettingItem onClick={handleSetting}>
                     <span>다크 모드</span>
                     <S.ToggleWrapper>
                         현재 끔
