@@ -20,7 +20,7 @@ function ModalFooter({ onConfirm }: ModalFooterProps) {
         {modalType === "confirm" ? (
             <div className="btn-wrap">
                 <button className="btn-confirm" onClick={onConfirm}>확인</button>
-                <button className="btn-confirm" onClick={closeModal}>취소</button>
+                <button className="btn-cancle" onClick={closeModal}>취소</button>
             </div>
         ) : (
             <div className="btn-wrap">

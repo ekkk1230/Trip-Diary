@@ -15,8 +15,8 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  width: 100%;
-  max-width: 320px;
+  width: auto;
+  min-width: 320px;
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -119,17 +119,19 @@ export const ModalFooter = styled.div`
   }
 
   /* 확인/닫기 버튼 (Main) */
-  .btn-confirm {
-    background-color: #333;
-    color: #fff;
-    &:active { background-color: #000; }
+
+
+  .btn-cancel {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #868e96;
   }
 
-  /* 취소 버튼 (Sub) */
-  .btn-cancel {
-    background-color: #f1f1f1;
-    color: #666;
-    &:active { background-color: #e5e5e5; }
+  .btn-confirm {
+    background-color: #26a69a;
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(38, 166, 154, 0.2);
   }
 `;
 
@@ -258,6 +260,7 @@ export const AddressRow = styled.div`
 export const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
+  width: 50rem;
   gap: 24px;
   padding: 8px;
   max-height: 80vh;
@@ -276,7 +279,7 @@ export const FormWrapper = styled.form`
 export const PhotoSection = styled.div`
   .upload_box {
     width: 100%;
-    height: 180px;
+    height: 30rem;
     background-color: #f8f9fa;
     border: 2px dashed #dee2e6;
     border-radius: 16px;
@@ -284,8 +287,20 @@ export const PhotoSection = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .image_clear { position: absolute; top: .4rem; right: .4rem; background: none; font-size: 3.6rem; padding: 0; width: 4rem; height: 4rem; }
+
+    label { 
+      cursor: pointer;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
     &:hover {
       background-color: #f1f3f5;
@@ -324,17 +339,20 @@ export const InputSection = styled.div`
       font-weight: 700;
       color: #343a40;
       margin-left: 4px;
+      text-align: left;
     }
 
     input[type="text"],
     input[type="tel"],
-    textarea {
+    textarea,
+    select {
       padding: 12px 16px;
       border: 1px solid #e9ecef;
       border-radius: 12px;
       font-size: 15px;
       background-color: #ffffff;
       transition: border-color 0.2s;
+      width: 100%;
 
       &:focus {
         outline: none;
@@ -354,7 +372,7 @@ export const InputSection = styled.div`
 
   .category_group {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1fr);
     gap: 10px;
 
     label {
@@ -424,18 +442,5 @@ export const ActionSection = styled.div`
     &:active {
       transform: scale(0.98);
     }
-  }
-
-  .cancel_btn {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    color: #868e96;
-  }
-
-  .submit_btn {
-    background-color: #26a69a;
-    border: none;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(38, 166, 154, 0.2);
   }
 `;
