@@ -36,7 +36,7 @@ function DetailPage() {
         loadData();
     }, [contentid, customPlaces]);
 
-    console.log(detail)
+    // console.log(detail)
 
     const isFavorite = favoriteList.some(fav => fav.contentid === contentid);
 
