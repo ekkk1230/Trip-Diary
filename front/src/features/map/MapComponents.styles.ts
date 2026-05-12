@@ -278,3 +278,27 @@ export const NoResultWrap = styled.div`
         cursor: pointer;
     }
 `;
+
+export const AdminButtonGroup = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: -10px; /* 제목과의 간격 조정 */
+    margin-bottom: 15px;
+`;
+
+export const AdminButton = styled.button<{ $type?: 'edit' | 'delete' }>`
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid #eee;
+    background-color: white;
+    color: ${props => props.$type === 'delete' ? '#ff4d4f' : '#666'};
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: ${props => props.$type === 'delete' ? '#fff1f0' : '#f5f5f5'};
+        border-color: ${props => props.$type === 'delete' ? '#ffccc7' : '#ddd'};
+    }
+`;

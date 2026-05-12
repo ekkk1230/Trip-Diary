@@ -9,9 +9,11 @@ import JournalList from "../../components/journal/JournalList";
 
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { useMapStore } from "../../store/useMapStore";
+import { useUserStore } from "../../store/useUserStore";
 
 function DetailPage() {
     const { toggleFavorite, favoriteList, customPlaces } = useMapStore();
+    const { user } = useUserStore();
     const { contentid } = useParams();
     const [detail, setDetail] = useState<any>(null);
 
@@ -39,6 +41,8 @@ function DetailPage() {
     // console.log(detail)
 
     const isFavorite = favoriteList.some(fav => fav.contentid === contentid);
+    const isUserPost = user && detail && detail.author === user.nickname;
+    console.log(isUserPost);
 
     if (!detail) return <div>데이터를 불러오는 중입니다...</div>;
 
@@ -52,6 +56,26 @@ function DetailPage() {
                     {isFavorite ?  <BsBookmarkHeartFill/> : <BsBookmarkHeart/>}
                 </S.FavoriteBtn>
             </S.DetailHeader>
+
+            {isUserPost && (
+                <S.AdminButtonGroup>
+                    <S.AdminButton onClick={() => alert('수정 페이지로 이동')}>
+                        수정하기
+                    </S.AdminButton>
+                    <S.AdminButton 
+                        $type="delete" 
+                        onClick={() => {
+                            if(confirm('정말 삭제하시겠습니까?')) {
+                                // deleteCustomPlace(detail.contentid);
+                                alert('삭제되었습니다.');
+                                window.history.back();
+                            }
+                        }}
+                    >
+                        삭제하기
+                    </S.AdminButton>
+                </S.AdminButtonGroup>
+            )}
 
             <S.ImageBox>
                 <img src={detail.firstimage || `${import.meta.env.BASE_URL}default-image.png`} alt={detail.title} />
