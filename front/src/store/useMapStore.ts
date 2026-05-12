@@ -52,6 +52,7 @@ export interface Trip {
     title: string;
     zipcode?: string;
     isCustom?: boolean;
+    author?: string;
 }
 
 interface MapStore {
@@ -168,7 +169,7 @@ export const useMapStore = create<MapStore>()(
                 }
             },
             addCustomPlaces: (place) => {
-                console.log(place)
+                // console.log(place)
                 set((state) => ({ customPlaces: [place, ...state.customPlaces] }));
                 const { filteredData } = get();
                 set({ filteredData: [place, ...filteredData] });

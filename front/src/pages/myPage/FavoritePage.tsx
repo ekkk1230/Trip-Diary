@@ -1,4 +1,4 @@
-import CardItem from "../../features/map/CardItem";
+import CardItem from "../../components/map/CardItem";
 import { useMapStore } from "../../store/useMapStore";
 import { useNavigate } from "react-router-dom";
 import * as S from "../../features/myPage/MyPage.styles"
@@ -27,7 +27,7 @@ function FavoritePage() {
 
             <S.GridSection>
                 {favoriteList.map((item) => (
-                    <CardItem key={item.contentid || item.id} item={item} />
+                    <CardItem key={item.contentid || item.id} item={item} link={`/mypage/favorite/${item.contentid}`} />
                 ))}
             </S.GridSection>
         </S.Container>

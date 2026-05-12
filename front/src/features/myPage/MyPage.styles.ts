@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const CountContainer = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     padding: 20px;
     background-color: #f8f9fa;

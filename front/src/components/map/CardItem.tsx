@@ -1,14 +1,15 @@
 import { useMapStore } from "../../store/useMapStore";
-import * as S from "./MapComponents.styles";
+import * as S from "../../features/map/MapComponents.styles";
 import { Link } from "react-router-dom";
 
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 
 interface CardItemProps {
-    item: any
+    item: any,
+    link: string,
 }
 
-function CardItem({ item }: CardItemProps) {
+function CardItem({ item, link }: CardItemProps) {
     const { toggleFavorite, favoriteList } = useMapStore();
 
     const handleFavoriteClick = (contentid: any) => {
@@ -23,7 +24,7 @@ function CardItem({ item }: CardItemProps) {
                 {isFavorite ?  <BsBookmarkHeartFill/> : <BsBookmarkHeart/>}
             </S.FavoriteButton>
 
-            <Link to={`/detail/${item.contentid}`}>
+            <Link to={link}>
                 <S.CardImage 
                     src={item.firstimage || "/default-image.png"} 
                     alt={item.title}

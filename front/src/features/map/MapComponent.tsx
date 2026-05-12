@@ -5,8 +5,9 @@ import { Grid, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 import * as S from "./MapComponents.styles";
-import CardItem from "./CardItem";
+import CardItem from "../../components/map/CardItem";
 import { useUiStore } from "../../store/useUiStore";
 import { useMapStore } from "../../store/useMapStore";
 import { useEffect, useMemo, useState } from "react";
@@ -133,7 +134,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 						>
 							{filteredData.map((item, idx) => (
 								<SwiperSlide key={idx}>
-									<CardItem item={item} /> 
+									<CardItem item={item} link={'/detail/${item.contentid}'} /> 
 								</SwiperSlide>
 							))}
 							
@@ -147,7 +148,6 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 							</SwiperSlide>
 						</S.StyledSwiper>
 					) : isSearched ? ( 
-						// 💡 2. 검색 결과가 없을 때 버튼 노출
 						<S.NoResultWrap>
 							<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>
 							<button className="add_direct_btn" onClick={() => openModal("confirm", "장소 추가", <AddPlaceModal />)}>

@@ -289,6 +289,7 @@ export const PhotoSection = styled.div`
     align-items: center;
     transition: all 0.2s ease;
     position: relative;
+    overflow: hidden;
 
     img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .image_clear { position: absolute; top: .4rem; right: .4rem; background: none; font-size: 3.6rem; padding: 0; width: 4rem; height: 4rem; }

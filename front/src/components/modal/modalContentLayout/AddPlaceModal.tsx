@@ -1,12 +1,14 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import DaumPostcodeEmbed from 'react-daum-postcode';
 import * as S from "../Modal.styles";
 import { categoryMap, useMapStore } from '../../../store/useMapStore';
 import ModalFooter from '../ModalFooter';
 import { IoIosCloseCircle } from "react-icons/io";
+import { useUserStore } from '../../../store/useUserStore';
 
 
 const AddPlaceModal = () => {
+    const { user } = useUserStore();
     const { addCustomPlaces } = useMapStore();
 
     const [isSearching, setIsSearching] = useState(false);
@@ -60,12 +62,36 @@ const AddPlaceModal = () => {
             title: formData.placeNm,
             zipcode: formData.zipCode,
             isCustom: true,
+            author: user?.nickname,
         }
         addCustomPlaces(place);
     };
 
+    const handleSubmit = (e?: FormEvent) => {
+        if (e) e.preventDefault();
+
+        if (!formData.placeNm || !formData.address) {
+            alert("장소명과 주소를 입력해주세요!");
+            return;
+        }
+    
+        const place = {
+            addr1: formData.address,
+            contentid: `custom_${crypto.randomUUID()}`,
+            contenttypeid: formData.category,
+            firstimage: previewUrl || '',
+            overview: formData.placeInfo,
+            title: formData.placeNm,
+            zipcode: formData.zipCode,
+            isCustom: true,
+            author: user?.nickname,
+        };
+    
+        addCustomPlaces(place);
+    }
+
     return (
-        <S.FormWrapper onSubmit={onSave}>
+        <S.FormWrapper onSubmit={handleSubmit}>
             {isSearching ? (
                 /* 주소 검색 화면 */
                 <S.AddressSearchWrapper>
@@ -156,7 +182,7 @@ const AddPlaceModal = () => {
                     </S.InputSection>
 
                     {/* 액션 버튼 */}
-                    <ModalFooter onConfirm={() => onSave(formData)} />
+                    <ModalFooter onConfirm={handleSubmit} />
                 </>
             )}
         </S.FormWrapper>

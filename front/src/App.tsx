@@ -17,6 +17,7 @@ import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyle } from './styles/GlobalStyle';
 import FindUser from './pages/auth/FindUser';
 import { useUserStore } from './store/useUserStore';
+import MySpot from './pages/myPage/MySpot';
 
 function App() {
     const { user } = useUserStore();
@@ -88,9 +89,24 @@ function App() {
                         <MyPage />
                     </Layout>
                 } />
+                <Route path="/mypage/myspot" element={
+                    <Layout title="나만의 장소" hasHeader hasBottomNav onBackClick={() => navigate('/mypage')}>
+                        <MySpot />
+                    </Layout>
+                } />
+                <Route path="/mypage/myspot/:contentid" element={
+                    <Layout title="나만의 장소" hasHeader hasBottomNav onBackClick={() => navigate('/mypage')}>
+                        <DetailPage />
+                    </Layout>
+                } />
                 <Route path="/mypage/favorite" element={
-                    <Layout title="찜목록" hasHeader hasBottomNav>
+                    <Layout title="찜목록" hasHeader hasBottomNav onBackClick={() => navigate('/mypage')}>
                         <FavoritePage />
+                    </Layout>
+                } />
+                <Route path="/mypage/favorite/:id" element={
+                    <Layout title="찜목록" hasHeader hasBottomNav onBackClick={() => navigate('/mypage')}>
+                        <DetailPage />
                     </Layout>
                 } />
 
