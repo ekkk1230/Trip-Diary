@@ -27,24 +27,24 @@ function FindUser() {
                 {activeTab === "id" ? (
                 <>
                     <S.InputGroup>
-                    <p>이름</p>
-                    <input type="text" placeholder="가입하신 이름을 입력하세요" />
+                        <p>이름</p>
+                        <input type="text" placeholder="가입하신 이름을 입력하세요" />
                     </S.InputGroup>
                     <S.InputGroup>
-                    <p>생년월일</p>
-                    <input type="date" />
+                        <p>생년월일</p>
+                        <input type="date" />
                     </S.InputGroup>
                     <S.ActionButton>아이디 찾기</S.ActionButton>
                 </>
                 ) : (
                 <>
                     <S.InputGroup>
-                    <p>아이디</p>
-                    <input type="text" placeholder="아이디를 입력하세요" />
+                        <p>아이디</p>
+                        <input type="text" placeholder="아이디를 입력하세요" />
                     </S.InputGroup>
                     <S.InputGroup>
-                    <p>이메일</p>
-                    <input type="email" placeholder="가입 시 등록한 이메일을 입력하세요" />
+                        <p>이메일</p>
+                        <input type="email" placeholder="가입 시 등록한 이메일을 입력하세요" />
                     </S.InputGroup>
                     <S.ActionButton>임시 비밀번호 발송</S.ActionButton>
                 </>

@@ -10,25 +10,72 @@ const API_CODE_MAP: { [key: string]: string } = {
   "24": "5",  "25": "8"
 };
 
+export const categoryMap = {
+    "관광지": "12",
+    "문화시설": "14",
+    "축제/공연/행사": "15",
+    "여행코스": "25",
+    "레포츠": "28",
+    "숙박": "32",
+    "쇼핑": "38",
+    "음식점": "39",
+} as const;
+
+export interface Trip {
+    addr1: string;
+    addr2?: string;
+    areacode?: string;
+    cat1?: string;
+    cat2?: string;
+    cat3?: string;
+    contentid: string;
+    contenttypeid: string;
+    cpyrhtDivCd?: string;
+    createdtime?: string;
+    firstimage?: string;
+    firstimage2?: string;
+    homepage?: string;
+    lDongRegnCd?: string;
+    lDongSignguCd? : string;
+    lclsSystm1?: string;
+    lclsSystm2?: string;
+    lclsSystm3?: string;
+    mapx?: string;
+    mapy?: string;
+    mlevel?: string;
+    modifiedtime?: string;
+    overview: string;
+    sigungucode?: string;
+    tel?: string;
+    telname?: string;
+    title: string;
+    zipcode?: string;
+    isCustom?: boolean;
+}
+
 interface MapStore {
-    allTourList: any[];
+    allTourList: Trip[];
+    customPlaces: Trip[];
     favoriteList: any[];
     selectedRegion: any | null;
     selectedSigungu: any | null;
-    filteredData: any[];
+    filteredData: Trip[];
     isLoading: boolean;
     isSearched: boolean;
 
     toggleFavorite: (id: string) => void;
     setSelectedRegion: (region: any | null) => void;
     setSelectedSigungu: (sigungu: any | null) => void;
-    setFilteredData: (data: any[]) => void;
+    setFilteredData: (data: Trip[]) => void;
+    refreshFilteredData: (apiItems: any[]) => void;
     fetchAndFilterData: (geo: any) => Promise<void>;
+    addCustomPlaces: (place: Trip) => void;
     resetMap: () => void;
 }
 
-export const useMapStore = create<MapStore>((set) => ({
+export const useMapStore = create<MapStore>((set, get) => ({
     allTourList: [],
+    customPlaces: [],
     favoriteList: [],
     selectedRegion: null,
     selectedSigungu: null,
@@ -42,14 +89,29 @@ export const useMapStore = create<MapStore>((set) => ({
         if (isExisted) {
             return { favoriteList: state.favoriteList.filter(item => item.contentid !== id) };
         } else {
-            const item = state.allTourList.find(t => t.contentid === id);
-            return { favoriteList: [item, ...state.favoriteList] };
+            const item = [...state.allTourList, ...state.customPlaces].find(t => t.contentid === id);
+            return item ? { favoriteList: [item, ...state.favoriteList] } : state;
         }
     }),
     setSelectedRegion: (region) => set({ selectedRegion: region }),
     setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
     setFilteredData: (data) => set({ filteredData: data }),
 
+
+    refreshFilteredData: (apiItems) => {
+        const { customPlaces, selectedSigungu } = get();
+
+        const keyword = selectedSigungu ? selectedSigungu.replace(/시|군|구/g, "") : "";
+        if (!keyword) {
+            set({ filteredData: apiItems });
+            return;
+        }
+
+        const myLocalPlaces = customPlaces.filter(place => place.addr1 && place.addr1.includes(keyword));
+        const filteredApiItems = apiItems.filter(item => item.addr1 && item.addr1.includes(keyword));
+
+        set({ filteredData: [...myLocalPlaces, ...filteredApiItems] });
+    },
     fetchAndFilterData: async (geo: any, contentTypeId?: string | number | null) => {
         // console.log("전달된 geo 데이터:", geo);
         const name = geo.properties.name;
@@ -64,23 +126,29 @@ export const useMapStore = create<MapStore>((set) => ({
 
             set((state) => {
                 const newAllList = [...state.allTourList];
-                allItems.forEach((newItem: any) => {
-                    if (!newAllList.some(existing => existing.contentid === newItem.id)) newAllList.push(newItem);
+                allItems.forEach((newItem: Trip) => {
+                    if (!newAllList.some(existing => existing.contentid === newItem.contentid)) {
+                        newAllList.push(newItem);
+                    }
                 });
-                return { allTourList: newAllList };
-            })
-            
-            const keyword = name.replace(/시|군|구/g, "");
-            const filtered = allItems.filter((item: any) => 
-                item.addr1 && item.addr1.includes(keyword)
-            );
 
-            set({ filteredData: filtered, isLoading: false });
+                return { allTourList: newAllList };
+            });
+
+            get().refreshFilteredData(allItems);
+
+            set({ isLoading: false });
         } catch (error) {
             console.error("데이터 로딩 실패:", error);
             set({ isLoading: false });
         }
     },
+    addCustomPlaces: (place) => {
+        set((state) => ({ customPlaces: [place, ...state.customPlaces] }));
+        const { filteredData } = get();
+        set({ filteredData: [place, ...filteredData] });
+    },
 
-    resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [] }),
+    resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [], isSearched: false }),
+
 }))

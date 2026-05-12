@@ -16,8 +16,10 @@ import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyle } from './styles/GlobalStyle';
 import FindUser from './pages/auth/FindUser';
+import { useUserStore } from './store/useUserStore';
 
 function App() {
+    const { user } = useUserStore();
     const { title, setTitle, isDark } = useUiStore();
     const theme = isDark ? darkTheme : lightTheme;
     const { resetMap } = useMapStore();
@@ -27,7 +29,22 @@ function App() {
         resetMap();
         setTitle('지도');
         navigate('/');
+    };
+
+    if (!user) {
+        return (
+            <ThemeProvider theme={theme}>
+                <GlobalStyle />
+                <Routes>
+                    <Route path="/login" element={<Layout><Login /></Layout>} />
+                    <Route path="/join" element={<Layout title="회원가입" hasHeader><Join /></Layout>} />
+                    <Route path="/findUser" element={<Layout title="아이디/비밀번호 찾기" hasHeader><FindUser /></Layout>} />
+                    <Route path="*" element={<Layout><Login /></Layout>} />
+                </Routes>
+            </ThemeProvider>
+        );
     }
+    
 
     return (
         <ThemeProvider theme={theme}>
@@ -82,28 +99,9 @@ function App() {
                         <SettingPage />
                     </Layout>
                 } />
-
                 <Route path="/settings/profile" element={
                     <Layout title="프로필 수정" hasHeader hasBottomNav>
                         <Profile />
-                    </Layout>
-                } />
-                
-                
-                {/* 로그인 페이지 */}
-                <Route path="/login" element={
-                    <Layout>
-                        <Login />
-                    </Layout>
-                } />
-                <Route path="/findUser" element={
-                    <Layout title="아이디/비밀번호 찾기" hasHeader>
-                        <FindUser />
-                    </Layout>
-                } />
-                <Route path="/join" element={
-                    <Layout title="회원가입" hasHeader>
-                        <Join />
                     </Layout>
                 } />
             </Routes>

@@ -26,7 +26,7 @@ function DetailPage() {
         loadData();
     }, [contentid]);
 
-    // console.log(detail)
+    console.log(detail)
 
     const isFavorite = favoriteList.some(fav => fav.contentid === contentid);
 
@@ -54,7 +54,7 @@ function DetailPage() {
 
             <S.Content dangerouslySetInnerHTML={{ __html: detail.overview }} />
 
-            {detail.homepage && (
+            {detail.homepage !== "" && (
                 <S.HomeButton 
                     href={detail.homepage.replace(/(<([^>]+)>)/gi, "")}
                     target="_blank" 

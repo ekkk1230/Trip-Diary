@@ -218,3 +218,41 @@ export const ImageBox = styled.div`
     }
 `;
 
+export const AddCardBtn = styled.div`
+    height: 100%; 
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #fafafa;
+    
+    .add_content {
+        text-align: center;
+        color: #888;
+        span { font-size: 24px; font-weight: bold; }
+        p { font-size: 14px; margin-top: 8px; }
+    }
+
+    &:hover {
+        background-color: #f1f8e9;
+        border-color: #a5d6a7;
+        color: #2e7d32;
+    }
+`;
+
+export const NoResultWrap = styled.div`
+    text-align: center;
+    padding: 40px 0;
+    
+    .add_direct_btn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #26a69a;
+        color: white;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+`;

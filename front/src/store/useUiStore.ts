@@ -28,7 +28,7 @@ export const useUiStore = create<UiStore>((set) => ({
     isOpen: false,
     modalType: null,
     modalTitle: '',
-    modalContent: '',
+    modalContent: null,
     onConfirm: null,
     openModal: (type, title, content, onConfirm) => set({
         isOpen: true,
@@ -37,7 +37,7 @@ export const useUiStore = create<UiStore>((set) => ({
         modalContent: content,
         onConfirm: onConfirm || null,
     }),
-    closeModal: () => set({ isOpen: false, modalType: null, modalTitle: '', modalContent: '', onConfirm: null }),
+    closeModal: () => set({ isOpen: false, modalType: null, modalTitle: '', modalContent: null, onConfirm: null }),
 
     isDark: false,
     setIsDark: () => set((state) => ({ isDark: !state.isDark })),

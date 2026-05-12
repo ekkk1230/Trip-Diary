@@ -1,4 +1,4 @@
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { geoCentroid, geoMercator } from "d3-geo";
 import { SwiperSlide } from 'swiper/react';
 import { Grid, Navigation, Pagination } from 'swiper/modules'; 
@@ -9,7 +9,8 @@ import * as S from "./MapComponents.styles";
 import CardItem from "./CardItem";
 import { useUiStore } from "../../store/useUiStore";
 import { useMapStore } from "../../store/useMapStore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import AddPlaceModal from "../../components/modal/modalContentLayout/AddPlaceModal";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
@@ -19,23 +20,28 @@ interface mapComponentProps {
 	visitedLocations?: string[];
 }
 
+const GEO_STYLE = {
+    default: { stroke: "#2E7D32", strokeWidth: 0.5, outline: "none" },
+    hover: { fill: "#C8E6C9", cursor: "pointer", outline: "none" },
+    pressed: { fill: "#81C784", outline: "none" }
+};
+
 const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) => {
-	const { setTitle } = useUiStore();
+	const { setTitle, openModal } = useUiStore();
 	
 	const { 
-		 selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
+		selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
 		filteredData, isLoading, fetchAndFilterData, isSearched
 	} = useMapStore();
 
 	const [isMain, setIsMain] = useState<Boolean>(false);
 	useEffect(() => {
 		if (isMainPage) setIsMain(isMainPage);
-	}, [])
-
-	const projection = geoMercator()
-		.center(selectedRegion ? geoCentroid(selectedRegion) : [127.5, 36])
-		.scale(selectedRegion ? 15000 : 4000) 
-		.translate([250, 300]);
+	}, []);
+	
+	const projection = useMemo(() => 
+        geoMercator().center([127.5, 36]).scale(5000).translate([250, 300]), 
+    []);
 
 
 	const handleRegionClick = async (geo: any) => {
@@ -45,92 +51,69 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 		} else {
 			fetchAndFilterData(geo); 
 		}
-	}
+	};
 
 	// console.log('visitedLocations', visitedLocations)
 
-	const provinceCounts = visitedLocations?.reduce((acc: any, loc: any) => {
-		const province = loc.split(' ')[0];
-		acc[province] = (acc[province] || 0) + 1;
-		return acc;
-	}, {}) || {};
+	const { provinceCounts, sigunguCounts } = useMemo(() => {
+		const pCounts: Record<string, number> = {};
+		const sCounts: Record<string, number> = {};
 
-	const sigunguCounts = visitedLocations?.reduce((acc: any, loc: any) => {
-		const parts = loc.split(' ');
-		if (parts.length > 1) {
-			const sigungu = parts[1]; 
-			acc[sigungu] = (acc[sigungu] || 0) + 1;
-		}
-   		return acc;
-	}, {}) || {};
+		visitedLocations.forEach((loc: string) => {
+			const parts = loc.split(' ');
 
-	const getColor = (count: number) => {
-		if (!count) return "rgba(241, 248, 233, 0.5)"; // 방문 안 함: 아주 연한 미색 + 반투명
+			if (parts[0]) {
+				const province = parts[0];
+				pCounts[province] = (pCounts[province] || 0) + 1;
+			}
 
-		const opacity = Math.min(0.2 + count * 0.25, 1.0); 
-		return `rgba(38, 166, 154, ${opacity})`; 
-	};
+			if (parts.length > 1) {
+				const sigungu = parts[1];
+				sCounts[sigungu] = (sCounts[sigungu] || 0) + 1;
+			}
+		});
+
+		return { provinceCounts: pCounts, sigunguCounts: sCounts };
+	}, [visitedLocations]);
+
+	const getGeoColor = (geo: any) => {
+        const geoName = geo.properties.name;
+        if (isMainPage) {
+            return selectedSigungu === geoName ? "#A5D6A7" : "#F1F8E9";
+        }
+        const count = !selectedRegion ? provinceCounts[geoName] : sigunguCounts[geoName];
+        if (!count) return "rgba(232, 249, 211, 0.5)";
+        const opacity = Math.min(0.2 + (count || 0) * 0.25, 1.0);
+        return `rgba(38, 166, 154, ${opacity})`;
+    };
 
 	return (
 		<>
 			<div className="MapContainer" style={{ width: "500px", margin: "0 auto" }}>
 				<ComposableMap projection={projection as any} width={500} height={600}>
-					<Geographies geography={selectedRegion ? MUNICIPALITY_URL : PROVINCE_URL}>
-						{({ geographies }) =>
-							geographies
-								.filter((geo) => {
-									if (!selectedRegion) return true;
-									const provinceCode = selectedRegion.properties.code;
-									const municipalityCode = geo.properties.code;
-
-									return municipalityCode.startsWith(provinceCode);
-								})
-								.map((geo) => (
-									<Geography
-										key={geo.rsmKey}
-										geography={geo}
-										fill={(() => {
-											const geoName = geo.properties.name;
-
-											const count = !selectedRegion 
-											? (provinceCounts?.[geoName] || 0) 
-											: (sigunguCounts?.[geoName] || 0);
-
-											// if (count > 0) console.log(`${geoName}: ${count}`);
-
-											if (isMainPage) {
-												return selectedSigungu === geo.properties.name ? "#A5D6A7" : "#F1F8E9";
-											} else {
-												return getColor(count);
-											}
-										})()}
-										onClick={() => {
-											if (!selectedRegion) {
-												handleRegionClick(geo);
-											} else {
-												handleRegionClick(geo);
-											}
-										}}
-										style={{
-											default: {
-												stroke: "#2E7D32", 
-												strokeWidth: 0.5,
-												outline: "none",
-											},
-											hover: { 
-												fill: "#C8E6C9", 
-												cursor: "pointer",
-												outline: "none",
-											},
-											pressed: {
-												fill: "#81C784",
-												outline: "none",
-											}
-										}}
-									/>
-								))
-						}
-					</Geographies>
+					<ZoomableGroup 
+						center={selectedRegion ? geoCentroid(selectedRegion) : [127.5, 36]}
+						zoom={selectedRegion ? 2 : 1}
+					>
+						<Geographies geography={selectedRegion ? MUNICIPALITY_URL : PROVINCE_URL}>
+							{({ geographies }) =>
+								geographies
+									.filter((geo) => {
+										if (!selectedRegion) return true;
+										return geo.properties.code.startsWith(selectedRegion.properties.code);
+									})
+									.map((geo) => (
+										<Geography
+											key={geo.rsmKey}
+											geography={geo}
+											fill={getGeoColor(geo)}
+											onClick={() => handleRegionClick(geo)}
+											style={GEO_STYLE}
+										/>
+									))
+							}
+						</Geographies>
+					</ZoomableGroup>
 				</ComposableMap>
 
 				{isMain && (
@@ -144,24 +127,33 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 							modules={[Grid, Navigation, Pagination]}
 							slidesPerView={2}
 							slidesPerGroup={2}
-							grid={{
-								rows: 3,
-								fill: 'row' 
-							}}
+							grid={{ rows: 3, fill: 'row' }}
 							spaceBetween={10} 
-							pagination={{ 
-								type: 'fraction',
-								clickable: true 
-							}}
+							pagination={{ type: 'fraction', clickable: true }}
 						>
 							{filteredData.map((item, idx) => (
 								<SwiperSlide key={idx}>
 									<CardItem item={item} /> 
 								</SwiperSlide>
 							))}
+							
+							<SwiperSlide>
+								<S.AddCardBtn onClick={() => openModal("confirm", "장소 추가", <AddPlaceModal />)}>
+									<div className="add_content">
+										<span>+</span>
+										<p>나만의 장소 추가</p>
+									</div>
+								</S.AddCardBtn>
+							</SwiperSlide>
 						</S.StyledSwiper>
 					) : isSearched ? ( 
-						<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>
+						// 💡 2. 검색 결과가 없을 때 버튼 노출
+						<S.NoResultWrap>
+							<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>
+							<button className="add_direct_btn" onClick={() => openModal("confirm", "장소 추가", <AddPlaceModal />)}>
+								직접 장소 추가하기
+							</button>
+						</S.NoResultWrap>
 					) : (
 						<S.SearchTxt>지역을 선택하여 관광지 정보를 확인하세요.</S.SearchTxt>
 					)
