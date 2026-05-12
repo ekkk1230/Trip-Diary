@@ -104,7 +104,7 @@ function App() {
                         <FavoritePage />
                     </Layout>
                 } />
-                <Route path="/mypage/favorite/:id" element={
+                <Route path="/mypage/favorite/:contentid" element={
                     <Layout title="찜목록" hasHeader hasBottomNav onBackClick={() => navigate('/mypage')}>
                         <DetailPage />
                     </Layout>
