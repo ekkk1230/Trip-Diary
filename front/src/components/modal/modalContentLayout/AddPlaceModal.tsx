@@ -52,21 +52,6 @@ const AddPlaceModal = () => {
         setPreviewUrl(null);
     }
 
-    const onSave = (formData: any) => {
-        const place = {
-            addr1: formData.address,
-            contentid: `custom_${crypto.randomUUID()}`,
-            contenttypeid: formData.category,
-            firstimage: previewUrl || '',
-            overview: formData.placeInfo,
-            title: formData.placeNm,
-            zipcode: formData.zipCode,
-            isCustom: true,
-            author: user?.nickname,
-        }
-        addCustomPlaces(place);
-    };
-
     const handleSubmit = (e?: FormEvent) => {
         if (e) e.preventDefault();
 
@@ -79,7 +64,7 @@ const AddPlaceModal = () => {
             addr1: formData.address,
             contentid: `custom_${crypto.randomUUID()}`,
             contenttypeid: formData.category,
-            firstimage: previewUrl || '',
+            firstimage: previewUrl || '/default-image.png',
             overview: formData.placeInfo,
             title: formData.placeNm,
             zipcode: formData.zipCode,
