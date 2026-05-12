@@ -64,7 +64,7 @@ const AddPlaceModal = () => {
             addr1: formData.address,
             contentid: `custom_${crypto.randomUUID()}`,
             contenttypeid: formData.category,
-            firstimage: previewUrl || '/default-image.png',
+            firstimage: previewUrl || `${import.meta.env.BASE_URL}default-image.png`,
             overview: formData.placeInfo,
             title: formData.placeNm,
             zipcode: formData.zipCode,

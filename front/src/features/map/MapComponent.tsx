@@ -134,7 +134,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 						>
 							{filteredData.map((item, idx) => (
 								<SwiperSlide key={idx}>
-									<CardItem item={item} link={'/detail/${item.contentid}'} /> 
+									<CardItem item={item} link={`/detail/${item.contentid}`} /> 
 								</SwiperSlide>
 							))}
 							

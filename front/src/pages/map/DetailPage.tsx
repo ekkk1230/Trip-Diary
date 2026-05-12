@@ -54,7 +54,7 @@ function DetailPage() {
             </S.DetailHeader>
 
             <S.ImageBox>
-                <img src={detail.firstimage || "/default-img.png"} alt={detail.title} />
+                <img src={detail.firstimage || `${import.meta.env.BASE_URL}default-image.png`} alt={detail.title} />
             </S.ImageBox>
             
             <S.InfoBox>
