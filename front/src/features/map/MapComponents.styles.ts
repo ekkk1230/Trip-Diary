@@ -1,9 +1,31 @@
 import styled, { keyframes } from "styled-components";
 import { Swiper } from 'swiper/react';
 
+export const MapContainer = styled.div`
+  width: 100%;
+  margin: 0 auto;
+
+  > svg {
+    display: block; margin: 2rem 0;
+    border-radius: 1.5rem;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05); 
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px); 
+    }
+  }
+
+  .swiper-pagination { position: relative; margin-top: 1rem; }
+  .btn_map {display: block; margin: 2rem auto 1rem; }
+`;
+
 export const SearchTxt = styled.div`
-  margin-top: 20px;
-  font-size: 1.2rem;
+  margin-top: 2rem;
+  font-size: 1.6rem;
+  text-align: center;
   color: #555; 
 `;
 
@@ -31,7 +53,7 @@ export const Card = styled.div`
 export const CardImage = styled.img`
   width: 100%;
   height: 150px;
-  object-fit: cover;
+  object-fit: cover; display: block;
 `;
 
 export const CardBody = styled.div`
@@ -69,7 +91,7 @@ const spin = keyframes`
 
 export const SpinnerWrap = styled.div`
     text-align: center;
-    margin-top: 20px;
+    margin-top: 2rem;
 `;
 
 export const Spinner = styled.div`

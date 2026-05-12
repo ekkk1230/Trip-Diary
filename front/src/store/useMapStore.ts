@@ -118,25 +118,16 @@ export const useMapStore = create<MapStore>()(
                 const filterFn = (item: Trip) => {
                     if (!item.addr1) return false;
                 
-                    // 1. 지도 키워드 정규화: "안양시만안구" -> "안양만안", "오산시" -> "오산"
                     const keyword = selectedSigungu
                         .replace(/\s+/g, "")
                         .replace(/시|군|구/g, "");
                 
-                    // 2. 주소 데이터 분리: "경기 안양시 만안구..." -> ["경기", "안양시", "만안구", ...]
                     const addrParts = item.addr1.split(" ");
                     
-                    // 3. 주소의 2번째(시)와 3번째(구)를 공백 없이 합침
-                    // 안양시 만안구 -> "안양시만안구"
-                    // 오산시 오산동 -> "오산시오산동"
                     const combinedAddr = (addrParts[1] + (addrParts[2] || ""))
                         .replace(/\s+/g, "")
                         .replace(/시|군|구/g, "");
                 
-                    // 4. 핵심: "결합된 주소"가 "키워드"로 시작하는지 확인!
-                    // 안양만안... 은 "안양만안"으로 시작함 (OK)
-                    // 오산오산... 은 "오산"으로 시작함 (OK)
-                    // 화성오산... 은 "오산"으로 시작하지 않음 (FAIL - 화성으로 시작하니까요!)
                     return combinedAddr.startsWith(keyword);
                 };
 
@@ -151,8 +142,6 @@ export const useMapStore = create<MapStore>()(
                 const code = geo.properties.code;
                 const provinceCode = code.substring(0, 2);
                 const apiAreaCode = API_CODE_MAP[provinceCode] || provinceCode;
-
-                console.log('name', name)
         
                 set({ filteredData: [], isLoading: true, selectedSigungu: name, isSearched: true });
         
@@ -179,6 +168,7 @@ export const useMapStore = create<MapStore>()(
                 }
             },
             addCustomPlaces: (place) => {
+                console.log(place)
                 set((state) => ({ customPlaces: [place, ...state.customPlaces] }));
                 const { filteredData } = get();
                 set({ filteredData: [place, ...filteredData] });

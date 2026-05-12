@@ -89,7 +89,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 
 	return (
 		<>
-			<div className="MapContainer" style={{ width: "500px", margin: "0 auto" }}>
+			<S.MapContainer>
 				<ComposableMap projection={projection as any} width={500} height={600}>
 					<ZoomableGroup 
 						center={selectedRegion ? geoCentroid(selectedRegion) : [127.5, 36]}
@@ -161,17 +161,17 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 
 				{selectedRegion && (
 					<button 
+						className="btn_map"
 						onClick={() => { 
 							setSelectedRegion(null) 
 							setSelectedSigungu(null)
 							setTitle("지도") 
 						}}
-						style={{ display: "block", margin: "10px auto" }}
 					>
 						전체 지도로 돌아가기
 					</button>
 				)}
-			</div>
+			</S.MapContainer>
 		</>
 	);
 };

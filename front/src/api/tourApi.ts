@@ -59,7 +59,13 @@ export const fetchDetail = async (contentid: string) => {
     try {
         const res = await fetch(`/api/B551011/KorService2/detailCommon2?${params}`);
         const data = await res.json();
-        return data.response.body.items.item[0];
+        const items = data?.response?.body?.items?.item;
+        
+        if (items && items.length > 0) {
+            return items[0]; 
+        }
+        
+        return null;
     } catch (err) {
         console.error(err, "deatil Error");
         return null;

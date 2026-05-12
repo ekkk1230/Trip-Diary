@@ -11,20 +11,30 @@ import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { useMapStore } from "../../store/useMapStore";
 
 function DetailPage() {
-    const { toggleFavorite, favoriteList } = useMapStore();
+    const { toggleFavorite, favoriteList, customPlaces } = useMapStore();
     const { contentid } = useParams();
     const [detail, setDetail] = useState<any>(null);
 
     useEffect(() => {
         const loadData = async () => {
-            if (contentid) {
-                const data = await fetchDetail(contentid);
-                setDetail(data);
+            if (!contentid) return;
+
+            const apiData = await fetchDetail(contentid);
+    
+            if (apiData) {
+                setDetail(apiData);
+            } else {
+                const customData = customPlaces.find(place => String(place.contentid) === String(contentid));
+                if (customData) {
+                    setDetail(customData);
+                } else {
+                    console.error("데이터를 찾을 수 없습니다.");
+                }
             }
         };
         
         loadData();
-    }, [contentid]);
+    }, [contentid, customPlaces]);
 
     console.log(detail)
 
@@ -54,7 +64,7 @@ function DetailPage() {
 
             <S.Content dangerouslySetInnerHTML={{ __html: detail.overview }} />
 
-            {detail.homepage !== "" && (
+            {detail?.homepage && detail.homepage !== "" && (
                 <S.HomeButton 
                     href={detail.homepage.replace(/(<([^>]+)>)/gi, "")}
                     target="_blank" 
