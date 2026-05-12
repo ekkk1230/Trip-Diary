@@ -31,16 +31,13 @@ function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
                 <S.Value>{visitedLocations.length}<span>개</span></S.Value>
             </S.StatBox>
             
-            <S.StatLink to="/mypage/myspot" state={filteredCustomData}>
-                <S.StatBox>
-                    <S.Label>나만의 장소</S.Label>
-                    <S.Value>{filteredCustomData.length}<span>개</span></S.Value>
-                </S.StatBox>
+            <S.StatLink to="/mypage/myspot" state={filteredCustomData} $variant="primary">
+                <S.Label>나만의 장소</S.Label>
+                <S.Value>{filteredCustomData.length}<span>개</span></S.Value>
                 <S.ArrowIcon>→</S.ArrowIcon>
             </S.StatLink>
             
-            
-            <S.StatLink to="/mypage/favorite">
+            <S.StatLink to="/mypage/favorite" $variant="secondary">
                 <S.Label>찜한 곳</S.Label>
                 <S.Value className="favorite">{favoriteList.length}<span>곳</span></S.Value>
                 <S.ArrowIcon>→</S.ArrowIcon>

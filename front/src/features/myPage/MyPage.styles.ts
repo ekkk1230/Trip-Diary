@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const CountContainer = styled.div`
     display: grid;
@@ -21,8 +21,7 @@ export const StatBox = styled.div`
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 `;
-
-export const StatLink = styled(Link)`
+export const StatLink = styled(Link)<{ $variant?: 'primary' | 'secondary' }>`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,8 +32,15 @@ export const StatLink = styled(Link)`
     position: relative;
     transition: all 0.2s ease;
 
-    background: linear-gradient(135deg, #75ffc2 0%, #cf7eff 100%);
-    box-shadow: 0 4px 12px rgb(226 117 255 / 30%);
+    ${props => props.$variant === 'primary' && css`
+        background: linear-gradient(135deg, #75ffc2 0%, #a07eff 100%);
+        box-shadow: 0 4px 12px rgba(160, 126, 255, 0.3);
+    `}
+
+    ${props => props.$variant === 'secondary' && css`
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        box-shadow: 0 4px 12px rgba(255, 154, 158, 0.3);
+    `}
 
     &:active {
         transform: scale(0.96);
@@ -45,7 +51,6 @@ export const StatLink = styled(Link)`
         color: white !important;
     }
 `;
-
 export const Label = styled.p`
     font-size: 1.2rem;
     color: #868e96;
