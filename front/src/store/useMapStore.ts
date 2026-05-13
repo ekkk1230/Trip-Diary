@@ -1,18 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchAllTourData } from "../api/tourApi";
-import { API_CODE_MAP } from "../constants/API_CODE_MAP";
-
-export const categoryMap = {
-    "관광지": "12",
-    "문화시설": "14",
-    "축제/공연/행사": "15",
-    "여행코스": "25",
-    "레포츠": "28",
-    "숙박": "32",
-    "쇼핑": "38",
-    "음식점": "39",
-} as const;
+import { API_CODE_MAP } from "../constants/region";
 
 export interface Trip {
     addr1: string;

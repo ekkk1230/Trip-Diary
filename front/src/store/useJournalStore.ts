@@ -3,6 +3,11 @@ import { create } from "zustand";
 import mockJournals from "../assets/data/mock_journal.json"
 import mockComments from "../assets/data/mock_comment.json"
 
+const updateArray = {
+    update: (arr: any[], id: any, data: any) => arr.map(item => item.id === id ? { ...item, ...data } : item),
+    remove: (arr: any[], id: any) => arr.filter(item => item.id !== id),
+};
+
 interface JournalLog {
     id: string;
     contentId: string;
@@ -36,11 +41,11 @@ interface JournalStore {
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
     searchJournals: (keyowrd: string, categoy: any) => void;
     likedJournal: (id: string) => void;
-    addJournal: (newJounal: JournalLog) => void;
-    addComment: (newComment: Comment) => void;
     updateJournal: (id: string, updateData: any) => void;
     updateComment: (id: string, updateData: any) => void;
     removeJournal: (id: string) => void;
+    addJournal: (newJounal: JournalLog) => void;
+    addComment: (newComment: Comment) => void;
     removeComment: (id: string) => void;
 }
 
@@ -54,11 +59,11 @@ export const useJournalStore = create<JournalStore>((set) => ({
     setIsEdit: (detailType, mood, forceValue) => set(state => {
         if (typeof forceValue === 'boolean') {
             return { isEdit: forceValue };
-        }
+        };
     
         if (!detailType && !mood) {
             return { isEdit: !state.isEdit };
-        }
+        };
     
         const shouldEdit = detailType === "edit" || mood === "new";
         return { isEdit: shouldEdit };
@@ -109,21 +114,21 @@ export const useJournalStore = create<JournalStore>((set) => ({
             filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
         }
     }),
-    addJournal: newJournal => set(state => ({ 
+    addJournal: (newJournal) => set(state => ({ 
         journals: [newJournal, ...state.journals], 
         filteredJournals: [newJournal, ...state.filteredJournals],
     })),
-    addComment: newComment => set(state => ({ comments: [newComment, ...state.comments] })),
     updateJournal: (id, updateData) => set((state) => ({
-        journals: state.journals.map(j => j.id === id ? { ...j, ...updateData } : j),
-        filteredJournals: state.filteredJournals.map(j => j.id === id ? { ...j, ...updateData} : j),
-    })),
-    updateComment: (id, updateData) => set((state) => ({
-        comments: state.comments.map(c => c.id === id ? { ...c, ...updateData } : c)
+        journals: updateArray.update(state.journals, id, updateData),
+        filteredJournals: updateArray.update(state.filteredJournals, id, updateData),
     })),
     removeJournal: (id) => set((state) => ({
-        journals: state.journals.filter(j => j.id !== id) ,
-        filteredJournals: state.filteredJournals.filter(j => j.id !== id),
+        journals: updateArray.remove(state.journals, id),
+        filteredJournals: updateArray.remove(state.filteredJournals, id),
     })),
-    removeComment: (id) => set((state) => ({ comments: state.comments.filter(c => c.id !== id) }))
+    addComment: (newComment) => set(state => ({ comments: [newComment, ...state.comments] })),
+    updateComment: (id, updateData) => set((state) => ({
+        comments: updateArray.update(state.comments, id, updateData),
+    })),
+    removeComment: (id) => set((state) => ({ comments: updateArray.remove(state.comments, id) }))
 }))

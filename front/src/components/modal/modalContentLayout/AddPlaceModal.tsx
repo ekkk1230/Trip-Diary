@@ -1,12 +1,13 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import DaumPostcodeEmbed from 'react-daum-postcode';
 import * as S from "../Modal.styles";
-import { categoryMap, useMapStore } from '../../../store/useMapStore';
+import { useMapStore } from '../../../store/useMapStore';
+import { CATEGORY_MAP } from '../../../constants/region';
 import ModalFooter from '../ModalFooter';
 import { IoIosCloseCircle } from "react-icons/io";
 import { useUserStore } from '../../../store/useUserStore';
 import { useUiStore } from '../../../store/useUiStore';
-import { SIDO_NAME_TO_CODE } from '../../../constants/API_CODE_MAP';
+import { SIDO_NAME_TO_CODE } from '../../../constants/region';
 
 interface AddPlaceModalProps {
     detail?: any;
@@ -152,7 +153,7 @@ const AddPlaceModal = ({ detail }: AddPlaceModalProps) => {
                             <div className="category_group">
                                 <select name="category" value={formData.category} onChange={handleChange}>
                                     <option hidden value="">카테고리를 선택해주세요</option>
-                                    {Object.entries(categoryMap).map(([name, id]) => (
+                                    {Object.entries(CATEGORY_MAP).map(([name, id]) => (
                                         <option key={id} value={id}>{name}</option>
                                     ))}
                                 </select>

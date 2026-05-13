@@ -5,7 +5,7 @@ import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
 import { TiWeatherSunny } from "react-icons/ti";
-import { REGION_DATA } from "../../constants/API_CODE_MAP";
+import { REGION_DATA } from "../../constants/region";
 import { formatDate } from "../../utils/date";
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
