@@ -39,14 +39,48 @@ export const AuthBox = styled.div`
             }
         }
         .input_wrapper:focus { border-color: #2d7d6e; }
+
+        .input_with_btn {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input_with_btn input {
+            flex: 1;
+        }
+
+        .check_btn {
+            white-space: nowrap;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .check_btn:hover {
+            background-color: #e0e0e0;
+        }
     }
     .auth_label + .auth_label { margin-top: 1.2rem; }
     .auth_label p { font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 500; }
-    .auth_label > input { background: #f0f9f6; width: 100%; outline: 0; }
+    .auth_label input { background: #f0f9f6; width: 100%; outline: 0; }
     .auth_label input:focus { border-color: #2d7d6e; }
     .auth_label input::placeholder { color: #1a3d35 }
 
     .auth_btn { width: 100%; background: #2d7d6e; color: #fff; border: none; font-size: 1.4rem; cursor: pointer; display: block; margin-top: 1.2rem; }
+
+    .input_info_text {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+        padding-left: 4px;
+        margin-top: 1rem;
+    }
 `;
 
 export const LoginLink = styled(Link)`

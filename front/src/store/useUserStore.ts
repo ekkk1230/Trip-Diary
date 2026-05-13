@@ -42,6 +42,9 @@ interface UserStore {
     profileImgChange: (userId: string, updateProfileImg: string) => void;
     profileDetailChange: (userId: string, updateProfile: any) => void;
     passwordChage: (userId: string, updatePassword: string) => void;
+
+    checkNickname: () => string[];
+    checkId: () => string[];
 }
 
 export const useUserStore = create<UserStore>()(
@@ -54,9 +57,7 @@ export const useUserStore = create<UserStore>()(
             login: (loginData) => {
                 const { users } = get();
 
-                const foundUser = users.find(
-                    u => u.userId === loginData.userId && u.password === loginData.password
-                );
+                const foundUser = users.find(u => u.userId === loginData.userId && u.password === loginData.password);
 
                 if (foundUser) {
                     set ({ user: foundUser });
@@ -92,7 +93,10 @@ export const useUserStore = create<UserStore>()(
 
             profileImgChange: (userId, updateProfileImg) => set((state): any => updateUserInState(state, userId, { profileImg: updateProfileImg })),
             profileDetailChange: (userId, updateProfile) => set((state): any => updateUserInState(state, userId, updateProfile)),
-            passwordChage: (userId, updatePassword) => set((state): any => updateUserInState(state, userId, { password: updatePassword }))
+            passwordChage: (userId, updatePassword) => set((state): any => updateUserInState(state, userId, { password: updatePassword })),
+
+            checkNickname: () => { return get().users.map(u => u.nickname) },
+            checkId: () => { return get().users.map(u => u.userId) }
         }),
         {
             name: "user-storage",

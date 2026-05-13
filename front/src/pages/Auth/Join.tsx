@@ -6,7 +6,7 @@ function Join() {
     const { formData, terms, profileImg, inputRefs, 
         handleImageChange, handleChange, 
         handleAllTerms, handleTermClick,
-        handleJoin } = useJoin();
+        handleCheckDuplicate, handleJoin } = useJoin();
 
     return (
         <>
@@ -25,11 +25,12 @@ function Join() {
                                     <div className="placeholder">+</div>
                                 )}
                             </div>
+                            <p className="input_info_text">최대 1MB / (jpg, png, webp)</p>
                         </label>
                         <input 
                             id="profile-upload" 
                             type="file" 
-                            accept="image/*" 
+                            accept="image/jpeg, image/png, image/webp"
                             onChange={handleImageChange} 
                             style={{ display: 'none' }} 
                         />
@@ -37,19 +38,32 @@ function Join() {
 
                     <label className="auth_label">
                         <p>닉네임</p>
-                        <input ref={el => {inputRefs.current.nickname = el}} name="nickname" type="text" placeholder="닉네임을 입력하세요." onChange={handleChange} />
+                        <div className="input_with_btn">
+                            <input ref={el => {inputRefs.current.nickname = el}} name="nickname" type="text" placeholder="공백없이 닉네임을 입력하세요. (최대 8자)" onChange={handleChange} maxLength={8} />
+                            <button type="button" onClick={() => handleCheckDuplicate('nickname')} className="check_btn">
+                                중복 확인
+                            </button>
+                        </div>
                     </label>
                     <label className="auth_label">
                         <p>아이디</p>
-                        <input ref={el => {inputRefs.current.userId = el}} name="userId" type="text" placeholder="아이디를 입력하세요." onChange={handleChange} />
+                        <div className="input_with_btn">
+                            <input ref={el => {inputRefs.current.userId = el}} name="userId" type="text" placeholder="공백없이 아이디를 입력하세요. (최대 8자)" onChange={handleChange} />
+                            <button type="button" onClick={() => handleCheckDuplicate('userId')} className="check_btn">
+                                중복 확인
+                            </button>
+                        </div>
                     </label>
                     <label className="auth_label">
                         <p>비밀번호</p>
-                        <input ref={el => {inputRefs.current.password = el}} name="password" type="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.password = el}} name="password" type="password" placeholder="공백없이 비밀번호를 입력하세요. (최소 8자)" onChange={handleChange} />
+                        <p className="input_info_text">
+                            영문, 숫자, 특수문자(!@#$%^&*) 포함 8자 이상
+                        </p>
                     </label>
                     <label className="auth_label">
                         <p>비밀번호 확인</p>
-                        <input ref={el => {inputRefs.current.passwordConfirm = el}} name="passwordConfirm" type="password" placeholder="비밀번호를 다시 입력하세요." onChange={handleChange} />
+                        <input ref={el => {inputRefs.current.passwordConfirm = el}} name="passwordConfirm" type="password" placeholder="공백없이 비밀번호를 다시 입력하세요." onChange={handleChange} />
                     </label>
                     <label className="auth_label">
                         <p>성별</p>

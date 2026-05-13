@@ -54,7 +54,7 @@ function Profile() {
             (
                 <PasswordChangeForm 
                     onConfirm={(newPw) => {
-                        console.log("변경할 비번:", newPw);
+                        // console.log("변경할 비번:", newPw);
                         passwordChage(user?.userId!, newPw);
                         closeModal();
                     }} 

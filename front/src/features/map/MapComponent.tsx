@@ -56,9 +56,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 		if (!selectedRegion) {
 			setSelectedRegion(geo);
 			setTitle(geo.properties.name);
-		} else {
-			fetchAndFilterData(geo); 
-		}
+		} else fetchAndFilterData(geo); 
 	};
 
 	// console.log('visitedLocations', visitedLocations)

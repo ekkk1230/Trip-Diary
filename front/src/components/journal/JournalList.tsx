@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import * as S from "../Components.styles"
 import { useJournalStore } from "../../store/useJournalStore";
-import type React from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import type { MouseEvent } from "react";
 
 interface JournalListProps {
     type: string;
@@ -32,17 +32,17 @@ function JournalList({ type, contentid }: JournalListProps) {
         ? filteredJournals.filter(log => log.author === "test")
         : filteredJournals;
 
-    const handleEditJournal = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    const handleEditJournal = (e: MouseEvent<HTMLButtonElement>, id: string) => {
         e.stopPropagation();
         navigate(`/journal/edit/${id}`, { state: { detailType: 'edit', mood: 'edit' } });
     }
 
-    const handleRemove = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    const handleRemove = (e: MouseEvent<HTMLButtonElement>, id: string) => {
         e.stopPropagation();
         if(window.confirm("기록을 삭제하시겠습니까?")) removeJournal(id);
     };
 
-    const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id:string) => {
+    const handleFavorite = (e: MouseEvent<HTMLButtonElement>, id:string) => {
         e.stopPropagation();
         likedJournal(id)
     };

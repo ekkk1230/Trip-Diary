@@ -1,114 +1,19 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import DaumPostcodeEmbed from 'react-daum-postcode';
 import * as S from "../Modal.styles";
-import { useMapStore } from '../../../store/useMapStore';
 import { CATEGORY_MAP } from '../../../constants/region';
 import ModalFooter from '../ModalFooter';
 import { IoIosCloseCircle } from "react-icons/io";
-import { useUserStore } from '../../../store/useUserStore';
-import { useUiStore } from '../../../store/useUiStore';
-import { SIDO_NAME_TO_CODE } from '../../../constants/region';
+import { useAppPlace } from '../../../hooks/useAppPlace';
 
 interface AddPlaceModalProps {
     detail?: any;
 }
 
 const AddPlaceModal = ({ detail }: AddPlaceModalProps) => {
-    const { user } = useUserStore();
-    const { closeModal } = useUiStore();
-    const { addCustomPlaces, updateCustomPlace } = useMapStore();
-
-    const [isSearching, setIsSearching] = useState(false);
-    const [formData, setFormData] = useState({
-        placeNm: '', category: '',
-        zipCode: '', address: '', address2: '',
-        placeInfo: ''
-    });
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-    useEffect(() => {
-        if (detail) {
-            setPreviewUrl(detail.firstimage);
-            setFormData(prev => ({
-                ...prev,
-                placeNm: detail.title,
-                category: detail.contenttypeid,
-                zipCode: detail.zipcode,
-                address: detail.addr1,
-                address2: detail.addr2,
-                placeInfo: detail.overview
-            }))
-        }
-    }, [detail])
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleComplete = (data: any) => {
-        setFormData(prev => ({
-            ...prev,
-            address: data.address,
-            zipCode: data.zonecode
-        }))
-        setIsSearching(false);
-    };
-
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        if (file) {
-            setSelectedFile(file);
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
-        }
-    }
-
-    const handleImageRemove = () => {
-        setSelectedFile(null);
-        setPreviewUrl(null);
-    }
-
-    const handleSubmit = (e?: FormEvent) => {
-        if (e) e.preventDefault();
-
-        if (!formData.placeNm || !formData.address) {
-            alert("장소명과 주소를 입력해주세요!");
-            return;
-        }
-
-        const sidoName = formData.address.substring(0, 2);
-        // console.log(sidoName)
-        const areacode = SIDO_NAME_TO_CODE[sidoName];
-    
-        const place = {
-            addr1: formData.address,
-            addr2: formData.address2,
-            areacode: areacode,
-            contentid: detail ? detail.contentid : `custom_${crypto.randomUUID()}`,
-            contenttypeid: formData.category,
-            firstimage: previewUrl || `${import.meta.env.BASE_URL}default-image.png`,
-            overview: formData.placeInfo,
-            title: formData.placeNm,
-            zipcode: formData.zipCode,
-            isCustom: true,
-            author: user?.nickname,
-        };
-    
-        if (detail) {
-            updateCustomPlace(place);
-        }
-        else {
-            addCustomPlaces(place);
-        }
-        
-        closeModal();
-    }
+    const {
+        isSearching, setIsSearching, formData, previewURL,
+        handleChange, handleComplete, handleFileChange, handleImageRemove, handleSubmit
+    } = useAppPlace(detail);
 
     return (
         <S.FormWrapper onSubmit={handleSubmit}>
@@ -124,9 +29,9 @@ const AddPlaceModal = ({ detail }: AddPlaceModalProps) => {
                 /* 입력 폼 화면 */
                 <>
                     <S.PhotoSection>
-                        {previewUrl ? (
+                        {previewURL ? (
                             <div className='upload_box'>
-                                <img src={previewUrl} alt="" />
+                                <img src={previewURL} alt="" />
                                 <button onClick={handleImageRemove} className='image_clear'><IoIosCloseCircle/></button>
                             </div>
                         ) : (
