@@ -79,32 +79,20 @@ export const useMapStore = create<MapStore>()(
                 // console.log("기준 지역코드(targetAreaCode):", targetAreaCode);
             
                 const filterFn = (item: Trip) => {
-                    // 1. 지역코드 비교 디버깅
-                    if (item.areacode) {
-                        const isAreaMatch = String(item.areacode) === String(targetAreaCode);
-                        if (!isAreaMatch) {
-                            return false;
-                        }
-                    } else {
-                        console.warn(`contentid: ${item.contentid} 에 areacode가 없습니다.`);
-                    }
-            
+                    if (String(item.areacode) !== String(targetAreaCode)) return false;
+
                     if (!item.addr1) return false;
-            
-                    // 2. 주소 텍스트 비교 로직
+
                     const cleanKeyword = sigunguName.replace(/시|군|구/g, "").replace(/\s+/g, "");
-                    const addrParts = item.addr1.split(" ");
                     
-                    const combinedAddr = (addrParts[1] + (addrParts[2] || ""))
-                        .replace(/\s+/g, "")
-                        .replace(/시|군|구/g, "");
-            
-                    const isMatch = combinedAddr.startsWith(cleanKeyword);
-            
-                    if (isMatch) {
-                        console.log(`일치: [${item.title}] 주소: ${item.addr1} / 코드: ${item.areacode}`);
-                    }
-            
+                    const fullAddrWithoutSido = item.addr1.split(" ").slice(1).join("").replace(/시|군|구/g, "").replace(/\s+/g, "");
+
+                    const isMatch = fullAddrWithoutSido.includes(cleanKeyword);
+
+                    // if (isMatch) {
+                    //     console.log(`매칭 성공: [${item.title}]`);
+                    // }
+
                     return isMatch;
                 };
             
@@ -123,7 +111,7 @@ export const useMapStore = create<MapStore>()(
                 const provinceCode = code.substring(0, 2);
                 const apiAreaCode = API_CODE_MAP[provinceCode] || provinceCode;
             
-                // console.log(`지역 선택됨: ${name} (코드: ${code}, API지역코드: ${apiAreaCode})`);
+                // console.log(`지역: ${name} (코드: ${code}, API지역코드: ${apiAreaCode})`);
             
                 set({ 
                     filteredData: [], 

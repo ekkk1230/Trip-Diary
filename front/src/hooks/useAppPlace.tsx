@@ -31,7 +31,7 @@ export const useAppPlace = (detail?: any) => {
                 zipCode: detail.zipcode,
                 address: detail.addr1,
                 address2: detail.addr2,
-                placeInfo: detail.overview
+                placeInfo: detail.overview,
             }))
         }
     }, [detail]);
@@ -58,7 +58,7 @@ export const useAppPlace = (detail?: any) => {
                     mapx: result[0].x,
                     mapy: result[0].y
                 }));
-                console.log("좌표 저장 완료:", result[0].x, result[0].y);
+                // console.log("좌표 저장 완료:", result[0].x, result[0].y);
             }
         })
         setIsSearching(false);
