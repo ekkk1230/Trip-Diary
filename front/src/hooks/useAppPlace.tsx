@@ -22,12 +22,6 @@ export const useAppPlace = (detail?: any) => {
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
 
     useEffect(() => {
-        if (!user) {
-            openModal("check", "이용 오류", <TextModal txt={"로그인 후 이용해주세요."} />);
-        }
-    }, [user, openModal]);
-
-    useEffect(() => {
         if (detail) {
             setPreviewURL(detail.firstimage);
             setFormData(prev => ({
