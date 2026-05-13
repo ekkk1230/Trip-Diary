@@ -14,7 +14,8 @@ export const useAppPlace = (detail?: any) => {
     const [ formData, setFormData ] = useState({
         placeNm: '', category: '',
         zipCode: '', address: '', address2: '',
-        placeInfo: ''
+        placeInfo: '',
+        mapx: '', mapy: ''
     });
     const [ previewURL, setPreviewURL ] = useState<string | null>(null);
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
@@ -57,6 +58,30 @@ export const useAppPlace = (detail?: any) => {
         setIsSearching(false);
     };
 
+    // const handleComplete = (data: any) => {
+    //     const fullAddress = data.address; // 선택된 주소
+        
+    //     // 카카오 주소->좌표 변환 객체 생성
+    //     const geocoder = new window.kakao.maps.services.Geocoder();
+    
+    //     geocoder.addressSearch(fullAddress, (result: any, status: any) => {
+    //         if (status === window.kakao.maps.services.Status.OK) {
+    //             // 좌표 추출 (x: 경도-mapx, y: 위도-mapy)
+    //             const { x, y } = result[0];
+    
+    //             setFormData(prev => ({
+    //                 ...prev,
+    //                 address: fullAddress,
+    //                 zipCode: data.zonecode,
+    //                 mapx: x, // ⬅️ 저장
+    //                 mapy: y  // ⬅️ 저장
+    //             }));
+    //         }
+    //     });
+    
+    //     setIsSearching(false);
+    // };
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -96,6 +121,8 @@ export const useAppPlace = (detail?: any) => {
             overview: formData.placeInfo,
             title: formData.placeNm,
             zipcode: formData.zipCode,
+            mapx: formData.mapx,
+            mapy: formData.mapy,
             isCustom: true,
             author: user?.nickname
         };
