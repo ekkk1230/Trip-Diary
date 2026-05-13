@@ -25,19 +25,20 @@ function DetailPage() {
 
     useEffect(() => {
         const loadData = async () => {
-            if (!contentid) return;
-
-            const apiData = await fetchDetail(contentid);
-    
-            if (apiData) {
-                setDetail(apiData);
-            } else {
-                const customData = customPlaces.find(place => place.contentid === contentid);
-                if (customData) {
-                    setDetail(customData);
-                } else {
-                    console.error("데이터를 찾을 수 없습니다.");
+            try {
+                if (contentid?.startsWith('custom_')) {
+                    const customPlace = customPlaces.find(p => p.contentid === contentid);
+                    
+                    if (customPlace) {
+                        setDetail(customPlace);
+                        return;
+                    }
                 }
+
+                const data = await fetchDetail(contentid!); 
+                setDetail(data);
+            } catch (error) {
+                console.error("detail Error:", error);
             }
         };
         

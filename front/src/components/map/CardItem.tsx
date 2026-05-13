@@ -18,7 +18,9 @@ function CardItem({ item, link }: CardItemProps) {
         toggleFavorite(user?.userId!, contentid)
     };
 
-    const isFavorite = favoriteList[user?.userId!].some(fav => fav.contentid === item.contentid);
+    const isFavorite = user?.userId 
+    ? (favoriteList[user.userId] || []).some(fav => fav.contentid === item.contentid)
+    : false;
 
     return (
         <S.Card>
