@@ -8,14 +8,14 @@ interface MyVisitedCountProps {
 
 function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
     const { user } = useUserStore();
-    const { favoriteList, customPlaces } = useMapStore();
+    const { favoriteList, getMyPlaces } = useMapStore();
     
     const visitedPlace = visitedLocations.reduce((acc: any, cur: any) => {
         acc[cur] = (acc[cur] || 0) + 1;
         return acc;
     }, {});
 
-    const filteredCustomData = customPlaces.filter(place => place.author === user?.nickname);
+    const filteredCustomData = getMyPlaces(user?.nickname);
 
     const regionCount = Object.keys(visitedPlace).length;
 
@@ -31,7 +31,7 @@ function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
                 <S.Value>{visitedLocations.length}<span>개</span></S.Value>
             </S.StatBox>
             
-            <S.StatLink to="/mypage/myspot" state={filteredCustomData} $variant="primary">
+            <S.StatLink to="/mypage/myspot" $variant="primary">
                 <S.Label>나만의 장소</S.Label>
                 <S.Value>{filteredCustomData.length}<span>개</span></S.Value>
                 <S.ArrowIcon>→</S.ArrowIcon>

@@ -139,7 +139,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 							))}
 							
 							<SwiperSlide>
-								<S.AddCardBtn onClick={() => openModal("confirm", "장소 추가", <AddPlaceModal />)}>
+								<S.AddCardBtn onClick={() => openModal("confirm", "나만의 장소 추가", <AddPlaceModal />)}>
 									<div className="add_content">
 										<span>+</span>
 										<p>나만의 장소 추가</p>
@@ -150,7 +150,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 					) : isSearched ? ( 
 						<S.NoResultWrap>
 							<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>
-							<button className="add_direct_btn" onClick={() => openModal("confirm", "장소 추가", <AddPlaceModal />)}>
+							<button className="add_direct_btn" onClick={() => openModal("confirm", "나만의 장소 추가", <AddPlaceModal />)}>
 								직접 장소 추가하기
 							</button>
 						</S.NoResultWrap>

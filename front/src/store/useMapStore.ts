@@ -1,15 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchAllTourData } from "../api/tourApi";
-
-const API_CODE_MAP: { [key: string]: string } = {
-  "21": "6",  "26": "7",  "38": "36", 
-  "22": "4",  "11": "1",  "31": "31", 
-  "32": "32", "33": "33", "34": "34", 
-  "35": "37", "36": "38", "37": "35", 
-  "39": "39", "23": "2",  "12": "3",
-  "24": "5",  "25": "8"
-};
+import { API_CODE_MAP } from "../constants/API_CODE_MAP";
 
 export const categoryMap = {
     "관광지": "12",
@@ -72,6 +64,11 @@ interface MapStore {
     refreshFilteredData: (apiItems: any[]) => void;
     fetchAndFilterData: (geo: any) => Promise<void>;
     addCustomPlaces: (place: Trip) => void;
+    updateCustomPlace: (updatePlace: Trip) => void;
+    removeCustomPlace: (contentid: string) => void;
+
+    getMyPlaces: (nickname: string | undefined) => Trip[];
+
     resetMap: () => void;
 }
 
@@ -100,55 +97,78 @@ export const useMapStore = create<MapStore>()(
             setSelectedRegion: (region) => set({ selectedRegion: region }),
             setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
             setFilteredData: (data) => set({ filteredData: data }),
-        
-        
+    
             refreshFilteredData: (apiItems) => {
                 const { customPlaces, selectedSigungu } = get();
-
+            
                 if (!selectedSigungu) {
                     set({ filteredData: apiItems });
                     return;
                 }
-        
-                const keyword = selectedSigungu.replace(/시|군|구/g, "").replace(/\s+/g, "");
-                if (!keyword) {
-                    set({ filteredData: apiItems });
-                    return;
-                }
-                
+            
+                const { name: sigunguName, areaCode: targetAreaCode } = selectedSigungu;
+            
+                // console.log("기준 시군구:", sigunguName);
+                // console.log("기준 지역코드(targetAreaCode):", targetAreaCode);
+            
                 const filterFn = (item: Trip) => {
+                    // 1. 지역코드 비교 디버깅
+                    if (item.areacode) {
+                        const isAreaMatch = String(item.areacode) === String(targetAreaCode);
+                        if (!isAreaMatch) {
+                            return false;
+                        }
+                    } else {
+                        console.warn(`contentid: ${item.contentid} 에 areacode가 없습니다.`);
+                    }
+            
                     if (!item.addr1) return false;
-                
-                    const keyword = selectedSigungu
-                        .replace(/\s+/g, "")
-                        .replace(/시|군|구/g, "");
-                
+            
+                    // 2. 주소 텍스트 비교 로직
+                    const cleanKeyword = sigunguName.replace(/시|군|구/g, "").replace(/\s+/g, "");
                     const addrParts = item.addr1.split(" ");
                     
                     const combinedAddr = (addrParts[1] + (addrParts[2] || ""))
                         .replace(/\s+/g, "")
                         .replace(/시|군|구/g, "");
-                
-                    return combinedAddr.startsWith(keyword);
+            
+                    const isMatch = combinedAddr.startsWith(cleanKeyword);
+            
+                    if (isMatch) {
+                        console.log(`일치: [${item.title}] 주소: ${item.addr1} / 코드: ${item.areacode}`);
+                    }
+            
+                    return isMatch;
                 };
-
+            
                 const myLocalPlaces = customPlaces.filter(filterFn);
                 const filteredApiItems = apiItems.filter(filterFn);
-        
+            
+                // console.log("필터링된 내 장소 개수:", myLocalPlaces.length);
+                // console.log("필터링된 API 장소 개수:", filteredApiItems.length);
+            
                 set({ filteredData: [...myLocalPlaces, ...filteredApiItems] });
             },
+            
             fetchAndFilterData: async (geo: any, contentTypeId?: string | number | null) => {
-                // console.log("전달된 geo 데이터:", geo);
                 const name = geo.properties.name;
                 const code = geo.properties.code;
                 const provinceCode = code.substring(0, 2);
                 const apiAreaCode = API_CODE_MAP[provinceCode] || provinceCode;
-        
-                set({ filteredData: [], isLoading: true, selectedSigungu: name, isSearched: true });
-        
+            
+                // console.log(`지역 선택됨: ${name} (코드: ${code}, API지역코드: ${apiAreaCode})`);
+            
+                set({ 
+                    filteredData: [], 
+                    isLoading: true, 
+                    selectedSigungu: { name, areaCode: apiAreaCode }, 
+                    isSearched: true 
+                });
+            
                 try {
                     const allItems = await fetchAllTourData(apiAreaCode, contentTypeId);
-        
+                    // console.log(`API 데이터 수신 완료: ${allItems.length}건`);
+            
                     set((state) => {
                         const newAllList = [...state.allTourList];
                         allItems.forEach((newItem: Trip) => {
@@ -156,12 +176,10 @@ export const useMapStore = create<MapStore>()(
                                 newAllList.push(newItem);
                             }
                         });
-        
                         return { allTourList: newAllList };
                     });
-        
+            
                     get().refreshFilteredData(allItems);
-         
                     set({ isLoading: false });
                 } catch (error) {
                     console.error("데이터 로딩 실패:", error);
@@ -173,6 +191,19 @@ export const useMapStore = create<MapStore>()(
                 set((state) => ({ customPlaces: [place, ...state.customPlaces] }));
                 const { filteredData } = get();
                 set({ filteredData: [place, ...filteredData] });
+            },
+            updateCustomPlace: updatePlace => set(state => ({
+                customPlaces: state.customPlaces.map(cp => cp.contentid === updatePlace.contentid ? { ...cp, ...updatePlace } : cp),
+                filteredData: state.filteredData.map(p => p.contentid === updatePlace.contentid ? { ...p, ...updatePlace } : p)
+            })),
+            removeCustomPlace: contentid => set(state => ({
+                customPlaces: state.customPlaces.filter(cp => cp.contentid !== contentid),
+                filteredData: state.filteredData.filter(p => p.contentid !== contentid)
+            })),
+
+            getMyPlaces: (nickname) => {
+                if (!nickname) return [];
+                return get().customPlaces.filter(place => place.author === nickname);
             },
         
             resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [], isSearched: false }),

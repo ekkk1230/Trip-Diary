@@ -28,6 +28,7 @@ function CardItem({ item, link }: CardItemProps) {
                 <S.CardImage 
                     src={item.firstimage || `${import.meta.env.BASE_URL}default-image.png`} 
                     alt={item.title}
+                    $noImage={!item.firstimage}
                 />
                 <S.CardBody>
                     <S.CardTitle>{item.title}</S.CardTitle>

@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Swiper } from 'swiper/react';
 
 export const MapContainer = styled.div`
@@ -50,10 +50,18 @@ export const Card = styled.div`
   }
 `;
 
-export const CardImage = styled.img`
+export const CardImage = styled.img<{ $noImage?: boolean }>`
   width: 100%;
   height: 150px;
   object-fit: cover; display: block;
+
+  ${(props) =>
+        props.$noImage &&
+        css`
+            object-fit: contain; 
+            padding: 20px;  
+            opacity: 0.6;        
+        `}
 `;
 
 export const CardBody = styled.div`
@@ -232,12 +240,14 @@ export const ImageBox = styled.div`
     border-radius: 1.5rem;
     overflow: hidden;
     margin-bottom: 1rem;
+    background: #fff;
 
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
+    .no-img { object-fit: contain; display: block; padding: 1rem 0; }
 `;
 
 export const AddCardBtn = styled.div`

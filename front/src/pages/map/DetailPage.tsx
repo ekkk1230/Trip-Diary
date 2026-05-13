@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -10,12 +10,18 @@ import JournalList from "../../components/journal/JournalList";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { useMapStore } from "../../store/useMapStore";
 import { useUserStore } from "../../store/useUserStore";
+import { useUiStore } from "../../store/useUiStore";
+import TextModal from "../../components/modal/modalContentLayout/TextModal";
+import AddPlaceModal from "../../components/modal/modalContentLayout/AddPlaceModal";
 
 function DetailPage() {
-    const { toggleFavorite, favoriteList, customPlaces } = useMapStore();
     const { user } = useUserStore();
+    const { openModal, closeModal } = useUiStore();
+    const { toggleFavorite, favoriteList, customPlaces, removeCustomPlace } = useMapStore();
     const { contentid } = useParams();
     const [detail, setDetail] = useState<any>(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadData = async () => {
@@ -26,7 +32,7 @@ function DetailPage() {
             if (apiData) {
                 setDetail(apiData);
             } else {
-                const customData = customPlaces.find(place => String(place.contentid) === String(contentid));
+                const customData = customPlaces.find(place => place.contentid === contentid);
                 if (customData) {
                     setDetail(customData);
                 } else {
@@ -42,7 +48,28 @@ function DetailPage() {
 
     const isFavorite = favoriteList.some(fav => fav.contentid === contentid);
     const isUserPost = user && detail && detail.author === user.nickname;
-    console.log(isUserPost);
+    // console.log(isUserPost);
+
+    const handleUpdatePost = () => {
+        openModal(
+            "confirm",
+            "나만의 장소 수정",
+            <AddPlaceModal detail={detail} />
+        )
+    }
+
+    const handleRemovePost = (contentid: string) => {
+        if (!contentid) return;
+        openModal(
+            "confirm",
+            "게시글 삭제",
+            <TextModal txt={"게시글을 삭제하시겠습니까?"} onConfirm={() => {
+                removeCustomPlace(contentid);
+                navigate('/mypage/myspot', { replace: true });
+                closeModal();
+            }} />
+        );
+    };
 
     if (!detail) return <div>데이터를 불러오는 중입니다...</div>;
 
@@ -59,18 +86,12 @@ function DetailPage() {
 
             {isUserPost && (
                 <S.AdminButtonGroup>
-                    <S.AdminButton onClick={() => alert('수정 페이지로 이동')}>
+                    <S.AdminButton onClick={handleUpdatePost}>
                         수정하기
                     </S.AdminButton>
                     <S.AdminButton 
                         $type="delete" 
-                        onClick={() => {
-                            if(confirm('정말 삭제하시겠습니까?')) {
-                                // deleteCustomPlace(detail.contentid);
-                                alert('삭제되었습니다.');
-                                window.history.back();
-                            }
-                        }}
+                        onClick={() => handleRemovePost(detail.contentid)}
                     >
                         삭제하기
                     </S.AdminButton>
@@ -78,7 +99,7 @@ function DetailPage() {
             )}
 
             <S.ImageBox>
-                <img src={detail.firstimage || `${import.meta.env.BASE_URL}default-image.png`} alt={detail.title} />
+                <img src={detail.firstimage || `${import.meta.env.BASE_URL}default-image.png`} alt={detail.title} className={!detail.firstimage ? 'no-img' : ''} />
             </S.ImageBox>
             
             <S.InfoBox>

@@ -1,24 +1,45 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import DaumPostcodeEmbed from 'react-daum-postcode';
 import * as S from "../Modal.styles";
 import { categoryMap, useMapStore } from '../../../store/useMapStore';
 import ModalFooter from '../ModalFooter';
 import { IoIosCloseCircle } from "react-icons/io";
 import { useUserStore } from '../../../store/useUserStore';
+import { useUiStore } from '../../../store/useUiStore';
+import { SIDO_NAME_TO_CODE } from '../../../constants/API_CODE_MAP';
 
+interface AddPlaceModalProps {
+    detail?: any;
+}
 
-const AddPlaceModal = () => {
+const AddPlaceModal = ({ detail }: AddPlaceModalProps) => {
     const { user } = useUserStore();
-    const { addCustomPlaces } = useMapStore();
+    const { closeModal } = useUiStore();
+    const { addCustomPlaces, updateCustomPlace } = useMapStore();
 
     const [isSearching, setIsSearching] = useState(false);
     const [formData, setFormData] = useState({
         placeNm: '', category: '',
-        zipCode: '', address: '',
+        zipCode: '', address: '', address2: '',
         placeInfo: ''
     });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    useEffect(() => {
+        if (detail) {
+            setPreviewUrl(detail.firstimage);
+            setFormData(prev => ({
+                ...prev,
+                placeNm: detail.title,
+                category: detail.contenttypeid,
+                zipCode: detail.zipcode,
+                address: detail.addr1,
+                address2: detail.addr2,
+                placeInfo: detail.overview
+            }))
+        }
+    }, [detail])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -59,10 +80,16 @@ const AddPlaceModal = () => {
             alert("장소명과 주소를 입력해주세요!");
             return;
         }
+
+        const sidoName = formData.address.substring(0, 2);
+        // console.log(sidoName)
+        const areacode = SIDO_NAME_TO_CODE[sidoName];
     
         const place = {
             addr1: formData.address,
-            contentid: `custom_${crypto.randomUUID()}`,
+            addr2: formData.address2,
+            areacode: areacode,
+            contentid: detail ? detail.contentid : `custom_${crypto.randomUUID()}`,
             contenttypeid: formData.category,
             firstimage: previewUrl || `${import.meta.env.BASE_URL}default-image.png`,
             overview: formData.placeInfo,
@@ -72,7 +99,14 @@ const AddPlaceModal = () => {
             author: user?.nickname,
         };
     
-        addCustomPlaces(place);
+        if (detail) {
+            updateCustomPlace(place);
+        }
+        else {
+            addCustomPlaces(place);
+        }
+        
+        closeModal();
     }
 
     return (
@@ -153,6 +187,15 @@ const AddPlaceModal = () => {
                                         name="address"
                                         readOnly 
                                         placeholder="주소 검색을 완료해주세요." 
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="main_address_group">
+                                    <input 
+                                        type="text" 
+                                        value={formData.address2} 
+                                        name="address2"
+                                        placeholder="상세 주소를 입력해주세요." 
                                         onChange={handleChange}
                                     />
                                 </div>

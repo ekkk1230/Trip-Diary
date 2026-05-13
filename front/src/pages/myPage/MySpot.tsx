@@ -1,14 +1,17 @@
-import { useLocation } from "react-router-dom"
 import CardItem from "../../components/map/CardItem";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Grid, Navigation, Pagination } from "swiper/modules";
 import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';import 'swiper/css/navigation';
+import { useMapStore } from "../../store/useMapStore";
+import { useUserStore } from "../../store/useUserStore";
 
 function MySpot() {
-    const location = useLocation();
-    const filteredCustomData = location.state || [];
+    const { getMyPlaces } = useMapStore();
+    const { user } = useUserStore();
+
+    const filteredCustomData = getMyPlaces(user?.nickname);
 
     return (
         <>
