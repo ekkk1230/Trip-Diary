@@ -39,14 +39,14 @@ export interface Trip {
 interface MapStore {
     allTourList: Trip[];
     customPlaces: Trip[];
-    favoriteList: any[];
+    favoriteList: { [userId: string]: Trip[] };
     selectedRegion: any | null;
     selectedSigungu: any | null;
     filteredData: Trip[];
     isLoading: boolean;
     isSearched: boolean;
 
-    toggleFavorite: (id: string) => void;
+    toggleFavorite: (userId: string, id: string) => void;
     setSelectedRegion: (region: any | null) => void;
     setSelectedSigungu: (sigungu: any | null) => void;
     setFilteredData: (data: Trip[]) => void;
@@ -66,22 +66,30 @@ export const useMapStore = create<MapStore>()(
         (set, get) => ({
             allTourList: [],
             customPlaces: [],
-            favoriteList: [],
+            favoriteList: { '': [] },
             selectedRegion: null,
             selectedSigungu: null,
             filteredData: [],
             isLoading: false,
             isSearched: false,
         
-            toggleFavorite: id => set(state => {
-                const isExisted = state.favoriteList.some(item => item.contentid === id);
-        
+            toggleFavorite: (userId, id) => set(state => {
+                let userFavoriteList = state.favoriteList[userId] || [];
+
+                const isExisted = userFavoriteList.some(item => item.contentid === id);
                 if (isExisted) {
-                    return { favoriteList: state.favoriteList.filter(item => item.contentid !== id) };
+                    userFavoriteList = userFavoriteList.filter(item => item.contentid !== id);
                 } else {
                     const item = [...state.allTourList, ...state.customPlaces].find(t => t.contentid === id);
-                    return item ? { favoriteList: [item, ...state.favoriteList] } : state;
+                    if (item) userFavoriteList = [item, ...state.favoriteList[userId]];
                 }
+
+                return {
+                    favoriteList: {
+                        ...state.favoriteList,
+                        [userId]: userFavoriteList
+                    }
+                };
             }),
             setSelectedRegion: (region) => set({ selectedRegion: region }),
             setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),

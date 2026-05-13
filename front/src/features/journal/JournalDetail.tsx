@@ -149,7 +149,6 @@ function JournalDetail() {
                                     </select>
                                 </div>
 
-                                {/* 구체적인 장소명 입력 영역 */}
                                 <input 
                                     type="text" 
                                     placeholder="상세 장소를 입력하세요 (예: 각연사, 광한루원)" 

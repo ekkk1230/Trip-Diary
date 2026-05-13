@@ -46,7 +46,7 @@ function DetailPage() {
 
     // console.log(detail)
 
-    const isFavorite = favoriteList.some(fav => fav.contentid === contentid);
+    const isFavorite = favoriteList[user?.userId!].some(fav => fav.contentid === contentid);
     const isUserPost = user && detail && detail.author === user.nickname;
     // console.log(isUserPost);
 
@@ -78,7 +78,7 @@ function DetailPage() {
             <S.DetailHeader>
                 <S.Title>{detail.title}</S.Title>
                 <S.FavoriteBtn 
-                    onClick={() => toggleFavorite(detail.contentid)}                    
+                    onClick={() => toggleFavorite(user?.userId!, detail.contentid)}                    
                 >
                     {isFavorite ?  <BsBookmarkHeartFill/> : <BsBookmarkHeart/>}
                 </S.FavoriteBtn>

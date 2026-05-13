@@ -39,7 +39,7 @@ function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
             
             <S.StatLink to="/mypage/favorite" $variant="secondary">
                 <S.Label>찜한 곳</S.Label>
-                <S.Value className="favorite">{favoriteList.length}<span>곳</span></S.Value>
+                <S.Value className="favorite">{(favoriteList[user?.userId!] || []).length}<span>곳</span></S.Value>
                 <S.ArrowIcon>→</S.ArrowIcon>
             </S.StatLink>
         </S.CountContainer>

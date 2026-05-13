@@ -2,12 +2,14 @@ import CardItem from "../../components/map/CardItem";
 import { useMapStore } from "../../store/useMapStore";
 import { useNavigate } from "react-router-dom";
 import * as S from "../../features/myPage/MyPage.styles"
+import { useUserStore } from "../../store/useUserStore";
 
 function FavoritePage() {
+    const { user } = useUserStore();
     const { favoriteList } = useMapStore();
     const navigate = useNavigate();
 
-    if (favoriteList.length <= 0) {
+    if ((favoriteList[user?.userId!] || []).length <= 0) {
         return (
             <S.EmptyWrapper>
                 <div className="icon">📍</div>
@@ -21,13 +23,13 @@ function FavoritePage() {
     return (
         <S.Container>
             <S.Header>
-                <h2>내가 찜한 곳 <span>{favoriteList.length}</span></h2>
+                <h2>내가 찜한 곳 <span>{(favoriteList[user?.userId!] || []).length}</span></h2>
                 <p>언제든 다시 꺼내 보고 여행을 계획해 보세요.</p>
             </S.Header>
 
             <S.GridSection>
-                {favoriteList.map((item) => (
-                    <CardItem key={item.contentid || item.id} item={item} link={`/mypage/favorite/${item.contentid}`} />
+                {favoriteList[user?.userId!].map((item) => (
+                    <CardItem key={item.contentid} item={item} link={`/mypage/favorite/${item.contentid}`} />
                 ))}
             </S.GridSection>
         </S.Container>

@@ -95,6 +95,10 @@ export const useJoin = () => {
 
     const handleCheckDuplicate = (type: string) => {
         if (type === 'nickname') {
+            if (formData.nickname.trim() === '')  {
+                openModal("check", "중복 오류", <TextModal txt={"닉네임을 입력해주세요."} onConfirm={() => focusTo("nickname")} />);
+                return;
+            }
             const isExist = nicknameArr.includes(formData.nickname);
             if (isExist) {
                 openModal("check", "중복 오류", <TextModal txt={"동일한 닉네임이 존재합니다."} onConfirm={() => focusTo("nickname")} />);
@@ -105,6 +109,10 @@ export const useJoin = () => {
             openModal("check", "중복 확인", <TextModal txt={"사용 가능한 닉네임입니다."} />);
     
         } else if (type === "userId") {
+            if (formData.userId.trim() === '')  {
+                openModal("check", "중복 오류", <TextModal txt={"아이디를 입력해주세요."} onConfirm={() => focusTo("userId")} />);
+                return;
+            }
             const isExist = idArr.includes(formData.userId);
             if (isExist) {
                 openModal("check", "중복 오류", <TextModal txt={"동일한 아이디가 존재합니다."} onConfirm={() => focusTo("userId")} />);
