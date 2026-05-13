@@ -3,6 +3,7 @@ import * as S from "../../features/map/MapComponents.styles";
 import { Link } from "react-router-dom";
 
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
+import { useUserStore } from "../../store/useUserStore";
 
 interface CardItemProps {
     item: any,
@@ -11,12 +12,13 @@ interface CardItemProps {
 
 function CardItem({ item, link }: CardItemProps) {
     const { toggleFavorite, favoriteList } = useMapStore();
+    const { user } = useUserStore();
 
     const handleFavoriteClick = (contentid: any) => {
-        toggleFavorite(contentid)
+        toggleFavorite(user?.userId!, contentid)
     };
 
-    const isFavorite = favoriteList.some(fav => fav.contentid === item.contentid);
+    const isFavorite = favoriteList[user?.userId!].some(fav => fav.contentid === item.contentid);
 
     return (
         <S.Card>
