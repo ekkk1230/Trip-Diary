@@ -46,7 +46,9 @@ function DetailPage() {
 
     // console.log(detail)
 
-    const isFavorite = favoriteList[user?.userId!].some(fav => fav.contentid === contentid);
+    const isFavorite = user?.userId 
+    ? favoriteList[user.userId]?.some(fav => fav.contentid === contentid) ?? false
+    : false;
     const isUserPost = user && detail && detail.author === user.nickname;
     // console.log(isUserPost);
 

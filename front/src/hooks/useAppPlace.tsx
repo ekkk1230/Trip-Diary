@@ -4,6 +4,7 @@ import { useUiStore } from "../store/useUiStore";
 import { useUserStore } from "../store/useUserStore"
 import TextModal from "../components/modal/modalContentLayout/TextModal";
 import { SIDO_NAME_TO_CODE } from "../constants/region";
+const { kakao } = window as any;
 
 export const useAppPlace = (detail?: any) => {
     const { user } = useUserStore();
@@ -50,37 +51,24 @@ export const useAppPlace = (detail?: any) => {
     };
 
     const handleComplete = (data: any) => {
-        setFormData(prev => ({
-            ...prev,
-            address: data.address,
-            zipCode: data.zonecode
-        }));
+        const fullAddress = data.address;
+
+        const geocoder = new kakao.maps.services.Geocoder();
+
+        geocoder.addressSearch(fullAddress, (result: any, status: any) =>  {
+            if (status === kakao.maps.services.Status.OK) {
+                setFormData(prev => ({
+                    ...prev,
+                    address: fullAddress,
+                    zipCode: data.zonecode,
+                    mapx: result[0].x,
+                    mapy: result[0].y
+                }));
+                console.log("좌표 저장 완료:", result[0].x, result[0].y);
+            }
+        })
         setIsSearching(false);
     };
-
-    // const handleComplete = (data: any) => {
-    //     const fullAddress = data.address; // 선택된 주소
-        
-    //     // 카카오 주소->좌표 변환 객체 생성
-    //     const geocoder = new window.kakao.maps.services.Geocoder();
-    
-    //     geocoder.addressSearch(fullAddress, (result: any, status: any) => {
-    //         if (status === window.kakao.maps.services.Status.OK) {
-    //             // 좌표 추출 (x: 경도-mapx, y: 위도-mapy)
-    //             const { x, y } = result[0];
-    
-    //             setFormData(prev => ({
-    //                 ...prev,
-    //                 address: fullAddress,
-    //                 zipCode: data.zonecode,
-    //                 mapx: x, // ⬅️ 저장
-    //                 mapy: y  // ⬅️ 저장
-    //             }));
-    //         }
-    //     });
-    
-    //     setIsSearching(false);
-    // };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

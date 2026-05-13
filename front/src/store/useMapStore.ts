@@ -42,7 +42,9 @@ export const useMapStore = create<MapStore>()(
             isSearched: false,
         
             toggleFavorite: (userId, id) => set(state => {
+                console.log(userId, id);
                 let userFavoriteList = state.favoriteList[userId] || [];
+                console.log(state.favoriteList)
 
                 const isExisted = userFavoriteList.some(item => item.contentid === id);
                 if (isExisted) {
