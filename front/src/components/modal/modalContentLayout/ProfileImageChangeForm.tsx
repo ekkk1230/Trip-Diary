@@ -1,12 +1,15 @@
 import { useState, type ChangeEvent } from "react";
 import * as S from "../Modal.styles";
 import ModalFooter from "../ModalFooter";
+import { useUserStore } from "../../../store/useUserStore";
 
 interface ProfileImageChangeFormProps {
     onImageChange: (file: File) => void;
 }
 
 function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) {
+    const { user, profileImgChange } = useUserStore();
+
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -20,7 +23,8 @@ function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) 
     };
 
     const handleConfirm = () => {
-        if (selectedFile) {
+        if (selectedFile && previewUrl) {
+            profileImgChange(user?.userId!, previewUrl);
             onImageChange(selectedFile);
         } else {
             alert("사진을 선택해주세요.");

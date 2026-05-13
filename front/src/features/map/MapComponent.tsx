@@ -32,13 +32,20 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 	
 	const { 
 		selectedRegion, setSelectedRegion, selectedSigungu, setSelectedSigungu,
-		filteredData, isLoading, fetchAndFilterData, isSearched
+		filteredData, isLoading, fetchAndFilterData, isSearched, resetMap
 	} = useMapStore();
 
 	const [isMain, setIsMain] = useState<Boolean>(false);
+
 	useEffect(() => {
 		if (isMainPage) setIsMain(isMainPage);
 	}, []);
+
+	useEffect(() => {
+		return () => {
+			resetMap(); 
+		};
+	}, [resetMap]);
 	
 	const projection = useMemo(() => 
         geoMercator().center([127.5, 36]).scale(5000).translate([250, 300]), 
@@ -79,13 +86,20 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 
 	const getGeoColor = (geo: any) => {
         const geoName = geo.properties.name;
-        if (isMainPage) {
-            return selectedSigungu === geoName ? "#A5D6A7" : "#F1F8E9";
+        if (isMainPage && selectedSigungu) {
+            if (typeof selectedSigungu === 'object' && selectedSigungu.name === geoName) {
+				return "#A5D6A7"; 
+			}
         }
-        const count = !selectedRegion ? provinceCounts[geoName] : sigunguCounts[geoName];
-        if (!count) return "rgba(232, 249, 211, 0.5)";
-        const opacity = Math.min(0.2 + (count || 0) * 0.25, 1.0);
-        return `rgba(38, 166, 154, ${opacity})`;
+
+		if (!isMainPage) {
+			const count = !selectedRegion ? provinceCounts[geoName] : sigunguCounts[geoName];
+			if (!count) return "rgba(232, 249, 211, 0.5)";
+			const opacity = Math.min(0.2 + (count || 0) * 0.25, 1.0);
+			return `rgba(38, 166, 154, ${opacity})`;
+		}
+
+        return "#F1F8E9";
     };
 
 	return (
