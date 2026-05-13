@@ -2,34 +2,12 @@ import { create } from "zustand";
 
 import mockJournals from "../assets/data/mock_journal.json"
 import mockComments from "../assets/data/mock_comment.json"
+import type { Comment, JournalLog } from "../types/journal";
 
 const updateArray = {
     update: (arr: any[], id: any, data: any) => arr.map(item => item.id === id ? { ...item, ...data } : item),
     remove: (arr: any[], id: any) => arr.filter(item => item.id !== id),
 };
-
-interface JournalLog {
-    id: string;
-    contentId: string;
-    logTitle: string;
-    location: string;
-    placeName: string;
-    travelDate: string;
-    weather: string;
-    mainImage: string;
-    author: string;
-    description: string;
-    stats: { likes: number, comments: number };
-    keywords: string[];
-}
-
-interface Comment {
-    id: string;
-    user: string;
-    journalId: number;
-    date: string;
-    text: string;
-}
 
 interface JournalStore {
     journals: JournalLog[];
@@ -39,7 +17,7 @@ interface JournalStore {
     isEdit: boolean;
     
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
-    searchJournals: (keyowrd: string, categoy: any) => void;
+    searchJournals: (keyowrd: string, categoy: string) => void;
     likedJournal: (id: string) => void;
     updateJournal: (id: string, updateData: any) => void;
     updateComment: (id: string, updateData: any) => void;

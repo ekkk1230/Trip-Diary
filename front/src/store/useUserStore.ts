@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { LoginData, User } from "../types/user";
 
 const updateUserInState = (state: any, userId: string, partialUpdate: any) => {
     const updateUsers = state.users.map((u: any) => u.userId === userId ? { ...u, ...partialUpdate } : u);
@@ -7,26 +8,6 @@ const updateUserInState = (state: any, userId: string, partialUpdate: any) => {
 
     return { users: updateUsers, user: updateUser };
 };
-
-interface User {
-    id: string;
-    nickname: string;
-    userId: string;
-    password: string;
-    gender: string;
-    birth: string;
-    profileImg: string;
-    agreements: {
-        service: boolean,
-        privacy: boolean,
-        agreedAt: string,
-    }
-}
-
-interface LoginData {
-    userId: string;
-    password: string;
-}
 
 interface UserStore {
     users: User[];
