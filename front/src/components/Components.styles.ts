@@ -244,3 +244,10 @@ export const FooterAction = styled.div`
   margin-top: 40px;
   padding-bottom: 20px;
 `;
+
+export const MapContainer = styled.div`
+  width: 100%;
+  height: 50rem;
+  top: 0;
+  left: 0;
+`;

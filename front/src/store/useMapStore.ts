@@ -51,7 +51,7 @@ export const useMapStore = create<MapStore>()(
                     userFavoriteList = userFavoriteList.filter(item => item.contentid !== id);
                 } else {
                     const item = [...state.allTourList, ...state.customPlaces].find(t => t.contentid === id);
-                    if (item) userFavoriteList = [item, ...state.favoriteList[userId]];
+                    if (item) userFavoriteList = [item, ...userFavoriteList];
                 }
 
                 return {

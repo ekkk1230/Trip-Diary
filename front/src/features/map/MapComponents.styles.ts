@@ -312,3 +312,79 @@ export const AdminButton = styled.button<{ $type?: 'edit' | 'delete' }>`
         border-color: ${props => props.$type === 'delete' ? '#ffccc7' : '#ddd'};
     }
 `;
+
+// 전체 레이아웃 컨테이너
+export const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #f3f4f6; /* bg-gray-100 */
+  overflow: hidden;
+`;
+
+// 리스트 영역
+export const ListSection = styled.div`
+  height: 40%;
+  min-height: 300px;
+  padding: 20px;
+  overflow-y: auto;
+`;
+
+// export const Title = styled.h1`
+//   font-size: 1.5rem;
+//   font-weight: bold;
+//   margin-bottom: 1.5rem;
+//   text-align: center;
+// `;
+
+// 드롭 가능한 리스트 컨테이너
+export const DroppableContainer = styled.div`
+  max-width: 448px; /* max-w-md */
+  margin: 0 auto;
+  background-color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+`;
+
+// 개별 드래그 아이템 카드
+export const DraggableCard = styled.div<{ $isDragging: boolean }>`
+  padding: 16px;
+  margin-bottom: 12px; /* mb-3 */
+  border: 1px solid #e5e7eb; /* border */
+  border-radius: 8px; /* rounded-lg */
+  background-color: ${props => props.$isDragging ? '#e0f2fe' : 'white'};
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+export const IndexBadge = styled.span`
+  font-weight: bold;
+  color: #2563eb; /* text-blue-600 */
+`;
+
+export const ItemTitle = styled.span`
+  flex: 1;
+  margin-left: 16px;
+`;
+
+export const DragHandle = styled.span`
+  color: #9ca3af; /* text-gray-400 */
+`;
+
+// 지도 컨테이너 (남은 공간 차지)
+export const MapSection = styled.div`
+  flex: 1;
+  position: relative;
+  width: 100%;
+  background-color: #e5e7eb;
+`;
