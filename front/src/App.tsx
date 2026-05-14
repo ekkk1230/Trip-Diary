@@ -18,7 +18,7 @@ import { GlobalStyle } from './styles/GlobalStyle';
 import FindUser from './pages/auth/FindUser';
 import { useUserStore } from './store/useUserStore';
 import MySpot from './pages/myPage/MySpot';
-import MySchedule from './pages/myPage/MySchedule';
+import MySchedule from './pages/myPage/MyPlanner';
 
 function App() {
     const { user } = useUserStore();
