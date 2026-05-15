@@ -71,3 +71,11 @@ export const CATEGORIES: Category[] = [
     { id: 38, name: "쇼핑" },
     { id: 39, name: "음식점" },
 ]
+
+export const MAP_SEARCH_MENUS = [
+    { kakaoCode: 'AT4', name: '관광지' },
+    { kakaoCode: 'FD6', name: '음식점' },
+    { kakaoCode: 'AD5', name: '숙박' },
+    { kakaoCode: 'CE7', name: '카페' },
+    { kakaoCode: 'PK6', name: '주차장' },
+];

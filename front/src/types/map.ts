@@ -21,7 +21,7 @@ export interface Trip {
     mapy?: string;
     mlevel?: string;
     modifiedtime?: string;
-    overview: string;
+    overview?: string;
     sigungucode?: string;
     tel?: string;
     telname?: string;

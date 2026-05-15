@@ -331,7 +331,7 @@ export const TopSection = styled.div`
 
 // 3. 좌측 장소 보관함
 export const PlaceStorage = styled.aside`
-  width: 360px;
+  width: 40%;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #e5e7eb;
@@ -398,10 +398,39 @@ export const SchedulePanel = styled.section`
 `;
 
 export const ScheduleHeader = styled.div`
-  padding: 1.5rem;
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
-  h3 { font-size: 1.125rem; font-weight: 700; }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1f2937;
+  }
+`;
+
+export const ClearButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+  }
+
+  svg {
+    margin-top: -1px;
+  }
 `;
 
 export const ScheduleList = styled.div`
@@ -508,4 +537,35 @@ export const MapWrapper = styled.div`
   width: 100%;
   border-top: 2px solid #e5e7eb;
   position: relative;
+`;
+
+export const MapCategoryNav = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  background: white;
+  padding: 6px;
+  border-radius: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+`;
+
+export const MapCategoryBtn = styled.button<{ $active: boolean }>`
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: none;
+  background: ${props => props.$active ? '#3b82f6' : 'transparent'};
+  color: ${props => props.$active ? 'white' : '#4b5563'};
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: ${props => props.$active ? '#2563eb' : '#f3f4f6'};
+  }
 `;
