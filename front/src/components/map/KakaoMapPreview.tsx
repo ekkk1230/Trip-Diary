@@ -113,7 +113,7 @@ function KakaoMapPreview({ locations, activeCategory, onMarkerClick }: KakaoMapP
 
             const overlay = new kakao.maps.CustomOverlay({
                 position: position,
-                content: `<div style="background-color: #2563eb; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border: 2px solid white;">${index + 1}</div>`,
+                content: `<div style="background-color: #2563eb; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border: 2px dashed white;">${index + 1}</div>`,
                 yAnchor: 0.5
             });
 
@@ -134,7 +134,6 @@ function KakaoMapPreview({ locations, activeCategory, onMarkerClick }: KakaoMapP
         polyline.setMap(mapInstance.current);
         polylineRef.current = polyline;
 
-        // 마커가 추가될 때만 범위 조정 (검색 중에는 자동 조정 끄는 것이 UX상 좋음)
         if (locations.length > 0) mapInstance.current.setBounds(bounds);
 
     }, [locations]);

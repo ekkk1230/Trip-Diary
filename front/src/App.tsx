@@ -18,7 +18,7 @@ import { GlobalStyle } from './styles/GlobalStyle';
 import FindUser from './pages/auth/FindUser';
 import { useUserStore } from './store/useUserStore';
 import MySpot from './pages/myPage/MySpot';
-import MySchedule from './pages/myPage/MyPlanner';
+import MyPlanner from './components/map/MyPlanner';
 
 function App() {
     const { user } = useUserStore();
@@ -125,7 +125,7 @@ function App() {
 
                 <Route path="/test" element={
                     <Layout title="" hasHeader hasBottomNav>
-                        <MySchedule />
+                        <MyPlanner />
                     </Layout>
                 } />
             </Routes>
