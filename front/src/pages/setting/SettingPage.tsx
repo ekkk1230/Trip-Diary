@@ -21,16 +21,6 @@ function SettingPage() {
         )
     }
 
-    const handleAlarm = () => {
-        openModal(
-            "check",
-            "알림 설정 변경",
-            (
-                <SetDarkOptionForm subTit={"알람 설정 적용"} subLabel={"중요한 소식과 업데이트에 대한 푸시 알림을 설정합니다."} type={"alarm"}  />
-            )
-        )
-    }
-
     const handleRemoveUser = () => {
         openModal(
             "confirm",
@@ -72,13 +62,6 @@ function SettingPage() {
                     <span>다크 모드</span>
                     <S.ToggleWrapper>
                         {isDark ? ("활성화") : ("비활성화")}
-                        <MdChevronRight />
-                    </S.ToggleWrapper>
-                </S.SettingItem>
-                <S.SettingItem onClick={handleAlarm}>
-                    <span>알림 설정</span>
-                    <S.ToggleWrapper>
-                        {alarm ? ("활성화") : ("비활성화")}
                         <MdChevronRight />
                     </S.ToggleWrapper>
                 </S.SettingItem>

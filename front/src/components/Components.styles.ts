@@ -325,8 +325,9 @@ export const CategoryTab = styled.button<{ $active: boolean }>`
 
 export const StorageList = styled.div`
   flex: 1;
-  overflow-y: auto; /* 목록이 길어지면 내부 스크롤 */
+  overflow-y: auto; 
   padding: 1rem;
+  display: flex; gap: 1rem; flex-flow: column;
 `;
 
 // 4. 우측 일정 패널 (DND)
@@ -481,7 +482,7 @@ export const TravelInfoTag = styled.div`
 
   .line {
     width: 2px;
-    height: 30px;
+    height: 5rem;
     background: #e5e7eb;
     border-style: dashed;
   }
@@ -494,6 +495,10 @@ export const TravelInfoTag = styled.div`
     font-size: 11px;
     color: #6b7280;
     font-weight: 500;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
     
     span {
       margin-left: 4px;
