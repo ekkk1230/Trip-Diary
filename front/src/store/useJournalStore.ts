@@ -25,7 +25,7 @@ interface JournalStore {
     updateJournal: (id: string, updateData: any) => void;
     updateComment: (id: string, updateData: any) => void;
     removeJournal: (id: string) => void;
-    addJournal: (newJounal: JournalLog) => void;
+    addJournal: (newJounal: JournalLog) => Promise<void>;
     addComment: (newComment: Comment) => void;
     removeComment: (id: string) => void;
 }
@@ -50,7 +50,7 @@ export const useJournalStore = create<JournalStore>((set) => ({
                 isLoading: false
             });
         } catch (err) {
-            console.error('fetchJournals 연결 실패', err);
+            console.error('fetchJournals 연결 실패 ', err);
             set({ isLoading: false });
         };
     },
@@ -113,10 +113,29 @@ export const useJournalStore = create<JournalStore>((set) => ({
             filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
         }
     }),
-    addJournal: (newJournal) => set(state => ({ 
-        journals: [newJournal, ...state.journals], 
-        filteredJournals: [newJournal, ...state.filteredJournals],
-    })),
+    addJournal: async(newJournal) => {
+        set({ isLoading: true });
+        try {
+            const response = await fetch("http://localhost:8080/api/journals", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newJournal)
+            });
+            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            const savedJournal = await response.json();
+
+            set(state => ({ 
+                journals: [savedJournal, ...state.journals], 
+                filteredJournals: [savedJournal, ...state.filteredJournals],
+                isLoading: false,
+            }));
+        } catch (err) {
+            console.error('addJournal 실패: ', err);
+            set({ isLoading: false });
+        }
+    },
     updateJournal: (id, updateData) => set((state) => ({
         journals: updateArray.update(state.journals, id, updateData),
         filteredJournals: updateArray.update(state.filteredJournals, id, updateData),

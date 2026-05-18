@@ -9,11 +9,13 @@ import { REGION_DATA } from "../../constants/region";
 import { formatDate } from "../../utils/date";
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import { useUserStore } from "../../store/useUserStore";
 
 
 function JournalDetail() {
     const { id } = useParams();
     const location = useLocation();
+    const { user } = useUserStore();
     const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds, isEdit, setIsEdit } = useJournalStore();
 
     const navigate = useNavigate();    
@@ -57,11 +59,10 @@ function JournalDetail() {
             if (mood === "new") {
                 const newJournal = {
                     ...finalData,
-                    id: crypto.randomUUID(),
                     contentId: id!,
                     placeName: '',
                     mainImage: '',
-                    author: 'test',
+                    author: user?.nickname!,
                     stats: { likes: 0, comments: 0 },
                     keywords: [],
                 }

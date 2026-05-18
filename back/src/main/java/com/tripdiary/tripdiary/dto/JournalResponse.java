@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 public class JournalResponse {
-    private Long id;
+    private String id;
     private String contentId;
     private String logTitle;
     private String location;
@@ -22,7 +22,7 @@ public class JournalResponse {
     private StatsDto stats;
 
     public JournalResponse(Journal journal) {
-        this.id = journal.getId();
+        this.id = journal.getId() != null ? String.valueOf(journal.getId()) : null;
         this.contentId = journal.getContentId();
         this.logTitle = journal.getLogTitle();
         this.location = journal.getLocation();
@@ -32,6 +32,7 @@ public class JournalResponse {
         this.mainImage = journal.getMainImage();
         this.keywords = journal.getKeywords();
         this.author = journal.getMember().getNickname();
+        this.description = journal.getDescription();
         if (journal.getStats() != null) {
             this.stats = new StatsDto(journal.getStats().getLikes(), journal.getStats().getComments());
         }

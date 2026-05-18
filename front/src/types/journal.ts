@@ -1,6 +1,6 @@
 
 export interface JournalLog {
-    id: string;
+    id?: string;
     contentId: string;
     logTitle: string;
     location: string;

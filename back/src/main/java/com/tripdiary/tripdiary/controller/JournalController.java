@@ -1,13 +1,10 @@
 package com.tripdiary.tripdiary.controller;
 
+import com.tripdiary.tripdiary.dto.JournalCreateRequest;
 import com.tripdiary.tripdiary.dto.JournalResponse;
 import com.tripdiary.tripdiary.service.JournalService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +18,10 @@ public class JournalController {
     @GetMapping
     public List<JournalResponse> getAllJournals() {
         return journalService.getAllJournals();
+    }
+
+    @PostMapping
+    public JournalResponse createJournal(@RequestBody JournalCreateRequest request) {
+        return journalService.createJournal(request);
     }
 }

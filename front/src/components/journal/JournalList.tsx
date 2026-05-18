@@ -63,13 +63,13 @@ function JournalList({ type, contentid }: JournalListProps) {
                             <S.AdminButtons>
                                 <button 
                                     className="edit-btn"
-                                    onClick={e => handleEditJournal(e, log.id)}
+                                    onClick={e => handleEditJournal(e, log.id!)}
                                 >
                                     수정
                                 </button>
                                 <button 
                                     className="delete-btn"
-                                    onClick={e => handleRemove(e, log.id)}
+                                    onClick={e => handleRemove(e, log.id!)}
                                 >
                                     삭제
                                 </button>
@@ -102,9 +102,9 @@ function JournalList({ type, contentid }: JournalListProps) {
                                         </div>
                                         <button 
                                             className="stats"
-                                            onClick={e => handleFavorite(e, log.id)}
+                                            onClick={e => handleFavorite(e, log.id!)}
                                         >
-                                            {likedJournalIds.includes(log.id) ? <GoHeartFill/> : <GoHeart/>} {log.stats.likes}
+                                            {likedJournalIds.includes(log.id!) ? <GoHeartFill/> : <GoHeart/>} {log.stats.likes}
                                         </button>
                                     </S.CardFooter>
                                 </S.ContentWrapper>
