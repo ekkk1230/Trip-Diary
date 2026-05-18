@@ -10,12 +10,12 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { journals, filteredJournals, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
+    const { journals, isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
 
     const navigate = useNavigate();
 
-    // console.log(journals)
-    if (journals.length === 0) {
+    console.log(journals)
+    if (isLoading) {
         return (
             <S.Section>
                 <div className="loading" style={{ textAlign: 'center', padding: '100px 0' }}>
@@ -112,7 +112,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                         </S.Card>
                     ))
                 ) : (
-                    <p style={{ gridColumn: '1/-1', textAlign: 'center', padding: '50px 0', color: '#999' }}>
+                    <p className="no_item">
                         기록된 저널이 없습니다. ✍️
                     </p>
                 )}

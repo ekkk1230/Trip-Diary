@@ -48,7 +48,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 	}, [resetMap]);
 	
 	const projection = useMemo(() => 
-        geoMercator().center([127.5, 36]).scale(5000).translate([250, 300]), 
+        geoMercator().center([127.5, 36]).scale(4000).translate([250, 300]), 
     []);
 
 

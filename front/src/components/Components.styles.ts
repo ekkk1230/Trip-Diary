@@ -65,6 +65,8 @@ export const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   
+  .no_item { font-size: 1.6rem; text-align: center; color: #999; }
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }

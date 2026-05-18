@@ -1,1 +1,13 @@
 .DS_Store
+
+# 인텔리제이 개인 설정 파일 제외
+.idea/
+back/.idea/
+*.iml
+
+# 빌드 결과물 및 임시 파일 제외
+back/.gradle/
+back/build/
+
+# 백엔드 민감한 설정 파일 제외
+back/src/main/resources/application.properties

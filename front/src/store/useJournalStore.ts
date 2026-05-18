@@ -15,6 +15,9 @@ interface JournalStore {
     likedJournalIds: string[];
     comments: Comment[];
     isEdit: boolean;
+    isLoading: boolean;
+
+    fetchJournals: () => Promise<void>;
     
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
     searchJournals: (keyowrd: string, categoy: string) => void;
@@ -28,11 +31,29 @@ interface JournalStore {
 }
 
 export const useJournalStore = create<JournalStore>((set) => ({
-    journals: mockJournals,
-    filteredJournals: mockJournals,
+    journals: [],
+    filteredJournals: [],
     likedJournalIds: [],
     comments: mockComments,
     isEdit: false,
+    isLoading: false,
+    
+    fetchJournals: async() => {
+        set({ isLoading: true });
+        try {
+            const response = await fetch("http://localhost:8080/api/journals");
+            const data = await response.json();
+            
+            set({
+                journals: data,
+                filteredJournals: data,
+                isLoading: false
+            });
+        } catch (err) {
+            console.error('fetchJournals 연결 실패', err);
+            set({ isLoading: false });
+        };
+    },
 
     setIsEdit: (detailType, mood, forceValue) => set(state => {
         if (typeof forceValue === 'boolean') {
