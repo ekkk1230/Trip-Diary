@@ -5,7 +5,7 @@ import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
 import { TiWeatherSunny } from "react-icons/ti";
-import { REGION_DATA } from "../../constants/region";
+import { CATEGORIES, REGION_DATA } from "../../constants/region";
 import { formatDate } from "../../utils/date";
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
@@ -32,7 +32,8 @@ function JournalDetail() {
         sigungu: journal?.location?.split(" ")[1] || "",
         placeName: journal?.placeName || "",
         description: journal?.description || "",
-        keywords: journal?.keywords || []
+        keywords: journal?.keywords || [],
+        contentId: journal?.contentId || ""
     })
 
     const updateField = (key: string, value: any) => {
@@ -59,7 +60,6 @@ function JournalDetail() {
             if (mood === "new") {
                 const newJournal = {
                     ...finalData,
-                    contentId: id!,
                     placeName: '',
                     mainImage: '',
                     author: user?.nickname!,
@@ -158,44 +158,56 @@ function JournalDetail() {
                                 />
                             </div>
                         </S.InputGroup>
-            
-                        <S.InputGroup>
-                            <span>키워드</span>
-                            <S.KeywordBadgeGroup>
-                                {["힐링", "액티비티", "맛집", "인생샷", "바다"].map((tag) => (
-                                    <button
-                                        key={tag}
-                                        type="button"
-                                        className={editData.keywords.includes(tag) ? "active" : ""}
-                                        onClick={() => {
-                                            const nextKeywords = editData.keywords.includes(tag)
-                                                ? editData.keywords.filter(k => k !== tag) 
-                                                : [...editData.keywords, tag];
-                                            updateField('keywords', nextKeywords);
-                                        }}
-                                    >
-                                        {tag}
-                                    </button>
-                                ))}
-                            </S.KeywordBadgeGroup>
 
-                            <S.TagInputWrapper>
-                                <input 
-                                    type="text" 
-                                    placeholder="직접 입력 (예: #차박) 후 엔터" 
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            const val = e.currentTarget.value.trim();
-                                            if (val && !editData.keywords.includes(val)) {
-                                                updateField('keywords', [...editData.keywords, val]);
-                                                e.currentTarget.value = '';
-                                            }
-                                        }
-                                    }}
-                                />
-                            </S.TagInputWrapper>
+                        <S.InputGroup>
+                            <span>카테고리</span>
+                            <select 
+                                value={editData.contentId}
+                                onChange={e => updateField('contentId', e.target.value)}
+                            >
+                                {CATEGORIES.map(cate => (
+                                    <option key={cate.id} value={String(cate.id)}>{cate.name}</option>
+                                ))}
+                            </select>
                         </S.InputGroup>
                     </S.Row>
+            
+                    <S.InputGroup>
+                        <span>키워드</span>
+                        <S.KeywordBadgeGroup>
+                            {["힐링", "액티비티", "맛집", "인생샷", "바다"].map((tag) => (
+                                <button
+                                    key={tag}
+                                    type="button"
+                                    className={editData.keywords.includes(tag) ? "active" : ""}
+                                    onClick={() => {
+                                        const nextKeywords = editData.keywords.includes(tag)
+                                            ? editData.keywords.filter(k => k !== tag) 
+                                            : [...editData.keywords, tag];
+                                        updateField('keywords', nextKeywords);
+                                    }}
+                                >
+                                    {tag}
+                                </button>
+                            ))}
+                        </S.KeywordBadgeGroup>
+
+                        <S.TagInputWrapper>
+                            <input 
+                                type="text" 
+                                placeholder="직접 입력 (예: #차박) 후 엔터" 
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        const val = e.currentTarget.value.trim();
+                                        if (val && !editData.keywords.includes(val)) {
+                                            updateField('keywords', [...editData.keywords, val]);
+                                            e.currentTarget.value = '';
+                                        }
+                                    }
+                                }}
+                            />
+                        </S.TagInputWrapper>
+                    </S.InputGroup>
             
                     <S.InputGroup>
                         <span>여행 기록</span>

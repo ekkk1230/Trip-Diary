@@ -23,4 +23,9 @@ public class JournalController {
     public JournalDto.JournalResponse createJournal(@RequestBody JournalDto.JournalRequest request) {
         return journalService.createJournal(request);
     }
+
+    @PostMapping("/update")
+    public JournalDto.JournalResponse updateJournal(@RequestBody JournalDto.UpdateJournalRequest request) {
+        return journalService.updateJournal(request);
+    }
 }

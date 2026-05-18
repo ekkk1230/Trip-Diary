@@ -22,7 +22,7 @@ interface JournalStore {
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
     searchJournals: (keyowrd: string, categoy: string) => void;
     likedJournal: (id: string) => void;
-    updateJournal: (id: string, updateData: any) => void;
+    updateJournal: (id: string, updateData: any) => Promise<void>;
     updateComment: (id: string, updateData: any) => void;
     removeJournal: (id: string) => void;
     addJournal: (newJounal: JournalLog) => Promise<void>;
@@ -136,10 +136,27 @@ export const useJournalStore = create<JournalStore>((set) => ({
             set({ isLoading: false });
         }
     },
-    updateJournal: (id, updateData) => set((state) => ({
-        journals: updateArray.update(state.journals, id, updateData),
-        filteredJournals: updateArray.update(state.filteredJournals, id, updateData),
-    })),
+    updateJournal: async(id, updateData) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/journals/update', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updateData)
+            });
+
+            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            const updatedJournal = await response.json();
+
+            set((state) => ({
+                journals: updateArray.update(state.journals, id, updatedJournal),
+                filteredJournals: updateArray.update(state.filteredJournals, id, updatedJournal),
+            }))
+        } catch (err) {
+            console.error('updateJournal 실패: ', err);
+        }
+    },
     removeJournal: (id) => set((state) => ({
         journals: updateArray.remove(state.journals, id),
         filteredJournals: updateArray.remove(state.filteredJournals, id),

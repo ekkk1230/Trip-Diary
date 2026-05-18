@@ -55,4 +55,28 @@ public class JournalService {
         Journal savedJournal = journalRepository.save(journal);
         return new JournalDto.JournalResponse(savedJournal);
     }
+
+    @Transactional
+    public JournalDto.JournalResponse updateJournal(JournalDto.UpdateJournalRequest request) {
+        Journal journal = journalRepository.findById(request.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + request.getId()));
+
+        String finalLocation = (request.getSido() + " " + request.getSigungu()).trim();
+        Stats stats = Stats.builder()
+                .likes(request.getStats().getLikes())
+                .comments(request.getStats().getComments())
+                .build();
+
+        journal.update(
+                request.getLogTitle(),
+                finalLocation,
+                request.getDescription(),
+                request.getWeather(),
+                request.getMainImage(),
+                request.getKeywords(),
+                request.getContentId()
+        );
+
+        return new JournalDto.JournalResponse(journal);
+    }
 }

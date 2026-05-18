@@ -39,7 +39,7 @@ public class Journal {
 
     // 1:N 양방향 관계 설정
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travle_plan_id")
+    @JoinColumn(name = "travel_plan_id")
     private TravelPlan travelPlan;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,4 +48,18 @@ public class Journal {
 
     @Embedded
     private Stats stats;
+
+    public void update(
+            String logTitle, String location,
+            String description, String weather,
+            String mainImage, List<String> keywords,
+            String placeName) {
+        this.logTitle = logTitle;
+        this.location = location;
+        this.description = description;
+        this.weather = weather;
+        this.mainImage = mainImage;
+        this.keywords = keywords;
+        this.placeName = placeName;
+    }
 }

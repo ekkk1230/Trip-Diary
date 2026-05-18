@@ -4,6 +4,7 @@ import com.tripdiary.tripdiary.domain.Journal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JournalDto {
@@ -24,6 +25,30 @@ public class JournalDto {
         private String sigungu;
         private List<String> keywords;
         private StatsDto stats;
+
+        @Getter
+        @NoArgsConstructor
+        public static class StatsDto {
+            private Integer likes;
+            private Integer comments;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class UpdateJournalRequest {
+        private Long id;
+        private String contentId;
+        private String logTitle;
+        private String placeName;
+        private LocalDateTime travelDate;
+        private String weather;
+        private String mainImage;
+        private String description;
+        private String sido;
+        private String sigungu;
+        private List<String> keywords;
+        private JournalRequest.StatsDto stats;
 
         @Getter
         @NoArgsConstructor
