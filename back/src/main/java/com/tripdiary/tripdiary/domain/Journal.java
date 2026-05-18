@@ -31,6 +31,7 @@ public class Journal {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "journal_keywords", joinColumns = @JoinColumn(name = "journal_id"))
     @Column(name = "keyword")

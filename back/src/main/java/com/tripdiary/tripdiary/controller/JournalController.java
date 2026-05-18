@@ -1,7 +1,6 @@
 package com.tripdiary.tripdiary.controller;
 
-import com.tripdiary.tripdiary.dto.JournalCreateRequest;
-import com.tripdiary.tripdiary.dto.JournalResponse;
+import com.tripdiary.tripdiary.dto.JournalDto;
 import com.tripdiary.tripdiary.service.JournalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,12 @@ public class JournalController {
     private final JournalService journalService;
 
     @GetMapping
-    public List<JournalResponse> getAllJournals() {
+    public List<JournalDto.JournalResponse> getAllJournals() {
         return journalService.getAllJournals();
     }
 
     @PostMapping
-    public JournalResponse createJournal(@RequestBody JournalCreateRequest request) {
+    public JournalDto.JournalResponse createJournal(@RequestBody JournalDto.JournalRequest request) {
         return journalService.createJournal(request);
     }
 }

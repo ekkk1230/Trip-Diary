@@ -3,8 +3,7 @@ package com.tripdiary.tripdiary.service;
 import com.tripdiary.tripdiary.domain.Journal;
 import com.tripdiary.tripdiary.domain.Member;
 import com.tripdiary.tripdiary.domain.Stats;
-import com.tripdiary.tripdiary.dto.JournalCreateRequest;
-import com.tripdiary.tripdiary.dto.JournalResponse;
+import com.tripdiary.tripdiary.dto.JournalDto;
 import com.tripdiary.tripdiary.repository.JournalRepository;
 import com.tripdiary.tripdiary.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +20,14 @@ public class JournalService {
     private final JournalRepository journalRepository;
     private final MemberRepository memberRepository;
 
-    public List<JournalResponse> getAllJournals() {
+    public List<JournalDto.JournalResponse> getAllJournals() {
         List<Journal> journals = journalRepository.findAll();
 
-        return journals.stream().map(JournalResponse::new).collect(Collectors.toList());
+        return journals.stream().map(JournalDto.JournalResponse::new).collect(Collectors.toList());
     }
 
     @Transactional
-    public JournalResponse createJournal(JournalCreateRequest request) {
+    public JournalDto.JournalResponse createJournal(JournalDto.JournalRequest request) {
         String finalLocation = (request.getSido() + " " + request.getSigungu()).trim();
 
         Member member = memberRepository.findByNickname(request.getAuthor())
@@ -54,6 +53,6 @@ public class JournalService {
             .build();
 
         Journal savedJournal = journalRepository.save(journal);
-        return new JournalResponse(savedJournal);
+        return new JournalDto.JournalResponse(savedJournal);
     }
 }

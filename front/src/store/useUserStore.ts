@@ -14,10 +14,10 @@ interface UserStore {
     user: User | null;
     setUser: (user: User) => void;
 
-    login: (LoginData: LoginData) => boolean;
+    login: (LoginData: LoginData) => Promise<boolean>;
     clearUser: () => void;
 
-    joinUser: (user: User) => void;
+    joinUser: (user: User) => Promise<void>;
     removeUser: (user: User) => void;
 
     profileImgChange: (userId: string, updateProfileImg: string) => void;
@@ -35,21 +35,39 @@ export const useUserStore = create<UserStore>()(
             user: null,
             setUser: (user) => set({ user }),
 
-            login: (loginData) => {
-                const { users } = get();
+            login: async(loginData) => {
+                try {
+                    const response = await fetch('http://localhost:8080/api/user/login', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(loginData)
+                    })
 
-                const foundUser = users.find(u => u.userId === loginData.userId && u.password === loginData.password);
+                    if (!response.ok) {
+                        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+                        return false;
+                    }
+                    const loginMember = await response.json();
 
-                if (foundUser) {
-                    set ({ user: foundUser });
-                    return true;
-                } else return false;
+                    // const { users } = get();
+
+                    // const foundUser = users.find(u => u.userId === loginData.userId && u.password === loginData.password);
+
+                    if (loginMember) {
+                        set ({ user: loginMember });
+                        return true;
+                    } else return false;
+                } catch (err) {
+                    console.error('login 실패: ', err);
+                    return false;
+                }
             },
             clearUser: () => set({ user: null }),
 
-            joinUser: (user) => {
+            joinUser: async(user) => {
                 const newUser = {
-                    id: user.id,
                     nickname: user.nickname,
                     userId: user.userId,
                     password: user.password,
@@ -62,8 +80,22 @@ export const useUserStore = create<UserStore>()(
                         agreedAt: user.agreements.agreedAt,
                     }
                 };
+                try {
+                    const response = await fetch('http://localhost:8080/api/user', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(newUser)
+                    });
 
-                set((state) => ({ users: [newUser, ...state.users] }));
+                    if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+                    const joinMember = await response.json();
+
+                    set((state) => ({ users: [joinMember, ...state.users] }));
+                } catch (err) {
+                    console.error('joinUser 실패: ', err);
+                }                
             },
             removeUser: (user) => {
                 set((state) => ({ 
