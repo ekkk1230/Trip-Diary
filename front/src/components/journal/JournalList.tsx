@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import * as S from "../Components.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import type { MouseEvent } from "react";
+import { useEffect, type MouseEvent } from "react";
 
 interface JournalListProps {
     type: string;
@@ -10,11 +10,13 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { journals, isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds } = useJournalStore();
+    const { isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds, fetchJournals } = useJournalStore();
 
     const navigate = useNavigate();
 
-    console.log(journals)
+    useEffect(() => { fetchJournals(); }, [])
+
+    // console.log(journals)
     if (isLoading) {
         return (
             <S.Section>

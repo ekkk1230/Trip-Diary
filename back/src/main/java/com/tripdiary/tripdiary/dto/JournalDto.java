@@ -1,10 +1,13 @@
 package com.tripdiary.tripdiary.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tripdiary.tripdiary.domain.Journal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class JournalDto {
@@ -41,7 +44,8 @@ public class JournalDto {
         private String contentId;
         private String logTitle;
         private String placeName;
-        private LocalDateTime travelDate;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate travelDate;
         private String weather;
         private String mainImage;
         private String description;
@@ -65,6 +69,7 @@ public class JournalDto {
         private String logTitle;
         private String location;
         private String placeName;
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private String travelDate;
         private String weather;
         private String mainImage;
@@ -79,7 +84,7 @@ public class JournalDto {
             this.logTitle = journal.getLogTitle();
             this.location = journal.getLocation();
             this.placeName = journal.getPlaceName();
-            this.travelDate = journal.getTravelDate() != null ? journal.getTravelDate().toString() : null;
+            this.travelDate = journal.getTravelDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             this.weather = journal.getWeather();
             this.mainImage = journal.getMainImage();
             this.keywords = journal.getKeywords();
@@ -90,6 +95,8 @@ public class JournalDto {
 
             if (journal.getStats() != null) {
                 this.stats = new StatsDto(journal.getStats().getLikes(), journal.getStats().getComments());
+            } else {
+                this.stats = new StatsDto(0, 0);
             }
         }
 

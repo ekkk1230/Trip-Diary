@@ -24,8 +24,10 @@ public class JournalController {
         return journalService.createJournal(request);
     }
 
-    @PostMapping("/update")
-    public JournalDto.JournalResponse updateJournal(@RequestBody JournalDto.UpdateJournalRequest request) {
-        return journalService.updateJournal(request);
+    @PutMapping("/{id}")
+    public JournalDto.JournalResponse updateJournal(
+            @PathVariable(name = "id") Long id,
+            @RequestBody JournalDto.UpdateJournalRequest request) {
+        return journalService.updateJournal(id, request);
     }
 }

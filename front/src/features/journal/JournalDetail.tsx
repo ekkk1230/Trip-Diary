@@ -104,7 +104,7 @@ function JournalDetail() {
                             <span>여행 날짜</span>
                             <input 
                                 type="date" 
-                                value={editData.travelDate}
+                                value={editData.travelDate ? editData.travelDate.substring(0, 10) : ""}
                                 onChange={e => updateField('travelDate', e.target.value)}
                             />
                         </S.InputGroup>

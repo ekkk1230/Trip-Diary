@@ -138,8 +138,8 @@ export const useJournalStore = create<JournalStore>((set) => ({
     },
     updateJournal: async(id, updateData) => {
         try {
-            const response = await fetch('http://localhost:8080/api/journals/update', {
-                method: "POST",
+            const response = await fetch(`http://localhost:8080/api/journals/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -150,8 +150,8 @@ export const useJournalStore = create<JournalStore>((set) => ({
             const updatedJournal = await response.json();
 
             set((state) => ({
-                journals: updateArray.update(state.journals, id, updatedJournal),
-                filteredJournals: updateArray.update(state.filteredJournals, id, updatedJournal),
+                journals: state.journals.map(j => String(j.id) === String(id) ? updatedJournal : j),
+                filteredJournals: state.filteredJournals.map(j => String(j.id) === String(id) ? updatedJournal : j)
             }))
         } catch (err) {
             console.error('updateJournal 실패: ', err);

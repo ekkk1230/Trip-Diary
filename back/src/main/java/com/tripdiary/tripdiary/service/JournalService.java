@@ -57,15 +57,11 @@ public class JournalService {
     }
 
     @Transactional
-    public JournalDto.JournalResponse updateJournal(JournalDto.UpdateJournalRequest request) {
-        Journal journal = journalRepository.findById(request.getId())
+    public JournalDto.JournalResponse updateJournal(Long id, JournalDto.UpdateJournalRequest request) {
+        Journal journal = journalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + request.getId()));
 
         String finalLocation = (request.getSido() + " " + request.getSigungu()).trim();
-        Stats stats = Stats.builder()
-                .likes(request.getStats().getLikes())
-                .comments(request.getStats().getComments())
-                .build();
 
         journal.update(
                 request.getLogTitle(),
