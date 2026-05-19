@@ -5,6 +5,7 @@ import com.tripdiary.tripdiary.service.JournalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,8 +22,10 @@ public class JournalController {
     }
 
     @PostMapping
-    public JournalDto.JournalResponse createJournal(@RequestBody JournalDto.JournalRequest request) {
-        return journalService.createJournal(request);
+    public JournalDto.JournalResponse createJournal(
+            @RequestPart(name = "journalDto") JournalDto.JournalRequest request,
+            @RequestPart(name = "image", required = false) MultipartFile imageFile) {
+        return journalService.createJournal(request, imageFile);
     }
 
     @PutMapping("/{id}")
@@ -33,7 +36,7 @@ public class JournalController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteJournal(@PathVariable(name = "id") Long id) {
+    public void deleteJournal(@PathVariable(name = "id") String id) {
         journalService.deleteJournal(id);
     }
 

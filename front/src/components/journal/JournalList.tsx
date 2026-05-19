@@ -16,7 +16,7 @@ function JournalList({ type, contentid }: JournalListProps) {
 
     useEffect(() => { fetchJournals(); }, [])
 
-    console.log(filteredJournals)
+    // console.log(filteredJournals)
     if (isLoading) {
         return (
             <S.Section>
@@ -80,11 +80,11 @@ function JournalList({ type, contentid }: JournalListProps) {
                             <div 
                                 onClick={() => {
                                     updateViews(String(log.id));
-                                    navigate(`/journal/${log.id}/view`, { state: { detailType: 'view' } })} 
+                                    navigate(`/journal/${log.id}`, { state: { detailType: 'view' } })} 
                                 }                                    
                                 style={{ cursor: 'pointer' }}>
                                 <S.ImageWrapper>
-                                    <img src={log.mainImage || `${import.meta.env.BASE_URL}default-image.png`} alt={log.logTitle} />
+                                    <img src={log.mainImage ? `http://localhost:8080${log.mainImage}` : `${import.meta.env.BASE_URL}default-image.png`} alt={log.logTitle} />
                                 </S.ImageWrapper>
                                     
                                 <S.ContentWrapper>

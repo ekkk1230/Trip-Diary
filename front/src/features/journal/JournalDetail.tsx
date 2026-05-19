@@ -16,13 +16,19 @@ function JournalDetail() {
     const { id } = useParams();
     const location = useLocation();
     const { user } = useUserStore();
-    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds, isEdit, setIsEdit } = useJournalStore();
+    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds, isEdit, setIsEdit, comments, fetchComments } = useJournalStore();
+
+    useEffect(() => {
+        fetchComments(parseInt(id!))
+    }, [id])
 
     const navigate = useNavigate();    
 
     const journal = journals.find(j => j.id === id);
-    const mood = location.state.mood || 'edit';
-    const detailType = location.state.detailType || 'edit';
+    const mood = location.state?.mood || 'edit';
+    const detailType = location.state?.detailType || 'edit';
+
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const [editData, setEditData] = useState({
         logTitle: journal?.logTitle || "",
@@ -53,26 +59,35 @@ function JournalDetail() {
 
     // console.log(detailType, journal, mood)
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (isEdit) {
-            const finalLocation = `${editData.sido} ${editData.sigungu}`.trim();
-            const finalData = { ...editData, location: finalLocation };
-
-            if (mood === "new") {
-                const newJournal = {
-                    ...finalData,
-                    placeName: '',
-                    mainImage: '',
-                    author: user?.nickname!,
-                    stats: { likes: 0, comments: 0, views: 0 },
-                    keywords: [],
+            try {
+                const finalLocation = `${editData.sido} ${editData.sigungu}`.trim();
+                const { mainImage, ...restData } = editData;
+                const finalData = { ...restData, location: finalLocation };
+    
+                if (mood === "new") {
+                    const newJournal = {
+                        ...finalData,
+                        placeName: '',
+                        author: user?.nickname!,
+                        stats: { likes: 0, comments: 0, views: 0 },
+                        keywords: [],
+                    }
+                    await addJournal(newJournal, imageFile);
+                } else {
+                    await updateJournal(journal?.id!, finalData);
                 }
-                addJournal(newJournal);
+    
                 setIsEdit(undefined, undefined, false);
-                navigate("/journal");
-            } else {
-                updateJournal(journal?.id!, finalData)
-                setIsEdit(undefined, undefined, false);
+                
+                setTimeout(() => {
+                    window.location.href = "/journal";
+                }, 100);
+    
+            } catch (error) {
+                console.error("저장 중 오류 발생:", error);
+                alert("저장에 실패했습니다. 다시 시도해 주세요.");
             }
         }
     }
@@ -83,6 +98,7 @@ function JournalDetail() {
         const file = e.target.files?.[0];
 
         if (file) {
+            setImageFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 updateField('mainImage', reader.result);
@@ -242,7 +258,10 @@ function JournalDetail() {
                                     />
                                     <S.DeleteImageButton
                                         type="button"
-                                        onClick={() => updateField('mainImage', '')}
+                                        onClick={() => {
+                                            updateField('mainImage', '');
+                                            setImageFile(null);
+                                        }}
                                     >
                                         ✕
                                     </S.DeleteImageButton>
@@ -294,7 +313,7 @@ function JournalDetail() {
                     </div>
 
                     {journal?.mainImage && (
-                        <img src={journal.mainImage} alt="" />
+                        <img src={`http://localhost:8080${journal.mainImage}`} alt="" />
                     )}
 
                     {/* 본문 */}

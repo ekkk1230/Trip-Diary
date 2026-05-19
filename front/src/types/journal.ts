@@ -7,7 +7,7 @@ export interface JournalLog {
     placeName: string;
     travelDate: string;
     weather: string;
-    mainImage: string;
+    mainImage?: string;
     author: string;
     description: string;
     stats: { likes: number, comments: number, views: number };
@@ -15,7 +15,7 @@ export interface JournalLog {
 }
 
 export interface Comment {
-    id: string;
+    id?: string;
     user: string;
     journalId: number;
     date: string;

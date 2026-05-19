@@ -1,14 +1,17 @@
 package com.tripdiary.tripdiary.service;
 
+import com.tripdiary.tripdiary.domain.Comment;
 import com.tripdiary.tripdiary.domain.Journal;
 import com.tripdiary.tripdiary.domain.Member;
 import com.tripdiary.tripdiary.domain.Stats;
 import com.tripdiary.tripdiary.dto.JournalDto;
+import com.tripdiary.tripdiary.repository.CommentRepository;
 import com.tripdiary.tripdiary.repository.JournalRepository;
 import com.tripdiary.tripdiary.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class JournalService {
     private final JournalRepository journalRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     public List<JournalDto.JournalResponse> getAllJournals() {
         List<Journal> journals = journalRepository.findAll();
@@ -28,11 +32,41 @@ public class JournalService {
     }
 
     @Transactional
-    public JournalDto.JournalResponse createJournal(JournalDto.JournalRequest request) {
+    public JournalDto.JournalResponse createJournal(JournalDto.JournalRequest request, MultipartFile imageFile) {
         String finalLocation = (request.getSido() + " " + request.getSigungu()).trim();
 
         Member member = memberRepository.findByNickname(request.getAuthor())
                                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        String imagePath = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String basePath = java.nio.file.Paths.get("").toAbsolutePath().toString();
+                String uploadDir;
+
+                if (basePath.endsWith("back")) {
+                    uploadDir = basePath + java.io.File.separator + "uploads" + java.io.File.separator;
+                } else {
+                    uploadDir = basePath + java.io.File.separator + "back" + java.io.File.separator + "uploads" + java.io.File.separator;
+                }
+
+                java.io.File folder = new java.io.File(uploadDir);
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+
+                String originalFilename = imageFile.getOriginalFilename();
+                String savedFilename = java.util.UUID.randomUUID().toString() + "_" + originalFilename;
+
+                java.io.File destination = new java.io.File(uploadDir + savedFilename);
+                imageFile.transferTo(destination);
+
+                imagePath = "/uploads/" + savedFilename;
+
+            } catch (java.io.IOException e) {
+                throw new RuntimeException("이미지 저장 중 오류가 발생했습니다.", e);
+            }
+        }
 
         Stats stats = Stats.builder()
                 .likes(request.getStats() != null ? request.getStats().getLikes() : 0)
@@ -47,7 +81,7 @@ public class JournalService {
             .placeName(request.getPlaceName())
             .travelDate(request.getTravelDate() != null ? java.time.LocalDate.parse(request.getTravelDate()).atStartOfDay() : null)
             .weather(request.getWeather())
-            .mainImage(request.getMainImage())
+            .mainImage(imagePath)
             .member(member)
             .description(request.getDescription())
             .keywords(request.getKeywords())
@@ -82,8 +116,9 @@ public class JournalService {
     }
 
     @Transactional
-    public void deleteJournal(Long id) {
-        Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
+    public void deleteJournal(String id) {
+        Journal journal = journalRepository.findById(Long.parseLong(id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
+        commentRepository.deleteByJournalId(Long.parseLong(id));
         journalRepository.delete(journal);
     }
 

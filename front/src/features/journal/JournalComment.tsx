@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./Journal.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../utils/date";
+import { useUserStore } from "../../store/useUserStore";
 
 
 function JournalComment() {
-    const { journals, comments, addComment, updateComment, removeComment } = useJournalStore();
+    const { user } = useUserStore();
+    const { journals, fetchComments, comments, addComment, updateComment, removeComment } = useJournalStore();
     const { id } = useParams();
     const journal = journals.find(j => j.id === id);
 
@@ -15,14 +17,15 @@ function JournalComment() {
     const [editText, setEditText] = useState<string>("");
 
 
-    const filterComment = comments.filter(c => c.journalId === parseInt(journal?.id!));
+    useEffect(() => {
+        fetchComments(parseInt(id!));
+    }, [id])
 
     const handleSubmit = () => {
         if (!commentText.trim()) return alert("입력후 확인을 눌러주세요.");
 
         const newComment = {
-            id: crypto.randomUUID(),
-            user: 'test',
+            user: user?.nickname!,
             journalId: parseInt(journal?.id!),
             date: formatDate(),
             text: commentText,
@@ -59,8 +62,8 @@ function JournalComment() {
             </S.CommentInputWrapper>
 
             <S.CommentList>
-                {filterComment.length > 0 ? (
-                    filterComment.map((c) => (
+                {comments.length > 0 ? (
+                    comments.map((c) => (
                         <S.CommentItem key={c.id}>
                             <div className="comment-header">
                                 <span className="user-name">{c.user}</span>
@@ -69,13 +72,13 @@ function JournalComment() {
                                 <div className="comment-actions">
                                     <button 
                                         className="edit-btn" 
-                                        onClick={() => handleEdit(c.id, c.text)}
+                                        onClick={() => handleEdit(c.id!, c.text)}
                                     >
                                         {editingId === c.id ? '확인' : '수정'}
                                     </button>
                                     <button 
                                         className="delete-btn" 
-                                        onClick={() => handleRemove(c.id)}
+                                        onClick={() => handleRemove(c.id!)}
                                     >
                                         삭제
                                     </button>
