@@ -24,7 +24,7 @@ interface JournalStore {
     likedJournal: (id: string) => void;
     updateJournal: (id: string, updateData: any) => Promise<void>;
     updateComment: (id: string, updateData: any) => void;
-    removeJournal: (id: string) => void;
+    removeJournal: (id: string) => Promise<void>;
     addJournal: (newJounal: JournalLog) => Promise<void>;
     addComment: (newComment: Comment) => void;
     removeComment: (id: string) => void;
@@ -157,10 +157,22 @@ export const useJournalStore = create<JournalStore>((set) => ({
             console.error('updateJournal 실패: ', err);
         }
     },
-    removeJournal: (id) => set((state) => ({
-        journals: updateArray.remove(state.journals, id),
-        filteredJournals: updateArray.remove(state.filteredJournals, id),
-    })),
+    removeJournal: async(id) => {
+        try {
+            const response = await fetch (`http://localhost:8080/api/journals/${id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) throw new Error(`서버 에로 발생 - 상태코드: ${response.status}`);
+
+            set(state => ({
+                journals: state.journals.filter(j => String(j.id) === String(id)),
+                filteredJournals: state.filteredJournals.filter(j => String(j.id) === String(id))
+            }))
+        } catch (err) {
+            console.error('removeJournal 실패: ', err);
+        }
+    },
     addComment: (newComment) => set(state => ({ comments: [newComment, ...state.comments] })),
     updateComment: (id, updateData) => set((state) => ({
         comments: updateArray.update(state.comments, id, updateData),

@@ -75,4 +75,10 @@ public class JournalService {
 
         return new JournalDto.JournalResponse(journal);
     }
+
+    @Transactional
+    public void deleteJournal(Long id) {
+        Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
+        journalRepository.delete(journal);
+    }
 }

@@ -30,4 +30,9 @@ public class JournalController {
             @RequestBody JournalDto.UpdateJournalRequest request) {
         return journalService.updateJournal(id, request);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteJournal(@PathVariable(name = "id") Long id) {
+        journalService.deleteJournal(id);
+    }
 }
