@@ -79,7 +79,7 @@ function App() {
                         <JournalDetailPage />
                     </Layout>
                 } />
-                <Route path="/journal/:id" element={
+                <Route path="/journal/:id/view" element={
                     <Layout title="저널" hasHeader hasBottomNav>
                         <JournalDetailPage />
                     </Layout>

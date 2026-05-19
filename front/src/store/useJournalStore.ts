@@ -20,14 +20,15 @@ interface JournalStore {
     fetchJournals: () => Promise<void>;
     
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
-    searchJournals: (keyowrd: string, categoy: string) => void;
-    likedJournal: (id: string) => void;
+    searchJournals: (keyowrd: string, categoy: string | null) => void;
+    likedJournal: (id: string) => Promise<void>;
     updateJournal: (id: string, updateData: any) => Promise<void>;
     updateComment: (id: string, updateData: any) => void;
     removeJournal: (id: string) => Promise<void>;
     addJournal: (newJounal: JournalLog) => Promise<void>;
     addComment: (newComment: Comment) => void;
     removeComment: (id: string) => void;
+    updateViews: (id: string) => Promise<void>;
 }
 
 export const useJournalStore = create<JournalStore>((set) => ({
@@ -85,34 +86,49 @@ export const useJournalStore = create<JournalStore>((set) => ({
 
         return { filteredJournals: filtered };
     }),
-    likedJournal: id => set(state => {
-        const journal = state.filteredJournals.find(j => j.id === id);
-        if (!journal) return state;
+    likedJournal: async(id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/journals/${id}/like`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(id)
+            });
+            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
 
-        const isAlreadyLiked = state.likedJournalIds.includes(id);
+            set(state => {
+                const journal = state.filteredJournals.find(j => j.id === id);
+                if (!journal) return state;
         
-        const newLikes = isAlreadyLiked
-            ? Math.max(0, (journal.stats.likes || 0) - 1)
-            : (journal.stats.likes || 0) + 1;
-
-        const updatedJournal = {
-            ...journal,
-            stats: {
-                ...journal.stats,
-                likes: newLikes
-            }
-        };
-
-        const newLikedIds = isAlreadyLiked
-            ? state.likedJournalIds.filter(likedId => likedId !== id)
-            : [...state.likedJournalIds, id];
-
-        return {
-            likedJournalIds: newLikedIds,
-            journals: state.journals.map(j => j.id === id ? updatedJournal : j),
-            filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
+                const isAlreadyLiked = state.likedJournalIds.includes(id);
+                
+                const newLikes = isAlreadyLiked
+                    ? Math.max(0, (journal.stats.likes || 0) - 1)
+                    : (journal.stats.likes || 0) + 1;
+        
+                const updatedJournal = {
+                    ...journal,
+                    stats: {
+                        ...journal.stats,
+                        likes: newLikes
+                    }
+                };
+        
+                const newLikedIds = isAlreadyLiked
+                    ? state.likedJournalIds.filter(likedId => likedId !== id)
+                    : [...state.likedJournalIds, id];
+        
+                return {
+                    likedJournalIds: newLikedIds,
+                    journals: state.journals.map(j => j.id === id ? updatedJournal : j),
+                    filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
+                }
+            })
+        } catch (err) {
+            console.error(`likedJournal 실패: ${err}`);
         }
-    }),
+    },
     addJournal: async(newJournal) => {
         set({ isLoading: true });
         try {
@@ -163,7 +179,7 @@ export const useJournalStore = create<JournalStore>((set) => ({
                 method: "DELETE",
             });
 
-            if (!response.ok) throw new Error(`서버 에로 발생 - 상태코드: ${response.status}`);
+            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
 
             set(state => ({
                 journals: state.journals.filter(j => String(j.id) === String(id)),
@@ -177,5 +193,38 @@ export const useJournalStore = create<JournalStore>((set) => ({
     updateComment: (id, updateData) => set((state) => ({
         comments: updateArray.update(state.comments, id, updateData),
     })),
-    removeComment: (id) => set((state) => ({ comments: updateArray.remove(state.comments, id) }))
+    removeComment: (id) => set((state) => ({ comments: updateArray.remove(state.comments, id) })),
+    updateViews: async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/journals/${id}/view`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(id)
+            });
+
+            if(!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+
+            set(state => {
+                const updateJournalStats = (j: JournalLog) => {
+                    if (String(j.id) !== String(id)) return j;
+                    return {
+                        ...j,
+                        stats: {
+                            ...j.stats,
+                            views: (j.stats.views || 0) + 1
+                        }
+                    }
+                };
+
+                return {
+                    journals: state.journals.map(updateJournalStats),
+                    filteredJournals: state.filteredJournals.map(updateJournalStats)
+                }
+            })
+        } catch (err) {
+            console.error(`updateViews 실패: ${err}`);
+        }
+    }
 }))

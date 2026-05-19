@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import * as S from "./Journal.styles";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
@@ -33,7 +33,8 @@ function JournalDetail() {
         placeName: journal?.placeName || "",
         description: journal?.description || "",
         keywords: journal?.keywords || [],
-        contentId: journal?.contentId || ""
+        contentId: journal?.contentId || "",
+        mainImage: journal?.mainImage || "",
     })
 
     const updateField = (key: string, value: any) => {
@@ -63,7 +64,7 @@ function JournalDetail() {
                     placeName: '',
                     mainImage: '',
                     author: user?.nickname!,
-                    stats: { likes: 0, comments: 0 },
+                    stats: { likes: 0, comments: 0, views: 0 },
                     keywords: [],
                 }
                 addJournal(newJournal);
@@ -77,6 +78,18 @@ function JournalDetail() {
     }
 
     const isLiked = likedJournalIds.includes(journal?.id!);
+
+    const handleImageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                updateField('mainImage', reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     const handleDelete = (journalId: string) => {
         if (confirm("기록을 삭제하시겠습니까?")) {
@@ -208,6 +221,35 @@ function JournalDetail() {
                             />
                         </S.TagInputWrapper>
                     </S.InputGroup>
+
+                    <S.InputGroup>
+                        <span>대표 사진</span>
+                        <S.ImageUploadWrapper>
+                            <S.FileInputLabel>
+                                사진 선택하기
+                                <input 
+                                    type="file" 
+                                    accept="image/*"
+                                    onChange={(e) => handleImageUpdate(e)}
+                                />
+                            </S.FileInputLabel>
+
+                            {editData.mainImage && (
+                                <S.PreviewContainer>
+                                    <S.PreviewImage 
+                                        src={editData.mainImage} 
+                                        alt="미리보기" 
+                                    />
+                                    <S.DeleteImageButton
+                                        type="button"
+                                        onClick={() => updateField('mainImage', '')}
+                                    >
+                                        ✕
+                                    </S.DeleteImageButton>
+                                </S.PreviewContainer>
+                            )}
+                        </S.ImageUploadWrapper>
+                    </S.InputGroup>
             
                     <S.InputGroup>
                         <span>여행 기록</span>
@@ -232,7 +274,7 @@ function JournalDetail() {
                         <div className="left">
                             <span className="author">@{journal?.author}</span>
                             <span className="stats"><AiOutlineLike />{journal?.stats?.likes}</span>
-                            <span className="stats"><FaRegEye /> {journal?.stats?.comments}</span>
+                            <span className="stats"><FaRegEye /> {journal?.stats?.views}</span>
                             <span className="date">{formatDate(journal?.travelDate)}</span>
                         </div>
                         
@@ -250,6 +292,10 @@ function JournalDetail() {
                         <span><MdOutlinePlace /> {journal?.location} {journal?.placeName}</span>
                         <span><TiWeatherSunny /> {journal?.weather}</span>
                     </div>
+
+                    {journal?.mainImage && (
+                        <img src={journal.mainImage} alt="" />
+                    )}
 
                     {/* 본문 */}
                     <p className="description">

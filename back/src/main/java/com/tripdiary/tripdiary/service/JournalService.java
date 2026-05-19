@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ public class JournalService {
         Stats stats = Stats.builder()
                 .likes(request.getStats() != null ? request.getStats().getLikes() : 0)
                 .comments(request.getStats() != null ? request.getStats().getComments() : 0)
+                .views(request.getStats() != null ? request.getStats().getViews() : 0)
                 .build();
 
         Journal journal = Journal.builder()
@@ -63,6 +65,8 @@ public class JournalService {
 
         String finalLocation = (request.getSido() + " " + request.getSigungu()).trim();
 
+        LocalDateTime updatedDate = request.getTravelDate() != null ? request.getTravelDate().atStartOfDay() : null;
+
         journal.update(
                 request.getLogTitle(),
                 finalLocation,
@@ -70,7 +74,8 @@ public class JournalService {
                 request.getWeather(),
                 request.getMainImage(),
                 request.getKeywords(),
-                request.getContentId()
+                request.getContentId(),
+                updatedDate
         );
 
         return new JournalDto.JournalResponse(journal);
@@ -80,5 +85,18 @@ public class JournalService {
     public void deleteJournal(Long id) {
         Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
         journalRepository.delete(journal);
+    }
+
+    @Transactional
+    public void increaseViewCount(Long id) {
+        Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
+        journal.increaseViewCount();
+    }
+
+    @Transactional
+    public int toggleLike(Long id) {
+        Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
+        journal.increaseLikeCount();
+        return journal.getStats().getLikes();
     }
 }

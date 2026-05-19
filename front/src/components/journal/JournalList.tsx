@@ -10,13 +10,13 @@ interface JournalListProps {
 }
 
 function JournalList({ type, contentid }: JournalListProps) {
-    const { isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds, fetchJournals } = useJournalStore();
+    const { isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds, fetchJournals, updateViews } = useJournalStore();
 
     const navigate = useNavigate();
 
     useEffect(() => { fetchJournals(); }, [])
 
-    // console.log(journals)
+    console.log(filteredJournals)
     if (isLoading) {
         return (
             <S.Section>
@@ -77,9 +77,14 @@ function JournalList({ type, contentid }: JournalListProps) {
                                 </button>
                             </S.AdminButtons>
 
-                            <div onClick={() => navigate(`/journal/${log.id}`, { state: { detailType: 'view' } })} style={{ cursor: 'pointer' }}>
+                            <div 
+                                onClick={() => {
+                                    updateViews(String(log.id));
+                                    navigate(`/journal/${log.id}/view`, { state: { detailType: 'view' } })} 
+                                }                                    
+                                style={{ cursor: 'pointer' }}>
                                 <S.ImageWrapper>
-                                    <img src={log.mainImage} alt={log.logTitle} />
+                                    <img src={log.mainImage || `${import.meta.env.BASE_URL}default-image.png`} alt={log.logTitle} />
                                 </S.ImageWrapper>
                                     
                                 <S.ContentWrapper>

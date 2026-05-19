@@ -34,6 +34,7 @@ public class JournalDto {
         public static class StatsDto {
             private Integer likes;
             private Integer comments;
+            private Integer views;
         }
     }
 
@@ -59,6 +60,7 @@ public class JournalDto {
         public static class StatsDto {
             private Integer likes;
             private Integer comments;
+            private Integer views;
         }
     }
 
@@ -94,9 +96,9 @@ public class JournalDto {
             this.description = journal.getDescription();
 
             if (journal.getStats() != null) {
-                this.stats = new StatsDto(journal.getStats().getLikes(), journal.getStats().getComments());
+                this.stats = new StatsDto(journal.getStats().getLikes(), journal.getStats().getComments(), journal.getStats().getViews());
             } else {
-                this.stats = new StatsDto(0, 0);
+                this.stats = new StatsDto(0, 0, 0);
             }
         }
 
@@ -104,10 +106,12 @@ public class JournalDto {
         public static class StatsDto {
             private Integer likes;
             private Integer comments;
+            private Integer views;
 
-            public StatsDto(Integer likes, Integer comments) {
+            public StatsDto(Integer likes, Integer comments, Integer views) {
                 this.likes = likes != null ? likes : 0;
                 this.comments = comments != null ? comments : 0;
+                this.views = views != null ? views : 0;
             }
         }
     }

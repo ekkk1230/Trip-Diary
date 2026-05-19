@@ -497,3 +497,73 @@ export const TagInputWrapper = styled.div`
         }
     }
 `;
+
+export const ImageUploadWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const FileInputLabel = styled.label`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 10px 16px;
+  background-color: #f5f5f5;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #eef6f0; 
+    border-color: #88bc92;
+    color: #4a7c59;
+  }
+
+  input [type="file"] {
+    display: none;
+  }
+`;
+
+export const PreviewContainer = styled.div`
+  position: relative;
+  width: fit-content;
+  margin-top: 4px;
+`;
+
+export const PreviewImage = styled.img`
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+`;
+
+export const DeleteImageButton = styled.button`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #ff7875;
+  }
+`;

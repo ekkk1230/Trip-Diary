@@ -10,7 +10,7 @@ export interface JournalLog {
     mainImage: string;
     author: string;
     description: string;
-    stats: { likes: number, comments: number };
+    stats: { likes: number, comments: number, views: number };
     keywords: string[];
 }
 

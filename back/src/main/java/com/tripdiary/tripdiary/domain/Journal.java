@@ -25,7 +25,7 @@ public class Journal {
     private LocalDateTime travelDate;
     private String weather;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String mainImage;
 
     @Column(columnDefinition = "TEXT")
@@ -53,7 +53,7 @@ public class Journal {
             String logTitle, String location,
             String description, String weather,
             String mainImage, List<String> keywords,
-            String placeName) {
+            String placeName, LocalDateTime travelDate) {
         this.logTitle = logTitle;
         this.location = location;
         this.description = description;
@@ -61,5 +61,22 @@ public class Journal {
         this.mainImage = mainImage;
         this.keywords = keywords;
         this.placeName = placeName;
+        this.travelDate = travelDate;
+    }
+
+    public void increaseViewCount() {
+        if (this.stats == null) {
+            this.stats = new Stats(0, 0, 0);
+        }
+        Integer currentViews = this.stats.getViews();
+        this.stats.setViews(currentViews == null ? 1 : currentViews + 1);
+    }
+
+    public void increaseLikeCount() {
+        if (this.stats == null) {
+            this.stats = new Stats(0, 0, 0);
+        }
+        Integer currentLikes = this.stats.getLikes();
+        this.stats.setLikes(currentLikes == null ? 1 : currentLikes + 1);
     }
 }

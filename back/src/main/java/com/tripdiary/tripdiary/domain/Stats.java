@@ -10,4 +10,5 @@ import lombok.*;
 public class Stats {
     private Integer likes;
     private Integer comments;
+    private Integer views;
 }
