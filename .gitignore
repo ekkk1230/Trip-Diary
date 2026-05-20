@@ -11,3 +11,6 @@ back/build/
 
 # 백엔드 민감한 설정 파일 제외
 back/src/main/resources/application.properties
+
+# 서버 업로드 파일 제외
+back/uploads/
