@@ -9,7 +9,8 @@ export const useJoin = () => {
     const { joinUser, checkNickname, checkId } = useUserStore();
     const { openModal } = useUiStore();
 
-    const [profileImg, setProfileImg] = useState<string | null>('');
+    const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
+    const [profileImgPreview, setProfileImgPreview] = useState<string | null>("");
     const [formData, setFormData] = useState({
         nickname: '', userId: '',
         password: '', passwordConfirm: '', 
@@ -54,13 +55,8 @@ export const useJoin = () => {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64String = reader.result as string;
-            setProfileImg(base64String);
-            setFormData(prev => ({ ...prev, profileImg: base64String }));
-        };
-        reader.readAsDataURL(file);
+        setProfileImgFile(file);
+        setProfileImgPreview(URL.createObjectURL(file));
     }
 
     const focusTo = (key: string) => inputRefs.current[key]?.focus();
@@ -124,7 +120,7 @@ export const useJoin = () => {
         }
     }
     
-    const handleJoin = () => {
+    const handleJoin = async () => {
         const requiredFields: Record<string, string> = {
             nickname: "닉네임", userId: "아이디", password: "비밀번호", birth: "생년월일"
         };
@@ -174,14 +170,13 @@ export const useJoin = () => {
             return;
         }
 
-        const user = {
+        const userData = {
             id: crypto.randomUUID(),
             nickname: formData.nickname.trim(),
             userId: formData.userId.trim(),
             password: formData.password.trim(),
             gender: formData.gender,
             birth: formData.birth,
-            profileImg: formData.profileImg || '',
             agreements: {
                 service: terms.service,
                 privacy: terms.privacy,
@@ -189,7 +184,11 @@ export const useJoin = () => {
             }
         };
 
-        joinUser(user);
+        const formDataObj = new FormData();
+        formDataObj.append("user", new Blob([JSON.stringify(userData)], { type: "application/json" }));
+        if (profileImgFile) formDataObj.append("file", profileImgFile);
+
+        await joinUser(formDataObj);
 
         openModal(
             "check",
@@ -217,8 +216,8 @@ export const useJoin = () => {
     }
 
     return { 
-        formData, terms, profileImg, inputRefs, 
-        setFormData, setTerms, setProfileImg, 
+        formData, terms, profileImgPreview, inputRefs, 
+        setFormData, setTerms, setProfileImgPreview, 
         handleImageChange, handleChange, 
         handleAllTerms, handleTermClick, handleCheckDuplicate, handleJoin
     };

@@ -4,12 +4,10 @@ import ProfileImageChangeForm from '../../components/modal/modalContentLayout/Pr
 import { useUiStore } from '../../store/useUiStore';
 import { useUserStore } from '../../store/useUserStore';
 import * as S from './Setting.styles';
-import { useNavigate } from 'react-router-dom';
 
 function Profile() {
     const { openModal, closeModal } = useUiStore();
     const { user, profileDetailChange, passwordChage } = useUserStore();
-    const navigate = useNavigate();
 
     const [profileForm, setProfileForm] = useState({
         nickname: user?.nickname || '',

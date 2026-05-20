@@ -30,10 +30,10 @@ function Login() {
         }))
     }
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const isSuccess = login(loginData);
         
-        if (isSuccess) {
+        if (await isSuccess) {
             navigate('/');
         } else {
             openModal(

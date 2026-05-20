@@ -2,6 +2,8 @@ import { useState, type ChangeEvent } from "react";
 import * as S from "../Modal.styles";
 import ModalFooter from "../ModalFooter";
 import { useUserStore } from "../../../store/useUserStore";
+import { useUiStore } from "../../../store/useUiStore";
+import TextModal from "./TextModal";
 
 interface ProfileImageChangeFormProps {
     onImageChange: (file: File) => void;
@@ -9,6 +11,7 @@ interface ProfileImageChangeFormProps {
 
 function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) {
     const { user, profileImgChange } = useUserStore();
+    const { openModal } = useUiStore();
 
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -24,10 +27,14 @@ function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) 
 
     const handleConfirm = () => {
         if (selectedFile && previewUrl) {
-            profileImgChange(user?.userId!, previewUrl);
+            profileImgChange(user?.userId!, selectedFile);
             onImageChange(selectedFile);
         } else {
-            alert("사진을 선택해주세요.");
+            openModal(
+                "check",
+                "프로필 변경",
+                <TextModal txt={"사진을 선택해주세요."} />
+            );
         }
     }
 

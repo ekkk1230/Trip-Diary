@@ -16,7 +16,7 @@ function JournalList({ type, contentid }: JournalListProps) {
 
     const navigate = useNavigate();
 
-    useEffect(() => { fetchJournals(); }, [])
+    useEffect(() => { fetchJournals(); }, []);
 
     // console.log(filteredJournals)
     if (isLoading) {

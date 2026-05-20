@@ -3,7 +3,7 @@ import Logo from "../../assets/Trip_Diary_row.png";
 import { useJoin } from '../../hooks/useJoin';
 
 function Join() {
-    const { formData, terms, profileImg, inputRefs, 
+    const { formData, terms, profileImgPreview, inputRefs, 
         handleImageChange, handleChange, 
         handleAllTerms, handleTermClick,
         handleCheckDuplicate, handleJoin } = useJoin();
@@ -19,8 +19,8 @@ function Join() {
                         <p className="auth_label_tit">프로필 사진</p>
                         <label htmlFor="profile-upload" className="profile_label">
                             <div className="img_preview">
-                                {profileImg ? (
-                                    <img src={profileImg} alt="Preview" />
+                                {profileImgPreview ? (
+                                    <img src={profileImgPreview} alt="Preview" />
                                 ) : (
                                     <div className="placeholder">+</div>
                                 )}

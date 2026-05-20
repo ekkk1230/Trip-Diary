@@ -17,10 +17,10 @@ interface UserStore {
     login: (LoginData: LoginData) => Promise<boolean>;
     clearUser: () => void;
 
-    joinUser: (user: User) => Promise<void>;
+    joinUser: (formData: any) => Promise<void>;
     removeUser: (user: User) => void;
 
-    profileImgChange: (userId: string, updateProfileImg: string) => void;
+    profileImgChange: (userId: string, file: File) => Promise<void>;
     profileDetailChange: (userId: string, updateProfile: any) => void;
     passwordChage: (userId: string, updatePassword: string) => void;
 
@@ -66,27 +66,11 @@ export const useUserStore = create<UserStore>()(
             },
             clearUser: () => set({ user: null }),
 
-            joinUser: async(user) => {
-                const newUser = {
-                    nickname: user.nickname,
-                    userId: user.userId,
-                    password: user.password,
-                    gender: user.gender,
-                    birth: user.birth,
-                    profileImg: user.profileImg,
-                    agreements: {
-                        service: user.agreements.service,
-                        privacy: user.agreements.privacy,
-                        agreedAt: user.agreements.agreedAt,
-                    }
-                };
+            joinUser: async(formData) => {
                 try {
                     const response = await fetch('http://localhost:8080/api/user', {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(newUser)
+                        body: JSON.stringify(formData)
                     });
 
                     if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
@@ -104,7 +88,25 @@ export const useUserStore = create<UserStore>()(
                 }));
             },
 
-            profileImgChange: (userId, updateProfileImg) => set((state): any => updateUserInState(state, userId, { profileImg: updateProfileImg })),
+            profileImgChange: async (userId, file) => {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    const response = await fetch(`http://localhost:8080/api/user/${userId}/profile-image`, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (!response.ok) throw new Error("업로드 실패");
+
+                    const data = await response.json();
+
+                    set((state): any => ({ user: { ...state.user, profileImg: data.imageUrl} }));
+                } catch (err) {
+                    console.error(err);
+                }
+            },
             profileDetailChange: (userId, updateProfile) => set((state): any => updateUserInState(state, userId, updateProfile)),
             passwordChage: (userId, updatePassword) => set((state): any => updateUserInState(state, userId, { password: updatePassword })),
 

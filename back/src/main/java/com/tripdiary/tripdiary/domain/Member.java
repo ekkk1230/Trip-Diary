@@ -32,4 +32,8 @@ public class Member {
 
     @Embedded
     private Agreements agreements;
+
+    public void changeProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
 }
