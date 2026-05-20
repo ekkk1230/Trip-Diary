@@ -81,6 +81,8 @@ export const useAppPlace = (detail?: any) => {
     const handleSubmit = (e?: FormEvent) => {
         if (e) e.preventDefault();
 
+        console.log(user, user?.nickname)
+
         if (!formData.placeNm || !formData.address) {
             openModal(
                 "check",

@@ -1,12 +1,16 @@
 package com.tripdiary.tripdiary.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+@Getter @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Trip {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +62,22 @@ public class Trip {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member author;
+
+    public void update(
+            String addr1, String addr2, String areaCode,
+            String contenttypeid, String firstimage, String overview,
+            String title, String zipcode, String mapx, String mapy) {
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.areacode = areaCode;
+        this.contenttypeid = contenttypeid;
+        this.firstimage = firstimage == null || firstimage.isEmpty() ? "" : firstimage;
+        this.overview = overview;
+        this.title = title;
+        this.zipcode = zipcode;
+        this.mapx = mapx;
+        this.mapy = mapy;
+    };
 }
