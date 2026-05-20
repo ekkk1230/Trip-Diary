@@ -33,6 +33,10 @@ function App() {
         navigate('/');
     };
 
+    const handleBackToJournal = () => {
+        navigate('/journal');
+    }
+
     if (!user) {
         return (
             <ThemeProvider theme={theme}>
@@ -80,7 +84,7 @@ function App() {
                     </Layout>
                 } />
                 <Route path="/journal/:id" element={
-                    <Layout title="저널" hasHeader hasBottomNav>
+                    <Layout title="저널" hasHeader hasBottomNav onBackClick={handleBackToJournal}>
                         <JournalDetailPage />
                     </Layout>
                 } />

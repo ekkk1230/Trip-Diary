@@ -1,118 +1,20 @@
-import { useEffect, useState, type ChangeEvent } from "react";
 import * as S from "./Journal.styles";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { MdOutlinePlace } from "react-icons/md";
 import { TiWeatherSunny } from "react-icons/ti";
-import { CATEGORIES, REGION_DATA } from "../../constants/region";
+import { REGION_DATA, CATEGORIES } from "../../constants/region";
 import { formatDate } from "../../utils/date";
-import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { useUserStore } from "../../store/useUserStore";
+import { useJournalDetail } from "../../hooks/useJournalDetail";
 
 
 function JournalDetail() {
-    const { id } = useParams();
-    const location = useLocation();
-    const { user } = useUserStore();
-    const { journals, addJournal, updateJournal, removeJournal, likedJournal, likedJournalIds, isEdit, setIsEdit, comments, fetchComments } = useJournalStore();
-
-    useEffect(() => {
-        fetchComments(parseInt(id!))
-    }, [id])
-
-    const navigate = useNavigate();    
-
-    const journal = journals.find(j => j.id === id);
-    const mood = location.state?.mood || 'edit';
-    const detailType = location.state?.detailType || 'edit';
-
-    const [imageFile, setImageFile] = useState<File | null>(null);
-
-    const [editData, setEditData] = useState({
-        logTitle: journal?.logTitle || "",
-        travelDate: journal?.travelDate || "",
-        weather: journal?.weather || "맑음",
-        sido: journal?.location?.split(" ")[0] || "",
-        sigungu: journal?.location?.split(" ")[1] || "",
-        placeName: journal?.placeName || "",
-        description: journal?.description || "",
-        keywords: journal?.keywords || [],
-        contentId: journal?.contentId || "",
-        mainImage: journal?.mainImage || "",
-    })
-
-    const updateField = (key: string, value: any) => {
-        setEditData(prev => ({
-            ...prev,
-            [key]: value,
-            ...(key === 'sido' && { sigungu: "" })
-        }));
-    };
-    
-    const sidos = Object.keys(REGION_DATA);
-    
-    useEffect(() => {
-        setIsEdit(detailType, mood);
-    }, [detailType, mood])
-
-    // console.log(detailType, journal, mood)
-
-    const handleSubmit = async () => {
-        if (isEdit) {
-            try {
-                const finalLocation = `${editData.sido} ${editData.sigungu}`.trim();
-                const { mainImage, ...restData } = editData;
-                const finalData = { ...restData, location: finalLocation };
-    
-                if (mood === "new") {
-                    const newJournal = {
-                        ...finalData,
-                        placeName: '',
-                        author: user?.nickname!,
-                        stats: { likes: 0, comments: 0, views: 0 },
-                        keywords: [],
-                    }
-                    await addJournal(newJournal, imageFile);
-                } else {
-                    await updateJournal(journal?.id!, finalData);
-                }
-    
-                setIsEdit(undefined, undefined, false);
-                
-                setTimeout(() => {
-                    window.location.href = "/journal";
-                }, 100);
-    
-            } catch (error) {
-                console.error("저장 중 오류 발생:", error);
-                alert("저장에 실패했습니다. 다시 시도해 주세요.");
-            }
-        }
-    }
-
-    const isLiked = likedJournalIds.includes(journal?.id!);
-
-    const handleImageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                updateField('mainImage', reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    const handleDelete = (journalId: string) => {
-        if (confirm("기록을 삭제하시겠습니까?")) {
-            removeJournal(journalId);
-            navigate('/journal');
-        }
-    }
+    const {
+        editData, isEdit, setIsEdit, setImageFile, likedJournal, 
+        journal, mood, sidos, isLiked, 
+        updateField, handleImageUpdate, handleSubmit, handleDelete
+    } = useJournalDetail();
 
     return (
         <>
@@ -280,9 +182,9 @@ function JournalDetail() {
                     </S.InputGroup>
 
                     {mood === "new" ? (
-                        <button onClick={handleSubmit}>등록하기</button>
+                        <button onClick={e => handleSubmit(e)}>등록하기</button>
                     ) : (
-                        <button onClick={handleSubmit}>확인</button>
+                        <button onClick={e => handleSubmit(e)}>확인</button>
                     )}
                 </S.EditForm>
             ) : (

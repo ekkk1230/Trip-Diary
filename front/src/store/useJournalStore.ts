@@ -75,14 +75,8 @@ export const useJournalStore = create<JournalStore>((set) => ({
     },
     
     setIsEdit: (detailType, mood, forceValue) => set(state => {
-        if (typeof forceValue === 'boolean') {
-            return { isEdit: forceValue };
-        };
-    
-        if (!detailType && !mood) {
-            return { isEdit: !state.isEdit };
-        };
-    
+        if (typeof forceValue === 'boolean') return { isEdit: forceValue };
+        
         const shouldEdit = detailType === "edit" || mood === "new";
         return { isEdit: shouldEdit };
     }),
@@ -163,12 +157,15 @@ export const useJournalStore = create<JournalStore>((set) => ({
 
             if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
             const savedJournal = await response.json();
+            console.log("서버에서 받은 데이터:", savedJournal);
 
             set(state => ({
                 journals: [savedJournal, ...state.journals],
                 filteredJournals: [savedJournal, ...state.filteredJournals],
                 isLoading: false,
             }));
+
+            return savedJournal;
         } catch (err) {
             console.error('addJournal 실패: ', err);
             set({ isLoading: false });
@@ -189,6 +186,8 @@ export const useJournalStore = create<JournalStore>((set) => ({
                 journals: state.journals.map(j => String(j.id) === String(id) ? updatedJournal : j),
                 filteredJournals: state.filteredJournals.map(j => String(j.id) === String(id) ? updatedJournal : j)
             }));
+
+            return updatedJournal;
         } catch (err) {
             console.error('updateJournal 실패: ', err);
         }
