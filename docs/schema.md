@@ -113,6 +113,16 @@ TourAPI 정보의 캐싱 및 사용자가 직접 만든 커스텀 장소를 저�
 | journal_id | Long | FK (Journal.id) | 대상 일기 식별자 |
 | keyword | String | - | 등록된 키워드 태그명 |
 
+### Likes (좋아요 기록)
+누가 어떤 일기에 좋아요를 눌렀는지 기록하여 **중복 좋아요를 방지**하고, 사용자가 좋아요를 취소할 수 있도록 관리하는 테이블입니다.
+
+| 컬럼명 | 타입 | 제약사항 | 설명 |
+| :--- | :--- | :--- | :--- |
+| id | Long | PK, Auto Increment | 고유 식별자 |
+| journal_id | Long | FK (Journal.id) | 좋아요를 받은 일기 식별자 |
+| member_id | Long | FK (Member.id) | 좋아요를 누른 회원 식별자 |
+| created_at | DateTime | - | 좋아요 누른 시간 |
+
 ---
 
 ## 3. 엔티티 관계도 (Concept ERD)
@@ -122,8 +132,10 @@ erDiagram
     MEMBER ||--o{ JOURNAL : "작성한다"
     MEMBER ||--o{ COMMENT : "댓글을 단다"
     MEMBER ||--o{ TRIP : "커스텀 생성한다"
+    MEMBER ||--o{ LIKES : "좋아요를 누른다"
     
     TRAVEL_PLAN ||--o{ JOURNAL : "포함한다"
     
     JOURNAL ||--o{ COMMENT : "댓글이 달린다"
     JOURNAL ||--o{ JOURNAL_KEYWORDS : "태그를 가진다"
+    JOURNAL ||--o{ LIKES : "좋아요를 받는다"

@@ -1,12 +1,11 @@
 package com.tripdiary.tripdiary.service;
 
-import com.tripdiary.tripdiary.domain.Comment;
-import com.tripdiary.tripdiary.domain.Journal;
-import com.tripdiary.tripdiary.domain.Member;
-import com.tripdiary.tripdiary.domain.Stats;
+import com.tripdiary.tripdiary.domain.*;
 import com.tripdiary.tripdiary.dto.JournalDto;
+import com.tripdiary.tripdiary.dto.LikesDto;
 import com.tripdiary.tripdiary.repository.CommentRepository;
 import com.tripdiary.tripdiary.repository.JournalRepository;
+import com.tripdiary.tripdiary.repository.LikesRepository;
 import com.tripdiary.tripdiary.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +24,7 @@ public class JournalService {
     private final JournalRepository journalRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final LikesRepository likesRepository;
 
     public List<JournalDto.JournalResponse> getAllJournals() {
         List<Journal> journals = journalRepository.findAll();
@@ -129,9 +130,26 @@ public class JournalService {
     }
 
     @Transactional
-    public int toggleLike(Long id) {
-        Journal journal = journalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + id));
-        journal.increaseLikeCount();
+    public int toggleLike(LikesDto.LikesRequest request) {
+        Long journalId = Long.parseLong(request.getJournalId());
+        Long memberId = Long.parseLong(request.getMemberId());
+        Journal journal = journalRepository.findById(journalId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다." + journalId));
+
+        Optional<Likes> likesOptional = likesRepository.findByJournalIdAndMemberId(journalId, memberId);
+        if (likesOptional.isPresent()) {
+            likesRepository.delete(likesOptional.get());
+            journal.decreaseLikeCount();
+        } else {
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다." + memberId));
+            Likes likes = Likes.builder()
+                            .journal(journal)
+                            .member(member)
+                            .created_at(LocalDateTime.now())
+                            .build();
+
+            likesRepository.save(likes);
+            journal.increaseLikeCount();
+        }
         return journal.getStats().getLikes();
     }
 }

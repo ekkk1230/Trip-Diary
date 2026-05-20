@@ -1,6 +1,7 @@
 package com.tripdiary.tripdiary.controller;
 
 import com.tripdiary.tripdiary.dto.JournalDto;
+import com.tripdiary.tripdiary.dto.LikesDto;
 import com.tripdiary.tripdiary.service.JournalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,8 @@ public class JournalController {
     }
 
     @PostMapping("/{id}/like")
-    public ResponseEntity<Void> increaseLikeCount(@PathVariable(name = "id") Long id) {
-        journalService.toggleLike(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Integer> increaseLikeCount(@PathVariable(name = "id") String id, @RequestBody LikesDto.LikesRequest request) {
+        int likes = journalService.toggleLike(request);
+        return ResponseEntity.ok(likes);
     }
 }

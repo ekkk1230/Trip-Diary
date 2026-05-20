@@ -1,7 +1,5 @@
 import { create } from "zustand";
 
-import mockJournals from "../assets/data/mock_journal.json"
-import mockComments from "../assets/data/mock_comment.json"
 import type { Comment, JournalLog } from "../types/journal";
 
 const updateArray = {
@@ -22,7 +20,7 @@ interface JournalStore {
     
     setIsEdit: (detailType?: string | null, mood?: string | null, forceValue?: boolean) => void;
     searchJournals: (keyowrd: string, categoy: string | null) => void;
-    likedJournal: (id: string) => Promise<void>;
+    likedJournal: (userId: string, postId: string) => Promise<void>;
     updateJournal: (id: string, updateData: any) => Promise<void>;
     updateComment: (id: string, updateData: any) => Promise<void>;
     addJournal: (newJounal: JournalLog, imageFile: File | null) => Promise<void>;
@@ -73,7 +71,7 @@ export const useJournalStore = create<JournalStore>((set) => ({
             console.error('fetchComments 연결 실패 ', err);
         };
     },
-    
+
     setIsEdit: (detailType, mood, forceValue) => set(state => {
         if (typeof forceValue === 'boolean') return { isEdit: forceValue };
         
@@ -98,20 +96,20 @@ export const useJournalStore = create<JournalStore>((set) => ({
 
         return { filteredJournals: filtered };
     }),
-    likedJournal: async(id) => {
+    likedJournal: async(journalId, memberId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/journals/${id}/like`, {
+            const response = await fetch(`http://localhost:8080/api/journals/${journalId}/like`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(id)
+                body: JSON.stringify({ journalId, memberId })
             });
             if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
 
             set(state => {
-                const journal = state.filteredJournals.find(j => j.id === id);
+                const journal = state.filteredJournals.find(j => j.id === journalId);
                 if (!journal) return state;
         
-                const isAlreadyLiked = state.likedJournalIds.includes(id);
+                const isAlreadyLiked = state.likedJournalIds.includes(journalId);
                 
                 const newLikes = isAlreadyLiked
                     ? Math.max(0, (journal.stats.likes || 0) - 1)
@@ -126,13 +124,13 @@ export const useJournalStore = create<JournalStore>((set) => ({
                 };
         
                 const newLikedIds = isAlreadyLiked
-                    ? state.likedJournalIds.filter(likedId => likedId !== id)
-                    : [...state.likedJournalIds, id];
+                    ? state.likedJournalIds.filter(likedId => likedId !== journalId)
+                    : [...state.likedJournalIds, journalId];
         
                 return {
                     likedJournalIds: newLikedIds,
-                    journals: state.journals.map(j => j.id === id ? updatedJournal : j),
-                    filteredJournals: state.filteredJournals.map(j => j.id === id ? updatedJournal : j)
+                    journals: state.journals.map(j => j.id === journalId ? updatedJournal : j),
+                    filteredJournals: state.filteredJournals.map(j => j.id === journalId ? updatedJournal : j)
                 }
             })
         } catch (err) {

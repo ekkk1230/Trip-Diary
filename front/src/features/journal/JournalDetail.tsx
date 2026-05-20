@@ -11,7 +11,7 @@ import { useJournalDetail } from "../../hooks/useJournalDetail";
 
 function JournalDetail() {
     const {
-        editData, isEdit, setIsEdit, setImageFile, likedJournal, 
+        userId, editData, isEdit, setIsEdit, setImageFile, likedJournal, 
         journal, mood, sidos, isLiked, 
         updateField, handleImageUpdate, handleSubmit, handleDelete
     } = useJournalDetail();
@@ -228,7 +228,7 @@ function JournalDetail() {
                         <p>이 여행기가 마음에 드셨나요?</p>
                         <button 
                             className={isLiked ? 'liked' : ''} 
-                            onClick={() => likedJournal(journal?.id!)}
+                            onClick={() => likedJournal(journal?.id!, userId)}
                         >
                             {isLiked ? <GoHeartFill/> : <GoHeart/>} 
                             {journal?.stats?.likes}

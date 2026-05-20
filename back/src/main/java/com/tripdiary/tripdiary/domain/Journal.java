@@ -79,4 +79,15 @@ public class Journal {
         Integer currentLikes = this.stats.getLikes();
         this.stats.setLikes(currentLikes == null ? 1 : currentLikes + 1);
     }
+
+    public void decreaseLikeCount() {
+        if (this.stats == null) {
+            this.stats = new Stats(0, 0, 0);
+        }
+        Integer currentLikes = this.stats.getLikes();
+        int count = (currentLikes == null) ? 0 : currentLikes;
+        if (count > 0) {
+            this.stats.setLikes(count - 1);
+        }
+    }
 }

@@ -3,6 +3,7 @@ import * as S from "../Components.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { useEffect, type MouseEvent } from "react";
+import { useUserStore } from "../../store/useUserStore";
 
 interface JournalListProps {
     type: string;
@@ -11,6 +12,7 @@ interface JournalListProps {
 
 function JournalList({ type, contentid }: JournalListProps) {
     const { isLoading, filteredJournals, removeJournal, likedJournal, likedJournalIds, fetchJournals, updateViews } = useJournalStore();
+    const { user } = useUserStore();
 
     const navigate = useNavigate();
 
@@ -46,7 +48,7 @@ function JournalList({ type, contentid }: JournalListProps) {
 
     const handleFavorite = (e: MouseEvent<HTMLButtonElement>, id:string) => {
         e.stopPropagation();
-        likedJournal(id)
+        likedJournal(user?.id!, id);
     };
 
     return (

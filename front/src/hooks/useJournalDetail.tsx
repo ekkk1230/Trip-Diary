@@ -20,6 +20,7 @@ export const useJournalDetail = () => {
     const mood = isNew ? 'new' : (isEditMode ? 'edit' : 'view');
     const sidos = Object.keys(REGION_DATA);
     const isLiked = likedJournalIds.includes(journal?.id!);
+    const userId = user?.id!;
 
     useEffect(() => { fetchComments(parseInt(id!)) }, [id]);
     useEffect(() => {
@@ -108,7 +109,7 @@ export const useJournalDetail = () => {
     }
 
     return {
-        editData, isEdit, setIsEdit, setImageFile, likedJournal, journal, mood, sidos, isLiked,
+        userId, editData, isEdit, setIsEdit, setImageFile, likedJournal, journal, mood, sidos, isLiked,
         updateField, handleImageUpdate, handleSubmit, handleDelete
     }
 
