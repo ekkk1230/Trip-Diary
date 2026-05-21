@@ -15,17 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    private static final String UPLOAD_DIR_NAME = "uploads";
+
     @Transactional
     public MemberDto.JoinResponse joinMember(MemberDto.JoinRequest request, MultipartFile imageFile) {
-        String imagePath = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            imagePath = uploadProfileImage(imageFile);
-        }
+        String imagePath = uploadProfileImage(imageFile);
 
         Agreements agreementsEntity = Agreements.builder()
                 .service(request.getAgreements().isService())
                 .privacy(request.getAgreements().isPrivacy())
-                .agreedAt(request.getAgreements().getAgreedAt() != null ? java.time.LocalDate.parse(request.getAgreements().getAgreedAt()).atStartOfDay() : null)
+                .agreedAt(parseDate(request.getAgreements().getAgreedAt()))
                 .build();
 
         Member newMember = Member.builder()
@@ -58,21 +57,14 @@ public class MemberService {
         if (imageFile == null || imageFile.isEmpty()) return null;
 
         try {
-            String basePath = java.nio.file.Paths.get("").toAbsolutePath().toString();
-            String uploadDir = basePath.endsWith("back")
-                    ? basePath + java.io.File.separator + "uploads" + java.io.File.separator
-                    : basePath + java.io.File.separator + "back" + java.io.File.separator + "uploads" + java.io.File.separator;
-
-            java.io.File folder = new java.io.File(uploadDir);
+            String basePath = System.getProperty("user.dir");
+            java.io.File folder = new java.io.File(basePath, UPLOAD_DIR_NAME);
             if (!folder.exists()) folder.mkdirs();
 
             String savedFilename = java.util.UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-            java.io.File destination = new java.io.File(uploadDir + savedFilename);
+            imageFile.transferTo(new java.io.File(folder, savedFilename));
 
-            imageFile.transferTo(destination);
-
-            return "/uploads/" + savedFilename;
-
+            return "/" + UPLOAD_DIR_NAME + "/" + savedFilename;
         } catch (java.io.IOException e) {
             throw new RuntimeException("프로필 이미지 저장 중 오류가 발생했습니다.", e);
         }
@@ -80,9 +72,11 @@ public class MemberService {
 
     public void updateMemberProfileImage(String userId, String imageUrl) {
         Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-
         member.changeProfileImg(imageUrl);
-
         memberRepository.save(member);
+    }
+
+    private java.time.LocalDateTime parseDate(String dateStr) {
+        return (dateStr != null) ? java.time.LocalDate.parse(dateStr).atStartOfDay() : null;
     }
 }

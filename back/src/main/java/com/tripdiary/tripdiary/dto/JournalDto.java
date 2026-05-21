@@ -79,6 +79,7 @@ public class JournalDto {
         private String description;
         private List<String> keywords;
         private StatsDto stats;
+        private String createdAt;
 
         public JournalResponse(Journal journal) {
             this.id = journal.getId() != null ? String.valueOf(journal.getId()) : null;
@@ -100,6 +101,8 @@ public class JournalDto {
             } else {
                 this.stats = new StatsDto(0, 0, 0);
             }
+
+            this.createdAt = journal.getCreatedAt().toString();
         }
 
         @Getter

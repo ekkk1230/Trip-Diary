@@ -14,7 +14,7 @@ import java.util.List;
 @Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Journal {
+public class Journal extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
