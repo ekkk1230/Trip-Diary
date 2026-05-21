@@ -44,7 +44,10 @@ export const fetchAllTourData = async (areaCode: string, contentTypeId?: string 
         return allItems; 
     }
     
-    return allItems;
+    return allItems.filter(item => {
+        const typeId = String(item.contenttypeid);
+        return typeId !== "15" && typeId !== "25";
+    });
 };
 
 export const fetchDetail = async (contentid: string) => {

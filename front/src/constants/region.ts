@@ -53,8 +53,8 @@ export const SIDO_NAME_TO_CODE: { [key: string]: string } = {
 export const CATEGORY_MAP = {
     "관광지": "12",
     "문화시설": "14",
-    "축제/공연/행사": "15",
-    "여행코스": "25",
+    // "축제/공연/행사": "15",
+    // "여행코스": "25",
     "레포츠": "28",
     "숙박": "32",
     "쇼핑": "38",
@@ -64,8 +64,8 @@ export const CATEGORY_MAP = {
 export const CATEGORIES: Category[] = [
     { id: 12, name: "관광지" },
     { id: 14, name: "문화시설" },
-    { id: 15, name: "축제/공연/행사" },
-    { id: 25, name: "여행코스" },
+    // { id: 15, name: "축제/공연/행사" },
+    // { id: 25, name: "여행코스" },
     { id: 28, name: "레포츠" },
     { id: 32, name: "숙박" },
     { id: 38, name: "쇼핑" },

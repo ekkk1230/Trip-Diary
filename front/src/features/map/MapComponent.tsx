@@ -12,6 +12,7 @@ import { useUiStore } from "../../store/useUiStore";
 import { useMapStore } from "../../store/useMapStore";
 import { useEffect, useMemo, useState } from "react";
 import AddPlaceModal from "../../components/modal/modalContentLayout/AddPlaceModal";
+import { CATEGORIES } from "../../constants/region";
 
 const PROVINCE_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json";
 const MUNICIPALITY_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_municipalities_geo_simple.json";
@@ -36,10 +37,9 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 	} = useMapStore();
 
 	const [isMain, setIsMain] = useState<Boolean>(false);
+	const [activeCategory, setActiveCategory] = useState<string>("all");
 
-	useEffect(() => {
-		if (isMainPage) setIsMain(isMainPage);
-	}, []);
+	useEffect(() => { if (isMainPage) setIsMain(isMainPage); }, []);
 
 	useEffect(() => {
 		return () => {
@@ -100,6 +100,11 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
         return "#F1F8E9";
     };
 
+	const displayedPlaces = useMemo(() => {
+		if (activeCategory === "all") return filteredData;
+		return filteredData.filter(d => d.contenttypeid === activeCategory);
+	}, [filteredData, activeCategory]);
+
 	return (
 		<>
 			<S.MapContainer>
@@ -136,29 +141,37 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 							<S.Spinner />
 						</S.SpinnerWrap>
 					) : filteredData.length > 0 ? (
-						<S.StyledSwiper
-							modules={[Grid, Navigation, Pagination]}
-							slidesPerView={2}
-							slidesPerGroup={2}
-							grid={{ rows: 3, fill: 'row' }}
-							spaceBetween={10} 
-							pagination={{ type: 'fraction', clickable: true }}
-						>
-							{filteredData.map((item, idx) => (
-								<SwiperSlide key={idx}>
-									<CardItem item={item} link={`/detail/${item.contentid}`} /> 
+						<>
+							<S.CategoryTabWrap>
+								{CATEGORIES.map(item => (
+									<button key={item.id} value={item.id} onClick={() => setActiveCategory(`${item.id}`)}>{item.name}</button>
+								))}
+							</S.CategoryTabWrap>
+
+							<S.StyledSwiper
+								modules={[Grid, Navigation, Pagination]}
+								slidesPerView={2}
+								slidesPerGroup={2}
+								grid={{ rows: 3, fill: 'row' }}
+								spaceBetween={10} 
+								pagination={{ type: 'fraction', clickable: true }}
+							>
+								{displayedPlaces.map((item, idx) => (
+									<SwiperSlide key={idx}>
+										<CardItem item={item} link={`/detail/${item.contentid}`} /> 
+									</SwiperSlide>
+								))}
+								
+								<SwiperSlide>
+									<S.AddCardBtn onClick={() => openModal("confirm", "나만의 장소 추가", <AddPlaceModal />)}>
+										<div className="add_content">
+											<span>+</span>
+											<p>나만의 장소 추가</p>
+										</div>
+									</S.AddCardBtn>
 								</SwiperSlide>
-							))}
-							
-							<SwiperSlide>
-								<S.AddCardBtn onClick={() => openModal("confirm", "나만의 장소 추가", <AddPlaceModal />)}>
-									<div className="add_content">
-										<span>+</span>
-										<p>나만의 장소 추가</p>
-									</div>
-								</S.AddCardBtn>
-							</SwiperSlide>
-						</S.StyledSwiper>
+							</S.StyledSwiper>
+						</>
 					) : isSearched ? ( 
 						<S.NoResultWrap>
 							<S.SearchTxt>검색 결과가 없습니다.</S.SearchTxt>

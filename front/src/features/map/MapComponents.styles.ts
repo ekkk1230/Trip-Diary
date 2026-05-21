@@ -312,3 +312,32 @@ export const AdminButton = styled.button<{ $type?: 'edit' | 'delete' }>`
         border-color: ${props => props.$type === 'delete' ? '#ffccc7' : '#ddd'};
     }
 `;
+
+export const CategoryTabWrap = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  padding: 0 5px;
+  overflow-x: auto;
+
+  button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.active {
+      background-color: #2e7d32; 
+      color: #ffffff;
+      border-color: #2e7d32;
+      font-weight: bold;
+    }
+  }
+`;
