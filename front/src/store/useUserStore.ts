@@ -70,7 +70,7 @@ export const useUserStore = create<UserStore>()(
                 try {
                     const response = await fetch('http://localhost:8080/api/user', {
                         method: "POST",
-                        body: JSON.stringify(formData)
+                        body: formData
                     });
 
                     if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
@@ -103,6 +103,7 @@ export const useUserStore = create<UserStore>()(
                     const data = await response.json();
 
                     set((state): any => ({ user: { ...state.user, profileImg: data.imageUrl} }));
+                    return data.imageUrl;
                 } catch (err) {
                     console.error(err);
                 }

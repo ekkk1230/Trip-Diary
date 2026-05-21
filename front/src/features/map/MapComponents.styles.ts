@@ -203,7 +203,7 @@ export const InfoBox = styled.div`
 // 본문 내용 (Overview)
 export const Content = styled.div`
   line-height: 1.8;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   color: #444;
   margin-top: 2rem;
   text-align: justify;

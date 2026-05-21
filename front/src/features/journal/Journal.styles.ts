@@ -25,7 +25,8 @@ export const DetailContainer = styled.div`
   padding: 20px;
   background-color: #f8f9fa;
   min-height: 100vh;
-  
+  img { width: 100%; }
+
   @media (max-width: 768px) {
     padding: 15px;
     background-color: #fff; // 모바일에서는 깔끔하게 화이트로 전환

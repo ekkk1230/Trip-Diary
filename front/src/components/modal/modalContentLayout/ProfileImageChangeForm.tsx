@@ -6,7 +6,7 @@ import { useUiStore } from "../../../store/useUiStore";
 import TextModal from "./TextModal";
 
 interface ProfileImageChangeFormProps {
-    onImageChange: (file: File) => void;
+    onImageChange: (imageUrl: any) => void;
 }
 
 function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) {
@@ -25,10 +25,10 @@ function ProfileImageChangeForm({ onImageChange }: ProfileImageChangeFormProps) 
         }
     };
 
-    const handleConfirm = () => {
-        if (selectedFile && previewUrl) {
-            profileImgChange(user?.userId!, selectedFile);
-            onImageChange(selectedFile);
+    const handleConfirm = async() => {
+        if (selectedFile) {
+            const realImageUrl = await profileImgChange(user?.userId!, selectedFile);
+            onImageChange(realImageUrl);
         } else {
             openModal(
                 "check",

@@ -30,7 +30,7 @@ interface JournalStore {
     updateViews: (id: string) => Promise<void>;
 }
 
-export const useJournalStore = create<JournalStore>((set) => ({
+export const useJournalStore = create<JournalStore>((set, get) => ({
     journals: [],
     filteredJournals: [],
     likedJournalIds: [],
@@ -155,7 +155,6 @@ export const useJournalStore = create<JournalStore>((set) => ({
 
             if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
             const savedJournal = await response.json();
-            console.log("서버에서 받은 데이터:", savedJournal);
 
             set(state => ({
                 journals: [savedJournal, ...state.journals],

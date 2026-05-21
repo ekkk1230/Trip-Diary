@@ -112,7 +112,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
             // console.log("필터링된 API 장소 개수:", filteredApiItems.length);
 
 
-            set({ filteredData: [...myLocalPlaces, ...filteredApiItems] });
+            set({ filteredData: [...filteredApiItems, ...myLocalPlaces] });
         } catch (err) {
             console.error(`refreschFilteredData 실패: ${err}`);
         }

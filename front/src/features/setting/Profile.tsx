@@ -31,11 +31,10 @@ function Profile() {
             "프로필 사진 변경", 
             (
                 <ProfileImageChangeForm 
-                    onImageChange={(file) => {
-                        const previewUrl = URL.createObjectURL(file);
+                    onImageChange={(imageUrl: string) => {
                         setProfileForm(prev => ({
                             ...prev,
-                            profileImg: previewUrl
+                            profileImg: imageUrl
                         }));
                         closeModal();
                     }} 
@@ -72,7 +71,7 @@ function Profile() {
             {/* 상단 프로필 이미지 */}
             <S.ImageSection>
                 <div className='profile-img'>
-                    <img src={profileForm.profileImg} alt="" />
+                    <img src={profileForm.profileImg ? `http://localhost:8080${profileForm.profileImg}` : `${import.meta.env.BASE_URL}default-image.png`} alt="" />
                 </div>
                 <button onClick={handleImageChange}>사진 변경</button>
             </S.ImageSection>

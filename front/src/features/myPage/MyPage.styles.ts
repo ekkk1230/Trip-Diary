@@ -150,3 +150,26 @@ export const EmptyWrapper = styled.div`
         cursor: pointer;
     }
 `;
+
+export const Wrapper = styled.div`
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+`;
+
+export const Title = styled.h2`
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`;
+
+export const EmptyState = styled.div`
+    text-align: center;
+    padding: 100px 0;
+    color: #888;
+    font-size: 1.1rem;
+`;

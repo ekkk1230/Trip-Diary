@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import * as S from "../Components.styles"
 import { useJournalStore } from "../../store/useJournalStore";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { useEffect, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useUserStore } from "../../store/useUserStore";
 
 interface JournalListProps {
@@ -15,6 +15,39 @@ function JournalList({ type, contentid }: JournalListProps) {
     const { user } = useUserStore();
 
     const navigate = useNavigate();
+
+    const filteredData = useMemo(() => {
+        return type === "detail"
+            ? filteredJournals.filter(log => log.contentId === contentid)
+            : type === "myList"
+            ? filteredJournals.filter(log => log.author === user?.nickname)
+            : filteredJournals;
+    }, [type, filteredJournals, contentid, user]);
+
+    const [sortOrder, setSortOrder] = useState("latest");
+
+    const displayList = useMemo(() => {
+        let sorted = [...filteredData];
+
+        if (sortOrder === "latest") {
+            sorted.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+            });
+        }
+        else if (sortOrder === "oldest") {
+            sorted.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateA - dateB;
+            });
+        }
+        else if (sortOrder === "likes") sorted.sort((a, b) => b.stats.likes - a.stats.likes);
+
+        return sorted;
+    }, [filteredData, sortOrder]);
+    
 
     useEffect(() => { fetchJournals(); }, []);
 
@@ -29,12 +62,6 @@ function JournalList({ type, contentid }: JournalListProps) {
         );
     }
 
-    const displayList = 
-        type === "detail" 
-        ? filteredJournals.filter(log => log.contentId === contentid)
-        : type === "myList"
-        ? filteredJournals.filter(log => log.author === "test")
-        : filteredJournals;
 
     const handleEditJournal = (e: MouseEvent<HTMLButtonElement>, id: string) => {
         e.stopPropagation();
@@ -48,13 +75,22 @@ function JournalList({ type, contentid }: JournalListProps) {
 
     const handleFavorite = (e: MouseEvent<HTMLButtonElement>, id:string) => {
         e.stopPropagation();
-        likedJournal(user?.id!, id);
+        likedJournal(id, user?.id!);
     };
+
+    const handleSort = (e: string) => setSortOrder(e);
 
     return (
         <S.Section>
             {type === "list" && (
-                <S.HeaderAction>
+                <S.HeaderAction style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {/* 정렬 셀렉터 추가 */}
+                    <select onChange={(e) => handleSort(e.target.value)}>
+                        <option value="latest">최신순</option>
+                        <option value="oldest">오래된순</option>
+                        <option value="likes">좋아요순</option>
+                    </select>
+        
                     <S.WriteButton onClick={() => navigate('/journal/write', { state: { detailType: 'edit', mood: 'new' } })}>
                         새로운 기록 남기기 🖋️
                     </S.WriteButton>
@@ -64,20 +100,22 @@ function JournalList({ type, contentid }: JournalListProps) {
                 {displayList.length > 0 ? (
                     displayList.map((log) => (
                         <S.Card key={log.id}>
-                            <S.AdminButtons>
-                                <button 
-                                    className="edit-btn"
-                                    onClick={e => handleEditJournal(e, log.id!)}
-                                >
-                                    수정
-                                </button>
-                                <button 
-                                    className="delete-btn"
-                                    onClick={e => handleRemove(e, log.id!)}
-                                >
-                                    삭제
-                                </button>
-                            </S.AdminButtons>
+                            {log.author === user?.nickname && (
+                                <S.AdminButtons>
+                                    <button 
+                                        className="edit-btn"
+                                        onClick={e => handleEditJournal(e, log.id!)}
+                                    >
+                                        수정
+                                    </button>
+                                    <button 
+                                        className="delete-btn"
+                                        onClick={e => handleRemove(e, log.id!)}
+                                    >
+                                        삭제
+                                    </button>
+                                </S.AdminButtons>
+                            )}
 
                             <div 
                                 onClick={() => {
@@ -91,7 +129,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                                     
                                 <S.ContentWrapper>
                                     <S.MetaInfo>
-                                        <span>{log.travelDate}</span>
+                                        <span>{log.createdAt ? log.createdAt.split('T')[0] : ""}</span>
                                         <span>{log.location}</span>
                                     </S.MetaInfo>
                                     

@@ -12,6 +12,7 @@ export interface JournalLog {
     description: string;
     stats: { likes: number, comments: number, views: number };
     keywords: string[];
+    createdAt?: string;
 }
 
 export interface Comment {

@@ -4,13 +4,15 @@ import MapComponent from "../../features/map/MapComponent";
 import JournalList from "../../components/journal/JournalList";
 import MyVisitedCount from "../../features/myPage/MyVisitedCount";
 import { useJournalStore } from "../../store/useJournalStore";
+import { useUserStore } from "../../store/useUserStore";
 
 function MyPage() {
     const { journals } = useJournalStore();
+    const { user } = useUserStore();
     const [myJournal, setMyJournal] = useState<any[]>([]);
 
     useEffect(() => {
-        const myJournals = journals.filter(d => d.author === "test");
+        const myJournals = journals.filter(d => d.author === user?.nickname);
         setMyJournal(myJournals);
     }, []);
 
