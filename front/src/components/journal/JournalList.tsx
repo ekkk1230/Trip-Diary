@@ -92,7 +92,7 @@ function JournalList({ type, contentid }: JournalListProps) {
                     </select>
         
                     <S.WriteButton onClick={() => navigate('/journal/write', { state: { detailType: 'edit', mood: 'new' } })}>
-                        새로운 기록 남기기 🖋️
+                        새로운 기록 남기기
                     </S.WriteButton>
                 </S.HeaderAction>
             )}

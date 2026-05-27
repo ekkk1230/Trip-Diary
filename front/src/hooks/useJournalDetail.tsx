@@ -23,15 +23,18 @@ export const useJournalDetail = () => {
     const userId = user?.id!;
 
     useEffect(() => { fetchComments(parseInt(id!)) }, [id]);
+
     useEffect(() => {
         if (!location.pathname.includes('/write') && !location.pathname.includes('/edit')) setIsEdit(undefined, undefined, false);
     }, [location.pathname]);
+    
     useEffect(() => {
         const isEditMode = mood === "edit" || mood === "new";
         setIsEdit(undefined, undefined, isEditMode);
     }, [mood]);
 
     const [imageFile, setImageFile] = useState<File | null>(null);
+
     const [editData, setEditData] = useState({
         logTitle: journal?.logTitle || "",
         travelDate: journal?.travelDate || "",
@@ -43,7 +46,24 @@ export const useJournalDetail = () => {
         keywords: journal?.keywords || [],
         contentId: journal?.contentId || "",
         mainImage: journal?.mainImage || "",
-    })
+    });
+
+    useEffect(() => {
+        if (journal && mood === "edit") {
+            setEditData({
+                logTitle: journal.logTitle || "",
+                travelDate: journal.travelDate || "",
+                weather: journal.weather || "",
+                sido: journal.location ? journal.location.split(" ")[0] : "",
+                sigungu: journal.location ? journal.location.split(" ")[1] : "",
+                placeName: journal.placeName || "",
+                description: journal.description || "",
+                keywords: journal.keywords || [],
+                contentId: journal.contentId || "",
+                mainImage: journal.mainImage || "",
+            });
+        }
+    }, [journal, mood]);
     
     const navigate = useNavigate();
     const updateField = (key: string, value: any) => {

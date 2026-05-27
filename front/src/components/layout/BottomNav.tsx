@@ -2,6 +2,7 @@ import * as S from './Layout.styles'
 import { Link } from 'react-router-dom';
 import { RiHomeHeartLine } from "react-icons/ri";
 import { BsJournalRichtext } from "react-icons/bs";
+import { BiTrip } from "react-icons/bi";
 import { FiUser, FiSettings } from "react-icons/fi";
 import { useUiStore } from '../../store/useUiStore';
 import { useMapStore } from '../../store/useMapStore';
@@ -26,6 +27,12 @@ function BottomNav() {
                     <Link to="/journal">
                         <BsJournalRichtext />
                         저널
+                    </Link>
+                </li>
+                <li className="nav_item">
+                    <Link to="/myplan">
+                        <BiTrip />
+                        나의 일정
                     </Link>
                 </li>
                 <li className="nav_item">

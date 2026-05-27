@@ -73,12 +73,13 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
         };
     },
 
-    setIsEdit: (detailType, mood, forceValue) => () => {
+    setIsEdit: (detailType, mood, forceValue) => set(() => {
         if (typeof forceValue === 'boolean') return { isEdit: forceValue };
         
         const shouldEdit = detailType === "edit" || mood === "new";
         return { isEdit: shouldEdit };
-    },
+    }),
+    
     searchJournals: (keyword, category) => set(state => {
         if (!keyword && !category) return { filteredJournals: state.journals };
 

@@ -89,6 +89,12 @@ function App() {
                     </Layout>
                 } />
 
+                <Route path="/myplan" element={
+                    <Layout title="" hasHeader hasBottomNav>
+                        <MyPlanner />
+                    </Layout>
+                } />
+
                 <Route path="/mypage" element={
                     <Layout title="마이페이지" hasHeader hasBottomNav>
                         <MyPage />
@@ -123,13 +129,6 @@ function App() {
                 <Route path="/settings/profile" element={
                     <Layout title="프로필 수정" hasHeader hasBottomNav>
                         <Profile />
-                    </Layout>
-                } />
-
-
-                <Route path="/test" element={
-                    <Layout title="" hasHeader hasBottomNav>
-                        <MyPlanner />
                     </Layout>
                 } />
             </Routes>
