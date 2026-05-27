@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { fetchAllTourData } from "../api/tourApi";
 import { API_CODE_MAP } from "../constants/region";
 import type { Trip } from "../types/map";
+import API from "../api/axios";
 
 interface MapStore {
     allTourList: Trip[];
@@ -82,8 +83,8 @@ export const useMapStore = create<MapStore>((set, get) => ({
      */
     refreshFilteredData: async(apiItems) => {
         try {
-            const response = await fetch('http://localhost:8080/api/trip');
-            const dbPlaces = await response.json();
+            const response = await API.get("/trip")
+            const dbPlaces = response.data;
 
             set({ customPlaces: dbPlaces });
 
@@ -156,13 +157,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     },
     addCustomPlaces: async(place) => {
         try {
-            const response = await fetch('http://localhost:8080/api/trip', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(place)
-            })
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.post("/trip", place);
             
             // console.log(place)
             set((state) => ({ customPlaces: [place, ...state.customPlaces] }));
@@ -174,13 +169,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     },
     updateCustomPlace: async(updatePlace) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/trip/${updatePlace.contentid}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatePlace)
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.put(`/trip/${updatePlace.contentid}`, updatePlace);
 
             set(state => ({
                 customPlaces: state.customPlaces.map(cp => cp.contentid === updatePlace.contentid ? { ...cp, ...updatePlace } : cp),
@@ -192,9 +181,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
     },
     removeCustomPlace: async(contentid) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/trip/${contentid}`, { method: "DELETE" });
-
-            if (!response.ok) throw new Error(`서버 오류 발생 - 상태코드: ${response.status}`);
+            await API.delete(`/trip/${contentid}`);
             set(state => ({
                 customPlaces: state.customPlaces.filter(cp => cp.contentid !== contentid),
                 filteredData: state.filteredData.filter(p => p.contentid !== contentid)

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LoginData, User } from "../types/user";
+import API from "../api/axios";
 
 const updateUserInState = (state: any, userId: string, partialUpdate: any) => {
     const updateUsers = state.users.map((u: any) => u.userId === userId ? { ...u, ...partialUpdate } : u);
@@ -37,23 +38,8 @@ export const useUserStore = create<UserStore>()(
 
             login: async(loginData) => {
                 try {
-                    const response = await fetch('http://localhost:8080/api/user/login', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(loginData)
-                    })
-
-                    if (!response.ok) {
-                        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
-                        return false;
-                    }
-                    const loginMember = await response.json();
-
-                    // const { users } = get();
-
-                    // const foundUser = users.find(u => u.userId === loginData.userId && u.password === loginData.password);
+                    const response = await API.post('/user/login', loginData);
+                    const loginMember = await response.data;
 
                     if (loginMember) {
                         set ({ user: loginMember });
@@ -68,13 +54,8 @@ export const useUserStore = create<UserStore>()(
 
             joinUser: async(formData) => {
                 try {
-                    const response = await fetch('http://localhost:8080/api/user', {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
-                    const joinMember = await response.json();
+                    const response = await API.post('user', formData);
+                    const joinMember = response.data;
 
                     set((state) => ({ users: [joinMember, ...state.users] }));
                 } catch (err) {
@@ -93,19 +74,13 @@ export const useUserStore = create<UserStore>()(
                 formData.append("file", file);
 
                 try {
-                    const response = await fetch(`http://localhost:8080/api/user/${userId}/profile-image`, {
-                        method: "POST",
-                        body: formData,
-                    });
-
-                    if (!response.ok) throw new Error("업로드 실패");
-
-                    const data = await response.json();
+                    const response = await API.post(`/user/${userId}/profile-image`, formData);
+                    const data = response.data;
 
                     set((state): any => ({ user: { ...state.user, profileImg: data.imageUrl} }));
                     return data.imageUrl;
                 } catch (err) {
-                    console.error(err);
+                    console.error('profileImgChange 실패: ', err);
                 }
             },
             profileDetailChange: (userId, updateProfile) => set((state): any => updateUserInState(state, userId, updateProfile)),

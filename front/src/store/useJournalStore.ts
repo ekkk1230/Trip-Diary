@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import API from "../api/axios";
 
 import type { Comment, JournalLog } from "../types/journal";
 
@@ -41,8 +42,8 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     fetchJournals: async() => {
         set({ isLoading: true });
         try {
-            const response = await fetch("http://localhost:8080/api/journals");
-            const data = await response.json();
+            const response = await API.get("/journals");
+            const data = response.data;
             
             set({
                 journals: data,
@@ -63,8 +64,8 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/comments/journal/${journalId}`);
-            const data = await response.json();
+            const response = await API.get(`/comments/journal/${journalId}`);
+            const data = await response.data;
             
             set({ comments: data });
         } catch (err) {
@@ -72,12 +73,12 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
         };
     },
 
-    setIsEdit: (detailType, mood, forceValue) => set(state => {
+    setIsEdit: (detailType, mood, forceValue) => () => {
         if (typeof forceValue === 'boolean') return { isEdit: forceValue };
         
         const shouldEdit = detailType === "edit" || mood === "new";
         return { isEdit: shouldEdit };
-    }),
+    },
     searchJournals: (keyword, category) => set(state => {
         if (!keyword && !category) return { filteredJournals: state.journals };
 
@@ -98,13 +99,8 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     }),
     likedJournal: async(journalId, memberId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/journals/${journalId}/like`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ journalId, memberId })
-            });
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
-
+            await API.post(`/journals/${journalId}/like`, { journalId, memberId });
+            
             set(state => {
                 const journal = state.filteredJournals.find(j => j.id === journalId);
                 if (!journal) return state;
@@ -148,13 +144,8 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
 
             if (imageFile) formData.append("image", imageFile);
 
-            const response = await fetch(`http://localhost:8080/api/journals`, {
-                method: "POST",
-                body: formData
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
-            const savedJournal = await response.json();
+            const response = await API.post("/journals", formData);
+            const savedJournal = response.data;
 
             set(state => ({
                 journals: [savedJournal, ...state.journals],
@@ -170,14 +161,8 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     updateJournal: async(id, updateData) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/journals/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updateData)
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
-            const updatedJournal = await response.json();
+            const response = await API.put(`/journals/${id}`, updateData);
+            const updatedJournal = response.data;
 
             set((state) => ({
                 journals: state.journals.map(j => String(j.id) === String(id) ? updatedJournal : j),
@@ -191,12 +176,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     addComment: async(newComment) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/comments/journal/${newComment.journalId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newComment)
-            });
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.post(`/comments/journal/${newComment.journalId}`, newComment);
             set(state => ({ comments: [newComment, ...state.comments] }))
         } catch (err) {
             console.error(`addComment 실패: ${err}`);
@@ -204,13 +184,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     updateComment: async(id, updateData) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/comments/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updateData)
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.put(`/comments/${id}`, updateData);
 
             set(state => ({ comments: updateArray.update(state.comments, id, updateData) }))
         } catch (err) {
@@ -219,11 +193,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     removeJournal: async(id) => {
         try {
-            const response = await fetch (`http://localhost:8080/api/journals/${id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.delete(`/journals/${id}`);
 
             set(state => ({
                 journals: state.journals.filter(j => String(j.id) !== String(id)),
@@ -235,11 +205,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     removeComment: async(id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/comments/${id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) throw new Error(`서버 에러 발생 - ${response.status}`);
+            await API.delete(`/comments/${id}`);
 
             set(state => ({ comments: state.comments.filter(c => c.id !== id) }));
         } catch (err) {
@@ -248,13 +214,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     },
     updateViews: async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/journals/${id}/view`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(id)
-            });
-
-            if(!response.ok) throw new Error(`서버 에러 발생 - 상태코드: ${response.status}`);
+            await API.post(`/journals/${id}/view`, id);
 
             set(state => {
                 const updateJournalStats = (j: JournalLog) => {

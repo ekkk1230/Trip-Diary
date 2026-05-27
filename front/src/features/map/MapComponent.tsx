@@ -144,7 +144,7 @@ const MapComponent = ({ isMainPage, visitedLocations = [] }: mapComponentProps) 
 						<>
 							<S.CategoryTabWrap>
 								{CATEGORIES.map(item => (
-									<button key={item.id} value={item.id} onClick={() => setActiveCategory(`${item.id}`)}>{item.name}</button>
+									<button key={item.id} value={item.id} className={activeCategory === String(item.id) ? "active" : ""} onClick={() => setActiveCategory(`${item.id}`)}>{item.name}</button>
 								))}
 							</S.CategoryTabWrap>
 
