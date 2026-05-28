@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class Plan {
     private LocalDate endDate;
     private String memo;
     @Builder.Default
-    @OneToMany(mappedBy = "plan", cascade = Cascade.ALL, orphanRemoval = true)
-    private List<Trip> planItems = new ArrayList<>();
-    private LocalDateTime createdAt; 
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlanItem> planItems = new ArrayList<>();
+    private LocalDateTime createdAt;
 }

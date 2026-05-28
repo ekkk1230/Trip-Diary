@@ -110,4 +110,10 @@ public class TripService {
     public void removeUserFavorite(String userId, String id) {
         favoriteRepository.deleteByMember_UserIdAndTrip_Contentid(userId, id);
     }
+
+    public List<TripDto.TripResponse> getCustomPlaces(String nickname) {
+        List<Trip> trips = tripRepository.findByAuthorNickname(nickname);
+
+        return trips.stream().map(TripDto.TripResponse::new).toList();
+    }
 }

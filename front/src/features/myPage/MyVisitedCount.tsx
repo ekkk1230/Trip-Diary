@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMapStore } from "../../store/useMapStore";
 import { useUserStore } from "../../store/useUserStore";
 import * as S from "./MyPage.styles"
@@ -8,14 +9,19 @@ interface MyVisitedCountProps {
 
 function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
     const { user } = useUserStore();
-    const { favoriteList, getMyPlaces } = useMapStore();
+    const { favoriteList, customPlaces, fetchCustomPlaces, fetchFavorites } = useMapStore();
+
+    useEffect(() => {
+        if (user) {
+            fetchFavorites(user.userId!);
+            fetchCustomPlaces(user.nickname);
+        };
+    }, [user]);
     
     const visitedPlace = visitedLocations.reduce((acc: any, cur: any) => {
         acc[cur] = (acc[cur] || 0) + 1;
         return acc;
     }, {});
-
-    const filteredCustomData = getMyPlaces(user?.nickname);
 
     const regionCount = Object.keys(visitedPlace).length;
 
@@ -33,7 +39,7 @@ function MyVisitedCount({ visitedLocations }: MyVisitedCountProps) {
             
             <S.StatLink to="/mypage/myspot" $variant="primary">
                 <S.Label>나만의 장소</S.Label>
-                <S.Value>{filteredCustomData.length}<span>개</span></S.Value>
+                <S.Value>{customPlaces.length}<span>개</span></S.Value>
                 <S.ArrowIcon>→</S.ArrowIcon>
             </S.StatLink>
             

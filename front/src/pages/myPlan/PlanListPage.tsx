@@ -10,19 +10,34 @@ export const mockPlans: Plan[] = [
         title: "여수·순천 2박 3일 힐링 식도락 여행",
         startDate: "2026-06-01",
         endDate: "2026-06-03",
-        memo: "게장 백반이랑 서대회무침 무조건 먹기! 순천만 국가정원은 둘째 날 아침 일찍 가야 안 더움.",
+        memo: "게장 백반이랑 서대회무침 무조건 먹기! 순천만은 첫날 가고, 둘째 날은 여수 중심!",
         createdAt: "2026-05-28T10:30:00",
+        // 🌟 planItem 한 바구니 안에 day: 1, day: 2, day: 3이 섞여서 들어갑니다.
         planItem: [
+            // ---------- 1일 차 (순천 코스) ----------
             {
                 contentid: "2733967",
                 title: "순천만국가정원",
                 addr1: "전라남도 순천시 국가정원1호길 47",
-                firstimage: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=400", // 테스트용 임시 이미지 주소
+                firstimage: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=400",
                 mapx: "127.502",
                 mapy: "34.931",
                 contenttypeid: "12",
-                isCustom: false
+                isCustom: false,
+                day: 1 // 👈 1일 차 표시!
             },
+            {
+                contentid: "126449",
+                title: "순천만습지",
+                addr1: "전라남도 순천시 순천만길 513",
+                firstimage: "",
+                mapx: "127.509",
+                mapy: "34.889",
+                contenttypeid: "12",
+                isCustom: false,
+                day: 1 // 👈 1일 차 표시!
+            },
+            // ---------- 2일 차 (여수 코스) ----------
             {
                 contentid: "126451",
                 title: "여수 오동도",
@@ -31,7 +46,31 @@ export const mockPlans: Plan[] = [
                 mapx: "127.766",
                 mapy: "34.744",
                 contenttypeid: "12",
-                isCustom: false
+                isCustom: false,
+                day: 2 // 👈 2일 차 표시!
+            },
+            {
+                contentid: "2384211",
+                title: "여수 해상케이블카",
+                addr1: "전라남도 여수시 돌산읍 돌산로 3600-1",
+                firstimage: "",
+                mapx: "127.745",
+                mapy: "34.731",
+                contenttypeid: "12",
+                isCustom: false,
+                day: 2 // 👈 2일 차 표시!
+            },
+            // ---------- 3일 차 (복귀 코스) ----------
+            {
+                contentid: "126414",
+                title: "여수 향일암",
+                addr1: "전라남도 여수시 돌산읍 향일암로 60",
+                firstimage: "",
+                mapx: "127.808",
+                mapy: "34.593",
+                contenttypeid: "12",
+                isCustom: false,
+                day: 3 // 👈 3일 차 표시!
             }
         ]
     },
@@ -52,7 +91,8 @@ export const mockPlans: Plan[] = [
                 mapx: "127.293",
                 mapy: "37.296",
                 contenttypeid: "12",
-                isCustom: false
+                isCustom: false,
+                day: 1
             },
             {
                 contentid: "custom_01",
@@ -62,13 +102,14 @@ export const mockPlans: Plan[] = [
                 mapx: "127.182",
                 mapy: "37.478",
                 contenttypeid: "39", // 음식점 타입 예시
-                isCustom: true // ⭐️ 사용자님이 직접 등록한 커스텀 장소 테스트용!
+                isCustom: true,
+                day: 1
             }
         ]
     }
 ];
 
-function PlanListPast() {
+function PlanList() {
     const { plans, fetchPlan } = usePlanStore();
     console.log(plans)
 
@@ -76,28 +117,29 @@ function PlanListPast() {
         <S.PlanWrap>
             {mockPlans.length >= 1 ? (
                 <>
-                    <S.LinkBtn className="linkBtn" to={`/plan/write`}>새로운 일정 계획하기</S.LinkBtn>
+                    <S.LinkBtn className="linkBtn" to={`/myplan/write`}>새로운 일정 계획하기</S.LinkBtn>
+                    
                     <S.PlanList>
                         {mockPlans.map(item => (
                             <li key={item.id}>
-                                <Link to={`/plan/${item.id}`}>
-                                    <p>{item.title}</p>
-                                    <p>{item.startDate} ~ {item.endDate}</p>
+                                <Link to={`/myplan/${item.id}`}>
+                                    <p className="item-date">{item.startDate} ~ {item.endDate}</p>
+                                    <p className="item-tit">{item.title}</p>
                                 </Link>
                             </li>
                         ))}
                     </S.PlanList>
                 </>
             ) : (
-                <div>
-                    <p>현재 계획된 일정이 없습니다.</p>
-                    <p>새로운 일정을 계획해 볼까요?</p>
+                <S.NoPlane>
+                    <p className="no-title">현재 계획된 일정이 없습니다.</p>
+                    <p className="no-desc">새로운 일정을 계획해 볼까요?</p>
 
                     <S.LinkBtn to={`/plan/write`}>새로운 일정 계획하기</S.LinkBtn>
-                </div>
+                </S.NoPlane>
             )}
         </S.PlanWrap>
     )
 }
 
-export default PlanListPast
+export default PlanList

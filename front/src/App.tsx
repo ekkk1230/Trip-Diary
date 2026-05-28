@@ -19,7 +19,8 @@ import FindUser from './pages/auth/FindUser';
 import { useUserStore } from './store/useUserStore';
 import MySpot from './pages/myPage/MySpot';
 import MyPlanner from './pages/myPlan/MyPlanner';
-import PlanListPast from './pages/myPlan/PlanListPast';
+import PlanListPage from './pages/myPlan/PlanListPage';
+import PlanDetailPage from './pages/myPlan/PlanDetailPage';
 
 function App() {
     const { user } = useUserStore();
@@ -91,9 +92,26 @@ function App() {
                 } />
 
                 <Route path="/myplan" element={
-                    <Layout title="" hasHeader hasBottomNav>
-                        {/* <MyPlanner /> */}
-                        <PlanListPast />
+                    <Layout title="나의 일정" hasHeader hasBottomNav>
+                        <PlanListPage />
+                    </Layout>
+                } />
+
+                <Route path="/myplan/write" element={
+                    <Layout title="나의 일정" hasHeader hasBottomNav>
+                        <MyPlanner />
+                    </Layout>
+                } />
+
+                <Route path="/myplan/:id" element={
+                    <Layout title="나의 일정" hasHeader hasBottomNav>
+                        <PlanDetailPage />
+                    </Layout>
+                } />
+
+                <Route path="/myplan/edit/:id" element={
+                    <Layout title="나의 일정" hasHeader hasBottomNav>
+                        <MyPlanner />
                     </Layout>
                 } />
 

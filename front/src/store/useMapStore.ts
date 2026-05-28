@@ -25,7 +25,7 @@ interface MapStore {
     updateCustomPlace: (updatePlace: Trip) => Promise<void>;
     removeCustomPlace: (contentid: string) => Promise<void>;
 
-    getMyPlaces: (nickname: string | undefined) => Trip[];
+    fetchCustomPlaces: (nickname: string | undefined) => Promise<void>;
 
     resetMap: () => void;
 }
@@ -210,9 +210,15 @@ export const useMapStore = create<MapStore>((set, get) => ({
         }
     },
 
-    getMyPlaces: (nickname) => {
-        if (!nickname) return [];
-        return get().customPlaces.filter(place => place.author === nickname);
+    fetchCustomPlaces: async(nickname) => {
+        try {
+            const response = await API.get(`/trip/custom-places/${nickname}`);
+            const data = response.data;
+
+            set({ customPlaces: data });
+        } catch (err) {
+            console.error(`fetchCustomPlaces 실패: ${err}`);
+        }
     },
 
     resetMap: () => set({ selectedRegion: null, selectedSigungu: null, filteredData: [], isSearched: false }),

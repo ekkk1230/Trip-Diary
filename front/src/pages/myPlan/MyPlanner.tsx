@@ -3,18 +3,24 @@ import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-p
 import { useMapStore } from '../../store/useMapStore';
 import { useUserStore } from '../../store/useUserStore';
 import KakaoMapPreview from '../../components/map/KakaoMapPreview';
-import * as S from "../../components/Components.styles";
+import * as S from "./MyPlan.styles";
 import { CATEGORIES, MAP_SEARCH_MENUS } from '../../constants/region';
 import type { Trip } from '../../types/map';
 import { calculateTravelTime } from "../../utils/mapUtils";
+import { useLocation } from 'react-router-dom';
+import type { Plan } from '../../types/plan';
+import { RiResetLeftLine } from "react-icons/ri";
 
 const MyPlanner = () => {
+	const location = useLocation();
+	const planData = location.state as Plan | undefined;
+	// console.log(planData)
 	const { user } = useUserStore();
 	const { favoriteList } = useMapStore();
 
 	const myFavorites = user?.userId ? favoriteList[user.userId] || [] : [];
 	const [category, setCategory] = useState('');
-	const [selectedPlaces, setSelectedPlaces] = useState<Trip[]>([]);
+	const [selectedPlaces, setSelectedPlaces] = useState<Trip[]>(planData ? planData.planItem : []);
 	const [mapCategory, setMapCategory] = useState<string>(''); 
 
 	const filteredFavoriteList = category !== '' 
@@ -80,9 +86,7 @@ const MyPlanner = () => {
 							</div>
 							{selectedPlaces.length > 0 && (
 								<S.ClearButton onClick={handleClearSchedule}>
-									<svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-										<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-									</svg>
+									<RiResetLeftLine />
 									초기화
 								</S.ClearButton>
 							)}

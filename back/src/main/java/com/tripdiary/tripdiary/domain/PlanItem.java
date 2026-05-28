@@ -25,5 +25,6 @@ public class PlanItem {
     @JoinColumn(name = "trip_id")
     private Trip trip;
     private int visitOrder;
-    private int travelDay;
+    @Column(name = "travel_day")
+    private int day;
 }

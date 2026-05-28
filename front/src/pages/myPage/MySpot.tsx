@@ -7,19 +7,22 @@ import 'swiper/css/pagination';import 'swiper/css/navigation';
 import { useMapStore } from "../../store/useMapStore";
 import { useUserStore } from "../../store/useUserStore";
 import * as S from "../../features/myPage/MyPage.styles"
+import { useEffect } from "react";
 
 function MySpot() {
-    const { getMyPlaces } = useMapStore();
+    const { customPlaces, fetchCustomPlaces } = useMapStore();
     const { user } = useUserStore();
 
-    const filteredCustomData = getMyPlaces(user?.nickname);
+    useEffect(() => {
+        if (user) fetchCustomPlaces(user.nickname);
+    }, [user])
 
     return (
         <>
             <S.Wrapper>
-                <S.Title>📍 나의 스팟 ({filteredCustomData.length})</S.Title>
+                <S.Title>📍 나의 스팟 ({customPlaces.length})</S.Title>
 
-                {filteredCustomData.length > 0 ? (
+                {customPlaces.length > 0 ? (
                     <Swiper
                         modules={[Grid, Navigation, Pagination]}
                         slidesPerView={2}
@@ -30,7 +33,7 @@ function MySpot() {
                         navigation={true} // 좌우 화살표 추가
                         style={{ paddingBottom: '40px' }} // 페이징 영역 확보
                     >
-                        {filteredCustomData.map((data: any) => (
+                        {customPlaces.map((data: any) => (
                             <SwiperSlide key={data.contentid}>
                                 <CardItem item={data} link={`/mypage/myspot/${data.contentid}`} /> 
                             </SwiperSlide>

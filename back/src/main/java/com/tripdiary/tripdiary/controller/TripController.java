@@ -50,5 +50,9 @@ public class TripController {
         tripService.removeUserFavorite(userId, id);
     }
 
+    @GetMapping("/custom-places/{nickname}")
+    public List<TripDto.TripResponse> getCustomPlaces(@PathVariable(name = "nickname") String nickname) {
+        return tripService.getCustomPlaces(nickname);
+    }
 
 }

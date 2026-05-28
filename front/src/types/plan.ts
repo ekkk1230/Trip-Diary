@@ -1,5 +1,9 @@
 import type { Trip } from "./map";
 
+export type PlanTripItem = Trip & {
+    day: number;
+};
+
 export interface Plan {
     id?: number;
     userId: string;
@@ -7,6 +11,6 @@ export interface Plan {
     startDate: string;
     endDate: string;
     memo?: string;
-    planItem: Trip[];
+    planItem: PlanTripItem[];
     createdAt?: string;
 }
