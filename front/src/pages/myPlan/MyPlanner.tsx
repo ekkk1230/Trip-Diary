@@ -7,6 +7,7 @@ import { RiResetLeftLine } from "react-icons/ri";
 import { MdClear } from "react-icons/md";
 import { useMyPlanner } from '../../hooks/useMyPlanner';
 import { useUserStore } from '../../store/useUserStore';
+import PlanHeader from '../../components/myplan/PlanHeader';
 
 const MyPlanner = () => {
 
@@ -25,42 +26,9 @@ const MyPlanner = () => {
 
 	return (
 		<S.PlannerContainer>
-			<S.PlannerHeader>
-				<S.HeaderTopRows>
-					<S.InputGroup className="title-input">
-						<label>여행 제목</label>
-						<input 
-							type="text" 
-							placeholder="멋진 여행 제목을 적어주세요." 
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-						/>
-					</S.InputGroup>
-
-					<S.InputGroup className="date-input">
-						<label>여행 기간</label>
-						<div className="date-picker-wrap">
-							<input type="date" value={startDate} min={todayString} onChange={e => setStartDate(e.target.value)} />
-							<span>~</span>
-							<input type="date" value={endDate} min={startDate || todayString} onChange={e => setEndDate(e.target.value)} />
-						</div>
-					</S.InputGroup>
-
-					<S.InputGroup className="memo-input">
-						<label>여행 메모</label>
-						<textarea 
-							placeholder="여행 시 참고할 메모를 자유롭게 적어보세요." 
-							value={memo}
-							onChange={(e) => setMemo(e.target.value)}
-						/>
-					</S.InputGroup>
-
-					<S.SaveButton onClick={handleSavePlan}>
-						{planData ? "수정 완료" : "일정 저장"}
-					</S.SaveButton>
-				</S.HeaderTopRows>
-			</S.PlannerHeader>
-
+			
+			<PlanHeader title={title} setTitle={setTitle} startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} memo={memo} setMemo={setMemo} planData={planData} handleSavePlan={handleSavePlan} todayString={todayString} />
+			
 			<S.TopSection>
 				<S.PlaceStorage>
 					<S.StorageHeader>
