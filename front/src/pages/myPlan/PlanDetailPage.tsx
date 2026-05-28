@@ -108,7 +108,7 @@ export const mockPlans: Plan[] = [
 ];
 
 function PlanDetailPage() {
-    const { plans } = usePlanStore();
+    const { plans, fetchPlan, deletePlan } = usePlanStore();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -131,9 +131,7 @@ function PlanDetailPage() {
         navigate(`/myplan/edit/${id}`, { state: plan });
     };
 
-    const handleRemove = (id: string) => {
-
-    };
+    const handleRemove = (id: string) => deletePlan(id);
 
 
     return (
