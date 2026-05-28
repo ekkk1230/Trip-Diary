@@ -45,17 +45,13 @@ public class TripDto {
             this.id = trip.getId() != null ? String.valueOf(trip.getId()) : null;
             this.title = trip.getTitle();
             this.contentid = trip.getContentid();
-            this.contenttypeid = trip.getContenttypeid();
             this.addr1 = trip.getAddr1();
             this.addr2 = trip.getAddr2();
             this.firstimage = (trip.getFirstimage() == null || trip.getFirstimage().isEmpty() ? "" : trip.getFirstimage());
-            this.zipcode = trip.getZipcode();
             this.mapx = trip.getMapx();
             this.mapy = trip.getMapy();
-            this.overview = trip.getOverview();
             this.isCustom = trip.isCustom();
             this.author = (trip.getAuthor() != null) ? trip.getAuthor().getNickname() : "";
-            this.areacode = trip.getAreacode();
         }
     }
 }

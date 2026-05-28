@@ -325,11 +325,128 @@ export const PlannerContainer = styled.div`
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 `;
 
+
+
+export const PlannerHeader = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+`;
+
+export const HeaderTopRows = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  width: 100%;
+
+  @media (max-width: 968px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+`;
+
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &.title-input { flex-grow: 2; }
+  &.date-input { flex-grow: 1; }
+  
+  &.memo-input {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  label {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.5px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 1rem;
+    font-weight: 500;
+    &:focus { border-color: #105e4c; outline: none; }
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 10rem; 
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1.5;
+    resize: none;
+    font-family: inherit;
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #105e4c;
+      box-shadow: 0 0 0 3px rgba(16, 94, 76, 0.1);
+    }
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+`;
+
+export const SaveButton = styled.button`
+  padding: 12px 28px;
+  height: 48px;
+  background-color: #105e4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(16, 94, 76, 0.2);
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #0d4b3d;
+    box-shadow: 0 4px 12px -1px rgba(16, 94, 76, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 8px;
+  }
+`;
+
 export const TopSection = styled.section`
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 24px;
-  min-height: 520px;
+  gap: 2.4rem;
+  min-height: 52rem;
 
   @media (max-width: 968px) {
     grid-template-columns: 1fr;
@@ -340,19 +457,19 @@ export const PlaceStorage = styled.div`
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 1.6rem;
+  border: .1rem solid #e2e8f0;
+  box-shadow: 0 .4rem .6rem -.1rem rgba(0, 0, 0, 0.05);
   overflow: hidden;
 `;
 
 export const StorageHeader = styled.div`
-  padding: 20px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 2rem;
+  border-bottom: 1rem solid #f1f5f9;
   background: #fafafa;
 
   h3 {
-    font-size: 1.15rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #1e293b;
     margin: 0 0 14px 0;
@@ -377,7 +494,7 @@ export const CategoryTabs = styled.div`
 export const CategoryTab = styled.button<{ $active: boolean }>`
   padding: 8px 14px;
   border-radius: 20px;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -451,10 +568,54 @@ export const ScheduleHeader = styled.div`
   border-bottom: 1px solid #f1f5f9;
 
   h3 {
-    font-size: 1.15rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #1e293b;
     margin: 0;
+  }
+`;
+
+export const DayTabWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+export const DayTabButton = styled.button<{ $isActive: boolean }>`
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  position: relative;
+  transition: all 0.2s ease;
+  color: ${props => props.$isActive ? '#105e4c' : '#94a3b8'};
+
+  &:hover {
+    color: ${props => props.$isActive ? '#105e4c' : '#475569'};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #105e4c;
+    border-radius: 3px 3px 0 0;
+    transform: scaleX(${props => props.$isActive ? 1 : 0});
+    transition: transform 0.2s ease;
   }
 `;
 
@@ -612,7 +773,7 @@ export const MapCategoryNav = styled.div`
 export const MapCategoryBtn = styled.button<{ $active: boolean }>`
   padding: 8px 14px;
   border-radius: 8px;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;

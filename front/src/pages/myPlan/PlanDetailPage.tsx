@@ -13,9 +13,7 @@ export const mockPlans: Plan[] = [
         endDate: "2026-06-03",
         memo: "게장 백반이랑 서대회무침 무조건 먹기! 순천만은 첫날 가고, 둘째 날은 여수 중심!",
         createdAt: "2026-05-28T10:30:00",
-        // 🌟 planItem 한 바구니 안에 day: 1, day: 2, day: 3이 섞여서 들어갑니다.
         planItem: [
-            // ---------- 1일 차 (순천 코스) ----------
             {
                 contentid: "2733967",
                 title: "순천만국가정원",
@@ -25,7 +23,7 @@ export const mockPlans: Plan[] = [
                 mapy: "34.931",
                 contenttypeid: "12",
                 isCustom: false,
-                day: 1 // 👈 1일 차 표시!
+                day: 1 
             },
             {
                 contentid: "126449",
@@ -36,9 +34,8 @@ export const mockPlans: Plan[] = [
                 mapy: "34.889",
                 contenttypeid: "12",
                 isCustom: false,
-                day: 1 // 👈 1일 차 표시!
+                day: 1 
             },
-            // ---------- 2일 차 (여수 코스) ----------
             {
                 contentid: "126451",
                 title: "여수 오동도",
@@ -48,7 +45,7 @@ export const mockPlans: Plan[] = [
                 mapy: "34.744",
                 contenttypeid: "12",
                 isCustom: false,
-                day: 2 // 👈 2일 차 표시!
+                day: 2 
             },
             {
                 contentid: "2384211",
@@ -59,9 +56,8 @@ export const mockPlans: Plan[] = [
                 mapy: "34.731",
                 contenttypeid: "12",
                 isCustom: false,
-                day: 2 // 👈 2일 차 표시!
+                day: 2 
             },
-            // ---------- 3일 차 (복귀 코스) ----------
             {
                 contentid: "126414",
                 title: "여수 향일암",
@@ -71,7 +67,7 @@ export const mockPlans: Plan[] = [
                 mapy: "34.593",
                 contenttypeid: "12",
                 isCustom: false,
-                day: 3 // 👈 3일 차 표시!
+                day: 3 
             }
         ]
     },
@@ -99,10 +95,10 @@ export const mockPlans: Plan[] = [
                 contentid: "custom_01",
                 title: "남한산성 백숙거리 단골집",
                 addr1: "경기도 광주시 남한산성면",
-                firstimage: "", // 이미지 없는 경우 예외처리 테스트용
+                firstimage: "", 
                 mapx: "127.182",
                 mapy: "37.478",
-                contenttypeid: "39", // 음식점 타입 예시
+                contenttypeid: "39", 
                 isCustom: true,
                 day: 1
             }

@@ -88,10 +88,6 @@ public class TripService {
                             .firstimage(tripDto.getFirstimage())
                             .mapy(tripDto.getMapy())
                             .mapx(tripDto.getMapx())
-                            .overview(tripDto.getOverview())
-                            .areacode(tripDto.getAreacode())
-                            .zipcode(tripDto.getZipcode())
-                            .contenttypeid(tripDto.getContenttypeid())
                             .author(null)
                             .isCustom(false)
                             .build();

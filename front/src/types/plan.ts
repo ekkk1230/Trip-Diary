@@ -1,7 +1,7 @@
 import type { Trip } from "./map";
 
 export type PlanTripItem = Trip & {
-    day: number;
+    day?: number;
 };
 
 export interface Plan {
