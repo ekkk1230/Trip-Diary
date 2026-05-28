@@ -3,6 +3,7 @@ import * as S from "./MyPlan.styles";
 import { usePlanStore } from "../../store/usePlanStore";
 import type { Plan } from "../../types/plan";
 import KakaoMapPreview from "../../components/map/KakaoMapPreview";
+import { useMemo, useState } from "react";
 
 export const mockPlans: Plan[] = [
     {
@@ -117,6 +118,15 @@ function PlanDetailPage() {
 
     if (!plan) return <div>존재하지 않는 페이지 입니다.</div>;
 
+    const [activeDate, setActiveDate] = useState<number>(1);
+
+    const currentDayPlaces = useMemo(() => {
+        return plan.planItem.filter(item => item.day === activeDate);
+    }, [plan.planItem, activeDate]);
+
+    const totalDays = Math.max(...plan.planItem.map(item => item.day ?? 1));
+    const daysArray = Array.from({ length: totalDays }, (_, i) => i + 1);
+    
     const handleUpdate = (id: string) => {
         navigate(`/myplan/edit/${id}`, { state: plan });
     };
@@ -140,13 +150,25 @@ function PlanDetailPage() {
                 </div>
             </S.ViewHeader>
 
+            <S.DayTabWrapper>
+                {daysArray.map(day => (
+                    <S.DayTabButton 
+                        key={day}
+                        $isActive={activeDate === day}
+                        onClick={() => setActiveDate(day)}
+                    >
+                        {day}일 차
+                    </S.DayTabButton>
+                ))}
+            </S.DayTabWrapper>
+
             {/* 2. 하단 상세 컨텐츠 (Flex 또는 Grid로 좌우 분할) */}
             <S.ViewContent>
                 {/* 왼쪽: 코스 타임라인 */}
                 <S.TimelineSection>
                     <h3>여행 코스</h3>
                     <ul className="timeline-list">
-                        {plan.planItem.map((item, index) => (
+                        {currentDayPlaces.map((item, index) => (
                             <li key={item.contentid} className="timeline-item">
                                 <span className="order-number">{index + 1}</span>
                                 <div className="place-info">
@@ -161,7 +183,7 @@ function PlanDetailPage() {
 
                 {/* 오른쪽: 지도 고정 박스 */}
                 <S.MapSection>
-                    <KakaoMapPreview locations={plan.planItem} activeCategory="" onMarkerClick={() => {}} />
+                    <KakaoMapPreview locations={currentDayPlaces} activeCategory="" onMarkerClick={() => {}} />
                 </S.MapSection>
             </S.ViewContent>
         </S.ViewWrap>
