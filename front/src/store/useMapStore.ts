@@ -14,7 +14,8 @@ interface MapStore {
     isLoading: boolean;
     isSearched: boolean;
 
-    toggleFavorite: (userId: string, id: string) => void;
+    toggleFavorite: (userId: string, id: string) => Promise<void>;
+    fetchFavorites: (userId: string) => Promise<void>;
     setSelectedRegion: (region: any | null) => void;
     setSelectedSigungu: (sigungu: any | null) => void;
     setFilteredData: (data: Trip[]) => void;
@@ -49,26 +50,55 @@ export const useMapStore = create<MapStore>((set, get) => ({
      * 2. userFavoriteList의 아이템과 현재 누른 관광지 contentid 비교하여 개인 유저의 찜목록에 있는지 확인
      * 3. 해당 아이템일 경우 userFavoriteList에서 필터 / 해당하지 않을 경우 기존 [전체 관광지, 커스텀 관광지] 배열에서 클릭한 item의 아이디와 동일한 contentid를 가진 아이템 반환하여 userFavoriteList에 추가
      */
-    toggleFavorite: (userId, id) => set(state => {
-        // console.log(userId, id);
-        let userFavoriteList = state.favoriteList[userId] || [];
-        // console.log(state.favoriteList)
-
+    toggleFavorite: async(userId, id) => {
+        const { favoriteList, allTourList, customPlaces } = get();
+        let userFavoriteList = favoriteList[userId] || [];
         const isExisted = userFavoriteList.some(item => item.contentid === id);
-        if (isExisted) {
-            userFavoriteList = userFavoriteList.filter(item => item.contentid !== id);
-        } else {
-            const item = [...state.allTourList, ...state.customPlaces].find(t => t.contentid === id);
-            if (item) userFavoriteList = [item, ...userFavoriteList];
-        }
-
-        return {
-            favoriteList: {
-                ...state.favoriteList,
-                [userId]: userFavoriteList
+        try {
+            if (isExisted) {
+                await API.delete(`/trip/favorite/${userId}/${id}`);
+                userFavoriteList = userFavoriteList.filter(item => item.contentid !== id);
+            } else {
+                const item = [...allTourList, ...customPlaces].find(t => t.contentid === id);
+                if (item) {
+                    await API.post(`/trip/favorite`, { userId, trip: item });
+                    userFavoriteList = [item, ...userFavoriteList];
+                }
             }
-        };
-    }),
+
+            set({ favoriteList: { ...favoriteList, [userId]: userFavoriteList } });
+        } catch (err) {
+            console.error(`toggleFavorite 실패: ${err}`);
+        }
+    },
+    // fetchFavorites: async(userId) => {
+    //     try {
+    //         const response = API.get(`/trip/favorite/${userId}`);
+    //         const favoriteList = (await response).data;
+    //         console.log(favor)
+
+    //         set({ favoriteList: favoriteList })
+    //     } catch (err) {
+    //         console.error('fetchFavorites 실패: ', err);
+    //     }
+    // },
+    fetchFavorites: async (userId) => {
+        if (!userId) return;
+        try {
+            const response = await API.get(`/trip/favorite/${userId}`);
+            const data = response.data; 
+            // console.log("서버에서 받아온 찜 목록:", data);
+            
+            set((state) => ({
+                favoriteList: {
+                    ...state.favoriteList,
+                    [userId]: data
+                }
+            }));
+        } catch (err) {
+            console.error('fetchFavorites 실패: ', err);
+        }
+    },
 
     setSelectedRegion: (region) => set({ selectedRegion: region }),
     setSelectedSigungu: (sigungu) => set({ selectedSigungu: sigungu }),
@@ -83,7 +113,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
      */
     refreshFilteredData: async(apiItems) => {
         try {
-            const response = await API.get("/trip")
+            const response = await API.get("/trip");
             const dbPlaces = response.data;
 
             set({ customPlaces: dbPlaces });

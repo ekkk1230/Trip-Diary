@@ -1,5 +1,6 @@
 package com.tripdiary.tripdiary.controller;
 
+import com.tripdiary.tripdiary.dto.FavoriteDto;
 import com.tripdiary.tripdiary.dto.TripDto;
 import com.tripdiary.tripdiary.service.TripService;
 import lombok.RequiredArgsConstructor;
@@ -33,4 +34,21 @@ public class TripController {
     public void deleteTripData(@PathVariable(name = "contentid") String contentid) {
         tripService.deleteTripData(contentid);
     }
+
+    @GetMapping("/favorite/{userId}")
+    public List<TripDto.TripResponse> getUserFavorite(@PathVariable(name = "userId") String userId) {
+        return tripService.getUserFavorite(userId);
+    }
+
+    @PostMapping("/favorite")
+    public void addUserFavorite(@RequestBody FavoriteDto.FavoriteRequest request) {
+        tripService.addUserFavorite(request.getUserId(), request.getTrip());
+    }
+
+    @DeleteMapping("/favorite/{userId}/{id}")
+    public void removeUserFavorite(@PathVariable(name = "userId") String userId, @PathVariable(name = "id") String id) {
+        tripService.removeUserFavorite(userId, id);
+    }
+
+
 }

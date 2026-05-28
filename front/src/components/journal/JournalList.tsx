@@ -84,7 +84,6 @@ function JournalList({ type, contentid }: JournalListProps) {
         <S.Section>
             {type === "list" && (
                 <S.HeaderAction style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    {/* 정렬 셀렉터 추가 */}
                     <select onChange={(e) => handleSort(e.target.value)}>
                         <option value="latest">최신순</option>
                         <option value="oldest">오래된순</option>

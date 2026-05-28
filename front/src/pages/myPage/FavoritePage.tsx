@@ -3,11 +3,16 @@ import { useMapStore } from "../../store/useMapStore";
 import { useNavigate } from "react-router-dom";
 import * as S from "../../features/myPage/MyPage.styles"
 import { useUserStore } from "../../store/useUserStore";
+import { useEffect } from "react";
 
 function FavoritePage() {
     const { user } = useUserStore();
-    const { favoriteList } = useMapStore();
+    const { favoriteList, fetchFavorites } = useMapStore();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) fetchFavorites(user.userId!);
+    }, [user]);
 
     if ((favoriteList[user?.userId!] || []).length <= 0) {
         return (

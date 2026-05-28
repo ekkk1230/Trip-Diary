@@ -1,8 +1,10 @@
 package com.tripdiary.tripdiary.service;
 
+import com.tripdiary.tripdiary.domain.Favorite;
 import com.tripdiary.tripdiary.domain.Member;
 import com.tripdiary.tripdiary.domain.Trip;
 import com.tripdiary.tripdiary.dto.TripDto;
+import com.tripdiary.tripdiary.repository.FavoriteRepository;
 import com.tripdiary.tripdiary.repository.MemberRepository;
 import com.tripdiary.tripdiary.repository.TripRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ import java.util.List;
 public class TripService {
     private final TripRepository tripRepository;
     private final MemberRepository memberRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public List<TripDto.TripResponse> getTripData() {
         List<Trip> tripList = tripRepository.findAll();
@@ -63,4 +68,46 @@ public class TripService {
         tripRepository.delete(trip);
     }
 
+    public List<TripDto.TripResponse> getUserFavorite(String userId) {
+        List<Favorite> favoriteList = favoriteRepository.findByMemberId(userId);
+
+        return favoriteList.stream()
+                .map(favorite -> new TripDto.TripResponse(favorite.getTrip()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addUserFavorite(String userId, TripDto.TripRequest tripDto) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Trip trip = tripRepository.findByContentid(tripDto.getContentid())
+                .orElseGet(() -> {
+                    Trip newTrip = Trip.builder()
+                            .contentid(tripDto.getContentid())
+                            .title(tripDto.getTitle())
+                            .addr1(tripDto.getAddr1())
+                            .firstimage(tripDto.getFirstimage())
+                            .mapy(tripDto.getMapy())
+                            .mapx(tripDto.getMapx())
+                            .overview(tripDto.getOverview())
+                            .areacode(tripDto.getAreacode())
+                            .zipcode(tripDto.getZipcode())
+                            .contenttypeid(tripDto.getContenttypeid())
+                            .author(null)
+                            .isCustom(false)
+                            .build();
+                    return tripRepository.save(newTrip);
+                });
+
+        Favorite favorite = Favorite.builder()
+                .member(member)
+                .trip(trip)
+                .build();
+
+        favoriteRepository.save(favorite);
+    }
+
+    @Transactional
+    public void removeUserFavorite(String userId, String id) {
+        favoriteRepository.deleteByMember_UserIdAndTrip_Contentid(userId, id);
+    }
 }

@@ -54,7 +54,7 @@ public class TripDto {
             this.mapy = trip.getMapy();
             this.overview = trip.getOverview();
             this.isCustom = trip.isCustom();
-            this.author = trip.getAuthor().getNickname();
+            this.author = (trip.getAuthor() != null) ? trip.getAuthor().getNickname() : "";
             this.areacode = trip.getAreacode();
         }
     }

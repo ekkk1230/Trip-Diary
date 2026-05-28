@@ -17,7 +17,7 @@ function MySpot() {
     return (
         <>
             <S.Wrapper>
-                <S.Title>📍 나의 소중한 스팟 ({filteredCustomData.length})</S.Title>
+                <S.Title>📍 나의 스팟 ({filteredCustomData.length})</S.Title>
 
                 {filteredCustomData.length > 0 ? (
                     <Swiper
