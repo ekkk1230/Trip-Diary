@@ -18,7 +18,8 @@ import { GlobalStyle } from './styles/GlobalStyle';
 import FindUser from './pages/auth/FindUser';
 import { useUserStore } from './store/useUserStore';
 import MySpot from './pages/myPage/MySpot';
-import MyPlanner from './components/map/MyPlanner';
+import MyPlanner from './pages/myPlan/MyPlanner';
+import PlanListPast from './pages/myPlan/PlanListPast';
 
 function App() {
     const { user } = useUserStore();
@@ -91,7 +92,8 @@ function App() {
 
                 <Route path="/myplan" element={
                     <Layout title="" hasHeader hasBottomNav>
-                        <MyPlanner />
+                        {/* <MyPlanner /> */}
+                        <PlanListPast />
                     </Layout>
                 } />
 

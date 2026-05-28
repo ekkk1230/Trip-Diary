@@ -71,17 +71,6 @@ export const useMapStore = create<MapStore>((set, get) => ({
             console.error(`toggleFavorite 실패: ${err}`);
         }
     },
-    // fetchFavorites: async(userId) => {
-    //     try {
-    //         const response = API.get(`/trip/favorite/${userId}`);
-    //         const favoriteList = (await response).data;
-    //         console.log(favor)
-
-    //         set({ favoriteList: favoriteList })
-    //     } catch (err) {
-    //         console.error('fetchFavorites 실패: ', err);
-    //     }
-    // },
     fetchFavorites: async (userId) => {
         if (!userId) return;
         try {

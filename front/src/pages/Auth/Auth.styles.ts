@@ -217,6 +217,7 @@ export const ProfileUploadSection = styled.div`
     justify-content: center;
     overflow: hidden;
     position: relative;
+    margin: 0 auto;
 
     img {
       width: 100%;
