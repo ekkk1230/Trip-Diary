@@ -1,13 +1,11 @@
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import KakaoMapPreview from '../../components/map/KakaoMapPreview';
 import * as S from "./MyPlan.styles";
 import { CATEGORIES, MAP_SEARCH_MENUS } from '../../constants/region';
-import { calculateTravelTime } from "../../utils/mapUtils";
 import { RiResetLeftLine } from "react-icons/ri";
-import { MdClear } from "react-icons/md";
 import { useMyPlanner } from '../../hooks/useMyPlanner';
 import { useUserStore } from '../../store/useUserStore';
 import PlanHeader from '../../components/myplan/PlanHeader';
+import ScheduleListSection from '../../components/myplan/ScheduleListSection';
 
 const MyPlanner = () => {
 
@@ -28,7 +26,7 @@ const MyPlanner = () => {
 		<S.PlannerContainer>
 			
 			<PlanHeader title={title} setTitle={setTitle} startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} memo={memo} setMemo={setMemo} planData={planData} handleSavePlan={handleSavePlan} todayString={todayString} />
-			
+
 			<S.TopSection>
 				<S.PlaceStorage>
 					<S.StorageHeader>
@@ -82,74 +80,7 @@ const MyPlanner = () => {
 						))}
 					</S.DayTabWrapper>
 					
-					<DragDropContext onDragEnd={onDragEnd}>
-						<Droppable droppableId="schedule-list">
-							{(provided) => (
-								<S.ScheduleList {...provided.droppableProps} ref={provided.innerRef}>
-									{currentDayPlaces.map((item, index) => (
-										<div key={item.contentid}>
-										<Draggable key={String(item.contentid)} draggableId={String(item.contentid)} index={index}>
-											{(provided, snapshot) => (
-												<S.DraggableItem
-													ref={provided.innerRef}
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													$isDragging={snapshot.isDragging}
-													style={provided.draggableProps.style}
-												>
-												{/* 1. 순서 번호 */}
-												<S.IndexBadge>{index + 1}</S.IndexBadge>
-
-												{/* 2. 장소 정보 */}
-												<S.ItemInfo>
-													<strong>{item.title}</strong>
-													<span>{item.addr1 || '주소 정보 없음'}</span>
-												</S.ItemInfo>
-
-												{/* 3. 삭제 버튼 */}
-												<S.RemoveButton onClick={(e) => {
-													e.stopPropagation();
-													handleSelected(item);
-												}}>
-													<MdClear />
-												</S.RemoveButton>
-											</S.DraggableItem>
-											)}
-										</Draggable>
-
-
-										{index < currentDayPlaces.length - 1 && (() => {
-											const nextItem = currentDayPlaces[index + 1];
-											
-											if (!nextItem) return null; 
-
-											return (
-												<S.TravelInfoTag>
-													<div className="line"></div>
-													<div className="info">
-														예상 소요시간 약 {
-															calculateTravelTime(
-																{ mapx: Number(item.mapx || 0), mapy: Number(item.mapy || 0) }, 
-																{ mapx: Number(nextItem.mapx || 0), mapy: Number(nextItem.mapy || 0) } 
-															).time
-														}분 
-														<span>({
-															calculateTravelTime(
-																{ mapx: Number(item.mapx || 0), mapy: Number(item.mapy || 0) }, 
-																{ mapx: Number(nextItem.mapx || 0), mapy: Number(nextItem.mapy || 0) }
-															).distance
-														}km)</span>
-													</div>
-												</S.TravelInfoTag>
-											);
-										})()}
-									</div>	
-									))}
-									{provided.placeholder}
-								</S.ScheduleList>
-							)}
-						</Droppable>
-					</DragDropContext>
+					<ScheduleListSection onDragEnd={onDragEnd} currentDayPlaces={currentDayPlaces} handleSelected={handleSelected} />
 				</S.SchedulePanel>
 			</S.TopSection>
 
