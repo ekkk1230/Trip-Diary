@@ -29,6 +29,6 @@ public class Plan {
     private String memo;
     @Builder.Default
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PlanItem> planItems = new ArrayList<>();
+    private List<PlanItem> planItem = new ArrayList<>();
     private LocalDateTime createdAt;
 }
