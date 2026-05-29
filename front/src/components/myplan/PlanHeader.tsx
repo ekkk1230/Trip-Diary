@@ -13,7 +13,7 @@ interface PlanHeaderProps {
     setStartDate: (value: string) => void;
     setEndDate: (value: string) => void;
     setMemo: (value: string) => void;
-    handleSavePlan: () => void;
+    handleSavePlan: (plan: Plan) => void;
 }
 
 function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setStartDate, setEndDate, setMemo, todayString, handleSavePlan }: PlanHeaderProps) {
@@ -22,6 +22,13 @@ function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setSt
     const onChangeStart = (e: ChangeEvent<HTMLInputElement>) => setStartDate(e.target.value);
     const onChangeEnd = (e: ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value);
     const onChangeMemo = (e: ChangeEvent<HTMLTextAreaElement>) => setMemo(e.target.value);
+
+    const onSave = () => {
+        const newPlan = {
+            
+        };
+        handleSavePlan(newPlan)
+    }
 
     return (
         <S.PlannerHeader>
@@ -54,7 +61,7 @@ function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setSt
                     />
                 </S.InputGroup>
 
-                <S.SaveButton onClick={handleSavePlan}>
+                <S.SaveButton onClick={() => }>
                     {planData ? "수정 완료" : "일정 저장"}
                 </S.SaveButton>
             </S.HeaderTopRows>

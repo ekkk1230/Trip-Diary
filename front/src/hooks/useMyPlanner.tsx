@@ -3,12 +3,14 @@ import { type PlanTripItem, type Plan } from "../types/plan";
 import { useMapStore } from "../store/useMapStore";
 import { useEffect, useMemo, useState } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
+import { usePlanStore } from "../store/usePlanStore";
 
 export const useMyPlanner = (user: any) => {
     const location = useLocation();
     const planData = location.state as | Plan | undefined;
 
     const { favoriteList, fetchFavorites } = useMapStore();
+    const { addPlan } = usePlanStore();
 
     useEffect(() => { fetchFavorites(user.userId) }, [user]);
 
@@ -83,9 +85,7 @@ export const useMyPlanner = (user: any) => {
         setSelectedPlaces([...otherDayItems, ...currentDayItems]);
     };
 
-    const handleSavePlan = () => {
-
-    }
+    const handleSavePlan = (plan: Plan) => addPlan(plan);
 
     return {
         planData,
