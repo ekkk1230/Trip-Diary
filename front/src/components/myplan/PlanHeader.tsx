@@ -13,7 +13,7 @@ interface PlanHeaderProps {
     setStartDate: (value: string) => void;
     setEndDate: (value: string) => void;
     setMemo: (value: string) => void;
-    handleSavePlan: (plan: Plan) => void;
+    handleSavePlan: () => void;
 }
 
 function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setStartDate, setEndDate, setMemo, todayString, handleSavePlan }: PlanHeaderProps) {
@@ -23,12 +23,7 @@ function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setSt
     const onChangeEnd = (e: ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value);
     const onChangeMemo = (e: ChangeEvent<HTMLTextAreaElement>) => setMemo(e.target.value);
 
-    const onSave = () => {
-        const newPlan = {
-            
-        };
-        handleSavePlan(newPlan)
-    }
+    const onSave = () => handleSavePlan();
 
     return (
         <S.PlannerHeader>

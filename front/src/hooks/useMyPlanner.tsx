@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom"
-import { type PlanTripItem, type Plan } from "../types/plan";
+import { type PlanTripItem, type Plan, type PlanRequest } from "../types/plan";
 import { useMapStore } from "../store/useMapStore";
 import { useEffect, useMemo, useState } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
@@ -85,7 +85,23 @@ export const useMyPlanner = (user: any) => {
         setSelectedPlaces([...otherDayItems, ...currentDayItems]);
     };
 
-    const handleSavePlan = (plan: Plan) => addPlan(plan);
+    const handleSavePlan = () => {
+    const requestData: PlanRequest = {
+        userId: user.userId,
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        memo: memo || "",
+        // 여기서 완전체(PlanTripItem)를 서버용(PlanTripItemRequest)으로 변환!
+        planItem: selectedPlaces.map((place) => ({
+            contentid: place.contentid,
+            visitOrder: place.visitOrder,
+            day: place.day
+        })),
+    };
+    
+    // 이 requestData를 axios.post("/api/plan", requestData)로 보내면 됩니다.
+};
 
     return {
         planData,
