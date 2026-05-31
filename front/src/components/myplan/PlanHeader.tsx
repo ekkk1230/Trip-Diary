@@ -56,7 +56,7 @@ function PlanHeader({ title, startDate, endDate, planData, memo, setTitle, setSt
                     />
                 </S.InputGroup>
 
-                <S.SaveButton onClick={() => }>
+                <S.SaveButton onClick={() => {}}>
                     {planData ? "수정 완료" : "일정 저장"}
                 </S.SaveButton>
             </S.HeaderTopRows>
