@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LoginData, User } from "../types/user";
+import axios from "axios";
 import API from "../api/axios";
 
 const updateUserInState = (state: any, userId: string, partialUpdate: any) => {
@@ -54,7 +55,8 @@ export const useUserStore = create<UserStore>()(
 
             joinUser: async(formData) => {
                 try {
-                    const response = await API.post('user', formData);
+                    const response = await axios.post('http://localhost:8080/api/user', formData, {
+                    });
                     const joinMember = response.data;
 
                     set((state) => ({ users: [joinMember, ...state.users] }));
