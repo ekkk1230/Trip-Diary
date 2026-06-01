@@ -1,6 +1,14 @@
 import type { Trip } from "./map";
 
 export type PlanTripItem = Trip & {
+    contentid: string;
+    title: string;
+    addr1: string;
+    firstimage: string;
+    mapx: string;
+    mapy: string;
+    contenttypeid: string;
+    isCustom: boolean;
     day: number;
     visitOrder: number;
 };

@@ -66,42 +66,55 @@ export const useMyPlanner = (user: any) => {
         setActiveDate(1);
     };
 
-    const onDragEnd = (result: DropResult) => {
-        const { source, destination } = result;
-        // 1. 올바른 위치에 떨어뜨린 게 아니거나 제자리에 둔 거라면 리턴
-        if (!destination || source.index === destination.index) return;
+    // const onDragEnd = (result: DropResult) => {
+    //     const { source, destination } = result;
+    //     // 1. 올바른 위치에 떨어뜨린 게 아니거나 제자리에 둔 거라면 리턴
+    //     if (!destination || source.index === destination.index) return;
 
-        // 2. 현재 활성화된 일차의 아이템들로 가짜 배열 생성
-        const currentDayItems = selectedPlaces.filter(item => item.day === activeDate);
+    //     // 2. 현재 활성화된 일차의 아이템들로 가짜 배열 생성
+    //     const currentDayItems = selectedPlaces.filter(item => item.day === activeDate);
         
-        // 3. 다른 일차의 아이템들도 따로 격리
-        const otherDayItems = selectedPlaces.filter(item => item.day !== activeDate);
+    //     // 3. 다른 일차의 아이템들도 따로 격리
+    //     const otherDayItems = selectedPlaces.filter(item => item.day !== activeDate);
     
-        // 4. 오늘 자 리스트 안에서 드래그 앤 드롭 순서 재조정
-        const [reorderedItem] = currentDayItems.splice(source.index, 1);
-        currentDayItems.splice(destination.index, 0, reorderedItem);
+    //     // 4. 오늘 자 리스트 안에서 드래그 앤 드롭 순서 재조정
+    //     const [reorderedItem] = currentDayItems.splice(source.index, 1);
+    //     currentDayItems.splice(destination.index, 0, reorderedItem);
     
-        // 5. 격리해 뒀던 다른 날짜 아이템들과 순서가 바뀐 오늘 날짜 아이템들을 합쳐서 셋팅
-        setSelectedPlaces([...otherDayItems, ...currentDayItems]);
+    //     // 5. 격리해 뒀던 다른 날짜 아이템들과 순서가 바뀐 오늘 날짜 아이템들을 합쳐서 셋팅
+    //     setSelectedPlaces([...otherDayItems, ...currentDayItems]);
+    // };
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) return;
+    
+        const newPlaces = [...selectedPlaces];
+        const [reorderedItem] = newPlaces.splice(result.source.index, 1);
+        newPlaces.splice(result.destination.index, 0, reorderedItem);
+    
+        const updatedPlaces = newPlaces.map((p, index) => ({
+            ...p,
+            visitOrder: index + 1 
+        }));
+    
+        setSelectedPlaces(updatedPlaces);
     };
 
     const handleSavePlan = () => {
-    const requestData: PlanRequest = {
-        userId: user.userId,
-        title: title,
-        startDate: startDate,
-        endDate: endDate,
-        memo: memo || "",
-        // 여기서 완전체(PlanTripItem)를 서버용(PlanTripItemRequest)으로 변환!
-        planItem: selectedPlaces.map((place) => ({
-            contentid: place.contentid,
-            visitOrder: place.visitOrder,
-            day: place.day
-        })),
+        const requestData: PlanRequest = {
+            userId: user.userId,
+            title: title,
+            startDate: startDate,
+            endDate: endDate,
+            memo: memo || "",
+            planItem: selectedPlaces.map((place) => ({
+                contentid: place.contentid,
+                visitOrder: place.visitOrder,
+                day: place.day
+            })),
+        };
+        addPlan(requestData)
+        // 이 requestData를 axios.post("/api/plan", requestData)로 보내면 됩니다.
     };
-    
-    // 이 requestData를 axios.post("/api/plan", requestData)로 보내면 됩니다.
-};
 
     return {
         planData,

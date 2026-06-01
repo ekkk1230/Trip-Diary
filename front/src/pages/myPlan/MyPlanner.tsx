@@ -97,7 +97,7 @@ const MyPlanner = () => {
 				))}
 				</S.MapCategoryNav>
 
-				<KakaoMapPreview locations={currentDayPlaces} activeCategory={mapCategory} onMarkerClick={handleSelected} />
+				<KakaoMapPreview locations={currentDayPlaces} activeCategory={mapCategory} onMarkerClick={item => handleSelected(item as any)} />
 			</S.MapWrapper>
 		</S.PlannerContainer>
 	);

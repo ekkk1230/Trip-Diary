@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import type { Plan } from "../types/plan";
+import type { Plan, PlanRequest } from "../types/plan";
 import API from "../api/axios";
 
 interface PlanStore {
-    plans: Plan[];
+    plans: any[];
     fetchPlan: (userId: string) => Promise<void>;
-    addPlan: (plan: Plan) => Promise<void>;
+    addPlan: (plan: PlanRequest) => Promise<void>;
     deletePlan: (planId: string) => Promise<void>;
 };
 
